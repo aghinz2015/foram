@@ -1,3 +1,10 @@
-<div>
-  {{forams}}
-</div>
+<table>
+  <tr>
+    <th ng-repeat="header in headers">{{header}}</th>
+  </tr>
+  <tr ng-repeat="foram in forams">
+    <td ng-repeat="(key, value) in foram">
+      {{value}}
+    </td>
+  </tr>
+</table>
