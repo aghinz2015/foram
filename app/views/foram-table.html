@@ -1,3 +1,14 @@
-<td ng-repeat="(key, value) in scope.foram">
-  <td>{{key}}</td>
-</td>
+<table class="foram-table">
+  <thead>
+  <th ng-repeat="(key, value) in forams[0]">
+    {{key}}
+  </th>
+  </thead>
+  <tbody>
+  <tr ng-repeat="foram in forams">
+    <td ng-repeat="(key, value) in foram">
+      {{value}}
+    </td>
+  </tr>
+  </tbody>
+</table>
