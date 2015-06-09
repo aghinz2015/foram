@@ -47,7 +47,7 @@ table.foram-table {
     }
   }
   th {
-    @include background-image(linear-gradient($header_color1, $header_color2));
+
     color: $header_font_color;
     text-transform: uppercase;
     font-size: 13px;
