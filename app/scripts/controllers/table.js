@@ -11,4 +11,15 @@ app.controller('TableCtrl',['$scope','$http','$q', function ($scope,$http,$q) {
     $scope.headers = Object.keys($scope.forams[0]);
 
   });
+
+  $(function() {
+    $( "#selectable" ).selectable({
+      filter: 'tr',
+      selected: function(event,ui){
+        console.log(event);
+        console.log(ui);
+
+      }
+    });
+  });
 }]);

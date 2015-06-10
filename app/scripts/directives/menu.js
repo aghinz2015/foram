@@ -21,13 +21,15 @@ app.directive('menuPosition',function($location,$compile,$templateCache){
     },
     templateUrl: '/views/submenu-temp.html',
     link: function(scope,element,attr){
-      var template = $templateCache.get('/views/submenu-temp.html')[1];
-
+      // var template = $templateCache.get('/views/submenu-temp.html')[1]; WINDOWS only
+      var template = $templateCache.get('/views/submenu-temp.html');
+      console.log(template);
       if (scope.position.list) {
         template += '<ul  class="submenu"><menu-position ng-repeat="subposition in position.list" position="subposition"></menu-position></ul>';
       }
 
       template = '<li class="menu-option" id="{{position.args}}" ng-click="position.click(position.args)">'+template+'</li>';
+      
       var newElement = angular.element(template);
       $compile(newElement)(scope);
 

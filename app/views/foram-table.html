@@ -4,8 +4,28 @@
     {{key}}
   </th>
   </thead>
-  <tbody>
-  <tr ng-repeat="foram in forams">
+  <tbody id="selectable">
+  <tr ng-repeat="foram in forams" class="ui-widget-content" data-foram="{{$index}}">
+    <td ng-repeat="(key, value) in foram">
+      {{value}}
+    </td>
+  </tr>
+  <tr ng-repeat="foram in forams" class="ui-widget-content" data-foram="2">
+    <td ng-repeat="(key, value) in foram">
+      {{value}}
+    </td>
+  </tr>
+  <tr ng-repeat="foram in forams" class="ui-widget-content" data-foram="3">
+    <td ng-repeat="(key, value) in foram">
+      {{value}}
+    </td>
+  </tr>
+  <tr ng-repeat="foram in forams" class="ui-widget-content" data-foram="4">
+    <td ng-repeat="(key, value) in foram">
+      {{value}}
+    </td>
+  </tr>
+  <tr ng-repeat="foram in forams" class="ui-widget-content" data-foram="5">
     <td ng-repeat="(key, value) in foram">
       {{value}}
     </td>
