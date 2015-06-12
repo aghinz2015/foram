@@ -1,32 +1,13 @@
+<div id="options">TO SOM OPCJE</div>
 <table class="foram-table">
   <thead>
-  <th ng-repeat="(key, value) in forams[0]">
+  <th ng-repeat="(key, value) in forams[0]" ng-if="key != 'id'">
     {{key}}
   </th>
   </thead>
   <tbody id="selectable">
-  <tr ng-repeat="foram in forams" class="ui-widget-content" data-foram="{{$index}}">
-    <td ng-repeat="(key, value) in foram">
-      {{value}}
-    </td>
-  </tr>
-  <tr ng-repeat="foram in forams" class="ui-widget-content" data-foram="2">
-    <td ng-repeat="(key, value) in foram">
-      {{value}}
-    </td>
-  </tr>
-  <tr ng-repeat="foram in forams" class="ui-widget-content" data-foram="3">
-    <td ng-repeat="(key, value) in foram">
-      {{value}}
-    </td>
-  </tr>
-  <tr ng-repeat="foram in forams" class="ui-widget-content" data-foram="4">
-    <td ng-repeat="(key, value) in foram">
-      {{value}}
-    </td>
-  </tr>
-  <tr ng-repeat="foram in forams" class="ui-widget-content" data-foram="5">
-    <td ng-repeat="(key, value) in foram">
+  <tr ng-repeat="foram in forams"  data-index="{{$index}}">
+    <td ng-repeat="(key, value) in foram" ng-if="key != 'id'">
       {{value}}
     </td>
   </tr>
