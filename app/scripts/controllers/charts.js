@@ -7,6 +7,6 @@
  * # ChartsCtrl
  * Controller of the trunkApp
  */
-app.controller('ChartsCtrl',['$scope','$http','$q', function ($scope,$http,$q) {
-
+app.controller('ChartsCtrl',['$scope','DatasetService', function ($scope,DatasetService) {
+	console.log(DatasetService.getProducts());
   }]);

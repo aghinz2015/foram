@@ -2,10 +2,10 @@
  * Created by Eryk on 2015-06-09.
  */
 
-app.controller('TableCtrl',['$scope','$http','datasetService', function ($scope,$http,datasetService) {
+app.controller('TableCtrl',['$location','$scope','$http','DatasetService', function ($location,$scope,$http,DatasetService) {
   $scope.forams = [];
   $scope.currentSet = {start: null,stop: null};
-  $http.get('https://foram-api.herokuapp.com/forams').success(function(data, status, headers, config) {
+  //$http.get('https://foram-api.herokuapp.com/forams').success(function(data, status, headers, config) {
     //$scope.forams = data.forams;
     $scope.forams = [
       {"id":{"$oid":"55588ef13338610003000000"},"kx":0.1,"ky":0.2,"kz":0.35,"tf":0.4,"phi":0.5,"beta":0.6},
@@ -17,7 +17,7 @@ app.controller('TableCtrl',['$scope','$http','datasetService', function ($scope,
       {"id":{"$oid":"55588ef13338610003000006"},"kx":0.17,"ky":0.2,"kz":0.53,"tf":0.4,"phi":0.5,"beta":0.6},
       {"id":{"$oid":"55588ef13338610003000007"},"kx":0.18,"ky":0.72,"kz":0.35,"tf":0.4,"phi":0.5,"beta":0.6}
     ];
-    console.log(JSON.stringify(data.forams));
+    //console.log(JSON.stringify(data.forams));
     $scope.status = status;
     $scope.headers = Object.keys($scope.forams[0]);
     $scope.optionsWindow = $("#options");
@@ -29,18 +29,17 @@ app.controller('TableCtrl',['$scope','$http','datasetService', function ($scope,
           $scope.currentSet.stop = null;
         },
         selected: function(event,ui) {
-          var index = ui.selected.getAttribute('data-index');
+          var index = parseInt(ui.selected.getAttribute('data-index'));
           if(!$scope.currentSet.start){
             $scope.currentSet.start = index;
-            return;
           }
 
-          if(index > $scope.currentSet.stop){
+          if(index > $scope.currentSet.stop || !$scope.currentSet.stop){
             $scope.currentSet.stop = index;
-          }
+            
+          }      
         },
         stop: function(event,ui){
-          console.log(event.screenX);
           $scope.optionsWindow.css({
             display: 'block',
             left: (event.screenX-6)+'px',
@@ -51,10 +50,12 @@ app.controller('TableCtrl',['$scope','$http','datasetService', function ($scope,
     });
 
     $scope.generateChart = function(){
-
+      console.log('przenosimy do charts');
+      DatasetService.putProducts($scope.forams.slice($scope.currentSet.start,$scope.currentSet.stop+1));
+      $location.path("/charts");
     }
 
 
 
-  });
+ // });
 }]);
