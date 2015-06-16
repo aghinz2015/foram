@@ -7,6 +7,7 @@
  * # ChartsCtrl
  * Controller of the trunkApp
  */
+
 app.controller('ChartsCtrl',['$scope','DatasetService', function ($scope,DatasetService) {
   $scope.chartEditingMode = false;
   $scope.$watch('chartEditingMode', function(){
@@ -35,10 +36,10 @@ app.controller('ChartsCtrl',['$scope','DatasetService', function ($scope,Dataset
     exporting: {
          enabled: true
     }
-  }
+  };
 
   $scope.data = DatasetService.getProducts();
-   
+
   $scope.changeDataSource = function() {
       $scope.chartConfig.series = [];
       var toBePushed = {data:[], name: "Series 1"};
@@ -56,8 +57,8 @@ app.controller('ChartsCtrl',['$scope','DatasetService', function ($scope,Dataset
         entry.color = $scope.chartConfig.colors[index < maxIndex ? index : maxIndex];
         index++;
     });
-  }
-  
+  };
+
   Highcharts.createElement('link', {
     href: '//fonts.googleapis.com/css?family=Unica+One',
     rel: 'stylesheet',
@@ -265,6 +266,6 @@ app.controller('ChartsCtrl',['$scope','DatasetService', function ($scope,Dataset
 
 // Apply the theme
   Highcharts.setOptions(Highcharts.theme);
-  
+
 }]);
 
