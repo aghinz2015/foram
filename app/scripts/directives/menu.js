@@ -22,8 +22,8 @@ app.directive('menuPosition',function($location,$compile,$templateCache){
     templateUrl: '/views/submenu-temp.html',
     link: function(scope,element,attr){
 
-      // var template = $templateCache.get('/views/submenu-temp.html')[1]; WINDOWS only
-      var template = $templateCache.get('/views/submenu-temp.html');
+      var template = $templateCache.get('/views/submenu-temp.html')[1]; //WINDOWS only
+      //var template = $templateCache.get('/views/submenu-temp.html');  //UNIX only
 
       console.log(template);
       if (scope.position.list) {
