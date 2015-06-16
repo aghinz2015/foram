@@ -7,7 +7,7 @@
  * # ChartsCtrl
  * Controller of the trunkApp
  */
-app.controller('ChartsCtrl',['$scope','$http','$q', function ($scope,$http,$q) {
+app.controller('ChartsCtrl',['$scope','DatasetService', function ($scope,DatasetService) {
   $scope.chartEditingMode = false;
   $scope.$watch('chartEditingMode', function(){
         $scope.chartEditingModeStatus = $scope.chartEditingMode ? 'Finish' : 'Edit chart';
@@ -37,93 +37,19 @@ app.controller('ChartsCtrl',['$scope','$http','$q', function ($scope,$http,$q) {
     }
   }
 
-  $scope.data =
-    {
-      kx: [{
-        name: "Data1",
-        id: 1,
-        data: [
-          [1, 10.05],
-          [2, 12.05],
-          [3, 14.44],
-          [4, 10.02],
-          [5, 11.05],
-          [6, 14.05],
-          [7, 16.05],
-          [8, 12.05],
-          [9, 13.55],
-          [10, 11.05],
-        ]
-      },   {
-        id: 2,
-        name: "Data2",
-        data: [
-          [1, 12.04],
-          [2, 18.05],
-          [3, 15.35],
-          [4, 14.05],
-          [5, 20.45],
-          [6, 17.05],
-          [7, 12.04],
-          [8, 14.05],
-          [9, 10.05],
-          [10, 7.54]
-        ]
-      }],
-      ky:[{
-        name: "Data1",
-        id: 1,
-        data: [
-          [1, 23.15],
-          [2, 23.01],
-          [3, 22.73],
-          [4, 22.83],
-          [5, 22.56]
-        ]
-      },   {
-        id: 2,
-        name: "Data2",
-        data: [
-          [1, 25.15],
-          [2, 25.01],
-          [3, 25.73],
-          [4, 25.83],
-          [5, 25.56]
-        ]
-      },  {
-        id: 3,
-        name: "Data3",
-        data: [
-          [1, 26.07],
-          [2, 24.01],
-          [3, 23.73],
-          [4, 29.83],
-          [5, 26.56]
-        ]
-      }
-      ]
-    };
- /*
-  $scope.data['kx'].forEach(function(entry) {
-    $scope.chartConfig.series.push(entry);
-  });
-  */
+  $scope.data = DatasetService.getProducts();
+   
   $scope.changeDataSource = function() {
       $scope.chartConfig.series = [];
-      if($scope.currentData == "kx") {
-        $scope.data["kx"].forEach(function(entry) {
-          $scope.chartConfig.series.push(entry);
-        });
-      } else if($scope.currentData == "ky") {
-        $scope.data["ky"].forEach(function(entry) {
-          $scope.chartConfig.series.push(entry);
-        });
-      }
-     // $scope.chartConfig.loading = false;
-
+      var toBePushed = {data:[], name: "Series 1"};
+      $scope.data.forEach(function(entry) {
+          toBePushed.name = $scope.currentData;
+          toBePushed.data.push(entry[$scope.currentData]);
+      });
+      $scope.chartConfig.series.push(toBePushed);
   };
-  
-  $scope.restoreDefaultSeriesColor = function() {
+
+    $scope.restoreDefaultSeriesColor = function() {
     var index = 0;
     var maxIndex = $scope.chartConfig.colors.length - 1;
     $scope.chartConfig.series.forEach(function(entry) {
@@ -341,5 +267,4 @@ app.controller('ChartsCtrl',['$scope','$http','$q', function ($scope,$http,$q) {
   Highcharts.setOptions(Highcharts.theme);
   
 }]);
-
 

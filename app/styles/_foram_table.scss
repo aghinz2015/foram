@@ -15,7 +15,7 @@ table.foram-table {
   border: 1px solid $border_color;
   border-bottom: 2px solid $header_color2;
   width: calc(100% - 20px);
-
+  
 
   th, td {
     color: $row_font_color;
@@ -26,24 +26,17 @@ table.foram-table {
   }
   tbody tr {
     background: $even_row_color;
-    &:hover {
-      background: $row_highlight_color;
-
-      td {
-        color: $hightlight_font_color;
-      }
+  
+    &.ui-selecting {
+      background: yellow;
+      color: black;
+    }
+    &.ui-selected {
+      background: #ffdfaa;
+      color: black;
     }
   }
-  tbody tr:nth-child(2n) {
-    background: $odd_row_color;
-    &:hover {
-      background: $row_highlight_color;
-
-      td {
-        color: $hightlight_font_color;
-      }
-    }
-  }
+  
   th {
 
     color: $header_font_color;

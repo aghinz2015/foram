@@ -44,3 +44,16 @@ var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.m
         redirectTo: '/'
       });
   });
+
+  app.service('DatasetService', function() {
+    var productList = [];
+
+    this.putProducts = function(newDataset) {
+      productList = newDataset;
+    };
+
+    this.getProducts = function(){
+      return productList;
+    };
+
+  });
