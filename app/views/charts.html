@@ -3,8 +3,8 @@
 <div class="span12">
   <div class="row">
     Select chart data
-    <select ng-model="currentData">
-      <option ng-repeat="(key,value) in data[0]" ng-click="changeDataSource()" value="{{key}}"> {{key}}</option>
+    <select ng-model="currentData" data-ng-change="changeDataSource()">
+      <option ng-repeat="(key,value) in data[0]" value="{{key}}"> {{key}}</option>
     </select>
   </div>
 
