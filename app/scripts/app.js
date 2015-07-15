@@ -20,7 +20,40 @@ var app = angular.module('trunkApp', ['ngRoute']);
         templateUrl: 'views/about.html',
         controller: 'AboutCtrl'
       })
+      .when('/charts', {
+        templateUrl: 'views/charts.html',
+        controller: 'ChartsCtrl'
+      })
+      .when('/table', {
+        templateUrl: 'views/foram-table.html',
+        controller: 'TableCtrl'
+      })
+      .when('/databases', {
+        templateUrl: 'views/databases.html',
+        controller: 'DatabasesCtrl'
+      })
+      .when('/settings', {
+        templateUrl: 'views/settings.html',
+        controller: 'SettingsCtrl'
+      })
+      .when('/visualisation', {
+        templateUrl: 'views/visualisation.html',
+        controller: 'VisualisationCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
+  });
+
+  app.service('DatasetService', function() {
+    var productList = [];
+
+    this.putProducts = function(newDataset) {
+      productList = newDataset;
+    };
+
+    this.getProducts = function(){
+      return productList;
+    };
+
   });

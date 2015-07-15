@@ -1,0 +1,9 @@
+<div class="custom-navbar">
+  <header>
+    <span class="fa fa-{{menu.icon}}"></span>
+    <a href="#/" class="smartHide">{{menu.name}}</a>
+  </header>
+  <ul class="side-nav">
+    <menu-position ng-repeat="position in menu.list" position="position"></menu-position>
+  </ul>
+</div>
