@@ -7,10 +7,13 @@
  * # MainCtrl
  * Controller of the trunkApp
  */
-angular.module('trunkApp')
-  .controller('MainCtrl',['$scope','$http', function ($scope,$http) {
-    $http.get('https://foram-api.herokuapp.com/forams').success(function(data, status, headers, config) {
-      $scope.forams = data;
+app.controller('MainCtrl',['$scope','$http','$q', function ($scope,$http,$q) {
+  $scope.forams = [];
+  $http.get('https://foram-api.herokuapp.com/forams').success(function(data, status, headers, config) {
+      $scope.forams = data.forams;
+
       $scope.status = status;
+      $scope.headers = Object.keys($scope.forams[0]);
+
     });
   }]);
