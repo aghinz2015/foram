@@ -25,19 +25,21 @@ app.controller('TableCtrl',['$location','$scope','$http','DatasetService', funct
       $( "#selectable" ).selectable({
         filter: 'tr',
         start: function(event,ui){
-          $scope.currentSet.start = null;
+          $scope.currentSet.start = undefined;
           $scope.currentSet.stop = null;
         },
         selected: function(event,ui) {
           var index = parseInt(ui.selected.getAttribute('data-index'));
-          if(!$scope.currentSet.start){
+          if($scope.currentSet.start === undefined){
             $scope.currentSet.start = index;
           }
 
           if(index > $scope.currentSet.stop || !$scope.currentSet.stop){
             $scope.currentSet.stop = index;
             
-          }      
+          } 
+          console.log("Start" + $scope.currentSet.start);
+          console.log("Stop" + $scope.currentSet.stop);     
         },
         stop: function(event,ui){
           $scope.optionsWindow.css({
@@ -54,8 +56,5 @@ app.controller('TableCtrl',['$location','$scope','$http','DatasetService', funct
       DatasetService.putProducts($scope.forams.slice($scope.currentSet.start,$scope.currentSet.stop+1));
       $location.path("/charts");
     }
-
-
-
  // });
 }]);
