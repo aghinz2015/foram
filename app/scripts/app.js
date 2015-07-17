@@ -10,6 +10,7 @@
  */
 var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.module']);
 
+  // basic routing config
   app.config(function ($routeProvider) {
     $routeProvider
       .when('/', {
@@ -45,6 +46,8 @@ var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.m
       });
   });
 
+  // mock service to set and get data between controllers
+  // #TODO in PROD version this is to be removed or replaced with better solution (factory with API methods?)
   app.service('DatasetService', function() {
     var productList = [];
 
