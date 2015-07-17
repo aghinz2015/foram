@@ -4,6 +4,8 @@
 
 'use strict';
 
+// foramTable directive used to present forams in table view
+// #TODO is directive the best solution?
 app.directive('foramTable',function(){
   return {
     restrict: 'E',

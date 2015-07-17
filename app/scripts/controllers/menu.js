@@ -3,37 +3,17 @@
  */
 'use strict';
 
-app.service('Database',function(){
-  return {
-    addDatabase: function(){
-      console.log("addDatabase");
-    },
-    searchDatabase: function(){
-      console.log("searchDatabase");
-    },
-    deleteDatabase: function(){
-      console.log("deleteDatabase");
-    }
-  }
-});
+app.controller('menuCtrl',function($scope,$location){
 
-app.controller('menuCtrl',function($scope,Database,$location){
+  // simple function to change location, works like a tag
+  // #TODO create a service with this function
   $scope.go = function(url) {
     angular.element(document.getElementsByClassName('menu-option active')).toggleClass('active');
     $location.path(url);
-    console.log("go() with url = " + url);
   };
 
-  $scope.showList = function(elementId) {
-    var oldActive = angular.element(document.getElementsByClassName('menu-option active'));
-    var newActive = angular.element(document.getElementById(elementId));
 
-    if(oldActive.attr('id') != newActive.attr('id')){
-      oldActive.toggleClass('active');
-    }
-    newActive.toggleClass('active');
-  };
-
+  // menu config - #TODO put it into JSON file
   $scope.menu = {
     name: 'FORAM',
     icon: 'bars',
@@ -79,8 +59,4 @@ app.controller('menuCtrl',function($scope,Database,$location){
       }
     ]
   };
-
-
-
-
 });
