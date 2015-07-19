@@ -3,17 +3,20 @@
  * */
 'use strict';
 
+// menu directive - menu must be a JSON object
 app.directive('menu',function(){
   return {
     restrict: 'E',
     scope: {
-      menu: "=menu"
+      menu: "="
     },
     templateUrl: '/views/menu-temp.html'
   }
 });
 
-app.directive('menuPosition',function($location,$compile,$templateCache){
+// menuPosition directive - responisble for creating menu sub-levels
+// #TODO click function will no longer be in position object - different service will be responsible
+app.directive('menuPosition',function($compile,$templateCache){
   return {
     restrict: 'E',
     scope: {
@@ -22,10 +25,9 @@ app.directive('menuPosition',function($location,$compile,$templateCache){
     templateUrl: '/views/submenu-temp.html',
     link: function(scope,element,attr){
 
-      var template = $templateCache.get('/views/submenu-temp.html')[1]; //WINDOWS only
-      //var template = $templateCache.get('/views/submenu-temp.html');  //UNIX only
+      //var template = $templateCache.get('/views/submenu-temp.html')[1]; //WINDOWS only
+      var template = $templateCache.get('/views/submenu-temp.html');  //UNIX/OSX only
 
-      console.log(template);
       if (scope.position.list) {
         template += '<ul  class="submenu"><menu-position ng-repeat="subposition in position.list" position="subposition"></menu-position></ul>';
       }

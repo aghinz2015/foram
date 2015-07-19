@@ -1,5 +1,4 @@
-// variables
-
+// variables & mixins
 
 
 @mixin transition($time) {
@@ -13,11 +12,7 @@
   transition-timing-function: cubic-bezier(0.455, 0.030, 0.515, 0.955);
 }
 
-
-
-//styles
-
-
+// styles
 
 .custom-navbar {
   background: $standard-menu-color;
@@ -59,10 +54,8 @@
         .menu-position {
           color: $standard-baige-light;
           background: $standard-light-menu;
-          span {
-            &.fa {
-              color: $standard-light-white-font;
-            }
+          span.fa {
+            color: $standard-light-white-font;
           }
         }
       }
@@ -78,10 +71,8 @@
         &:hover {
           color: $standard-baige-light;
           background: $standard-light-menu;
-          span {
-            &.fa {
-              color: $standard-light-white-font;
-            }
+          span.fa {
+            color: $standard-light-white-font;
           }
         }
 
@@ -112,8 +103,6 @@
         top: 0;
         @include transition(200ms);
 
-
-
         @media screen and (max-width: 900px){
           left: 115px;
           &.active {
@@ -139,10 +128,8 @@
             &:hover, &.active {
               color: $standard-baige-light;
               background: $standard-menu-color;
-              span {
-                &.fa {
-                  color: $standard-light-white-font;
-                }
+              span.fa {
+                color: $standard-light-white-font;
               }
             }
 
@@ -161,6 +148,9 @@
 
 
   @media screen and (max-width: 900px){
+
+    width: 135px;
+
     header {
       font-size: 1.5em;
       span.fa {
@@ -181,17 +171,15 @@
         }
       }
     }
-    &{
-      width: 135px;
-    }
   }
 
   @media screen and (max-width: 670px){
 
+    width: 40px;
+
     .smartHide {
       display: none;
     }
-
 
     header {
       width: 100%;
@@ -214,31 +202,24 @@
           }
         }
 
-      &.active{
-        .submenu {
-          width: 100px;
+        &.active {
+          .submenu {
+            width: 100px;
+          }
         }
-      }
-      .submenu {
-        left: 20px;
-        li {
-          margin: 0;
-          .menu-position {
-            .smartHide {
-              display: inline;
+        .submenu {
+          left: 20px;
+          li {
+            margin: 0;
+            .menu-position {
+              .smartHide {
+                display: inline;
+              }
+              text-align: left;
             }
-            text-align: left;
           }
         }
       }
-    }
-
-
-
-    }
-
-    &{
-      width: 40px;
     }
   }
 }

@@ -14,22 +14,27 @@
 </div>
 
 <div class="row">
+
   <div class="large-3 columns" ng-show="chartEditingMode">
       <form class="form">X-Axis min: <input type="number" ng-model="chartConfig.xAxis.currentMin">
         X-Axis max: <input type="number" ng-model="chartConfig.xAxis.currentMax">
       </form>
       <button ng-click="restoreDefaultSeriesColor()"> Default Colors </button>
   </div>
+
   <div class="large-3 columns" ng-show="chartEditingMode">
     <div class="row" ng-repeat="serie in chartConfig.series">
       Color of {{serie.name}}
       <input colorpicker ng-model="serie.color" type="text">
     </div>
   </div>
+
   <div class="large-3 columns" ng-show="chartEditingMode">
     <input ng-repeat="serie in chartConfig.series" ng-model="serie.name">
   </div>
+
   <div class="large-3 columns">
     <button ng-click="chartEditingMode = !chartEditingMode"> {{chartEditingModeStatus}}</button>
   </div>
+
  </div>
