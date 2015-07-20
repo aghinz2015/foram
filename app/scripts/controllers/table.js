@@ -55,6 +55,27 @@ app.controller('TableCtrl',['$location','$scope','$http','DatasetService', funct
       console.log('przenosimy do charts');
       DatasetService.putProducts($scope.forams.slice($scope.currentSet.start,$scope.currentSet.stop+1));
       $location.path("/charts");
-    }
+    };
  // });
+    $scope.hasFilters = false;
+    $scope.filters = [];
+    $scope.filterData = function() {
+      var i;
+      for(i in $scope.filters) {
+        $scope.filters[i].param.trim();
+      }
+      console.log($scope.filters);
+    };
+    $scope.addFilter = function() {
+      $scope.filters.push({});
+      $scope.hasFilters = true;
+    };
+    $scope.clearFilters = function() {
+      $scope.hasFilters = false;
+      $scope.filters = [];
+    };
+    $scope.deleteFilter = function(index) {
+      $scope.filters.splice(index,1);
+      if($scope.filters.length == 0) $scope.hasFilters = false;
+    };
 }]);
