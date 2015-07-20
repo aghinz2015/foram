@@ -7,6 +7,34 @@
  * # VisualisationCtrl
  * Controller of the trunkApp
  */
-app.controller('VisualisationCtrl',['$scope','$http','$q', function ($scope,$http,$q) {
+app.controller('VisualisationCtrl',['$scope','ViewerFactory', function ($scope,ViewerFactory) {
 
+  // initialize our ViewerFactory responsible for 3D visualisation
+  ViewerFactory.init({
+    canvasId: 'visualisation-canvas',
+    containerId: 'visualisation-container'
+  });
+
+  // scale the model.
+  $scope.scale = function () {
+    ViewerFactory.scale(this.data.scale);
+  };
+
+  // rotate around an axis
+  $scope.rotate = function () {
+    ViewerFactory.rotate(
+      parseFloat(this.data.rotateX),
+      parseFloat(this.data.rotateY),
+      parseFloat(this.data.rotateZ))
+  };
+
+  // translate around the scene
+  $scope.translate = function () {
+    ViewerFactory.translate(
+      parseFloat(this.data.positionX),
+      parseFloat(this.data.positionY),
+      parseFloat(this.data.positionZ))
+  };
+
+  // #TODO do we want an AngularJS toolbar to control our WebGL view or just mouse move?
 }]);
