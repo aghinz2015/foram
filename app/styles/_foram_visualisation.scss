@@ -4,8 +4,17 @@
     border: 2px solid #1a1a1a;
   }
 }
+.toolbar {
+  h2 {
+    margin: 10px 0 0 20px;
+    text-transform: uppercase;
+    font-family: 'Open Sans',sans-serif;
+  }
 
-.toolbar-option {
-  display: inline-block;
-  width: 13%;
+  .toolbar-option {
+    display: inline-block;
+    width: 11%;
+    margin: 10px 1.5%;
+  }
 }
+

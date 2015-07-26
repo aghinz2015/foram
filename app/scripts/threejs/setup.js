@@ -7,24 +7,21 @@
 Viewer.Scene = Viewer.Scene || {};
 
 /**
- * Setup the scene geometry
+ * Setup the scene objects
  * @param {Object} params
- * @constructor
  */
 Viewer.Scene.Setup = function (params) {
 
   this.context = params.context;
-
   this.init();
 };
 
 Viewer.Scene.Setup.prototype = {
 
   /**
-   * Initialize all of the THREE.JS framework
+   * Initialize all of the primary Scene objects
    */
   init: function () {
-    console.log("Setups init");
     this.lights();
     this.createSphere();
   },
@@ -41,6 +38,9 @@ Viewer.Scene.Setup.prototype = {
     this.context.scene.add(light);
   },
 
+  /**
+   * Create objects #TODO This object is a demo object just to see something
+   */
   createSphere: function(){
     console.log('Sphere created');
     var geometry = new THREE.SphereGeometry( 5, 32, 32 );

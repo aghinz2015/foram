@@ -7,8 +7,9 @@
 Viewer.Scene = Viewer.Scene || {};
 
 /**
- * @namespace  Camera initialization.  Contains setup for both Perspective and Orthographic cameras.
- * @class Creates cameras for the scene.
+ * Create cameras holder for our view
+ * @param params
+ * @constructor
  */
 Viewer.Scene.Camera = function (params) {
   this.liveCamera = null;
@@ -27,6 +28,15 @@ Viewer.Scene.Camera.prototype = {
     this.liveCamera.position.y = 12;
     this.liveCamera.position.z = 28;
     this.liveCamera.lookAt(new THREE.Vector3(0, 0, 0));
+  },
 
+  /**
+   * Deal with window resize
+   * @param width
+   * @param height
+   */
+  resize: function(width,height) {
+    this.liveCamera.aspect = width/height;
+    this.liveCamera.updateProjectionMatrix();
   }
 };
