@@ -60,7 +60,7 @@ Viewer.Scene.prototype = {
       }.bind(this), 100);
     }.bind(this), false );
 
-    this.controls.addEventListener('change', this.webGLRenderer.renderer.render(this.scene,this.camera.liveCamera));
+    this.controls.addEventListener('change', this.webGLRenderer.render(this.scene,this.camera.liveCamera));
   },
 
   /**
