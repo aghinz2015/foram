@@ -23,7 +23,6 @@ app.controller('menuCtrl',function($scope,$location){
         icon: 'home',
         args: '/',
         click: $scope.go
-
       },
       {
         name: 'Databases',

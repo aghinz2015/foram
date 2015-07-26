@@ -11,9 +11,18 @@ app.controller('VisualisationCtrl',['$scope','ViewerFactory', function ($scope,V
 
   // initialize our ViewerFactory responsible for 3D visualisation
   ViewerFactory.init({
-    canvasId: 'visualisation-canvas',
-    containerId: 'visualisation-container'
+    containerId: '#WebGL-output'
   });
+
+  $scope.data = {
+    'scale': 1,
+    'rotateX': 0,
+    'rotateY': 0,
+    'rotateZ': 0,
+    'positionX': 0,
+    'positionY': 0,
+    'positionZ': 0
+  };
 
   // scale the model.
   $scope.scale = function () {
@@ -36,5 +45,5 @@ app.controller('VisualisationCtrl',['$scope','ViewerFactory', function ($scope,V
       parseFloat(this.data.positionZ))
   };
 
-  // #TODO do we want an AngularJS toolbar to control our WebGL view or just mouse move?
+  // #TODO do we want an AngularJS toolbar to control our WebGL view or just mouse move?s
 }]);

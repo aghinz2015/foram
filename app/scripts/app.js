@@ -44,6 +44,16 @@ var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.m
       .otherwise({
         redirectTo: '/'
       });
+  })
+    .filter('forceInt', function(){
+    return function(input) {
+      return parseInt(input, 10);
+    };
+  })
+    .filter('forceFloat', function(){
+    return function(input){
+      return parseFloat(input);
+    }
   });
 
   // mock service to set and get data between controllers
@@ -60,3 +70,9 @@ var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.m
     };
 
   });
+
+
+var Viewer = {
+  'Scene': null
+};
+

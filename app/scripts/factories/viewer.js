@@ -8,23 +8,23 @@ app.factory('ViewerFactory',function(){
   var home;
 
   // initialize 3D scene
-  function init(params){
+  function init(params) {
     home = new Viewer.Scene(params);
     animate();
+
   }
 
   function animate(){
-    requestAnimationFrame(animate());
+    requestAnimationFrame(animate);
     render();
   }
 
   function render(){
-    home.renderer.render(home.scene,home.cameras.liveCam);
-    home.controls.update();
+    home.webGLRenderer.renderer.render(home.scene,home.camera.liveCamera);
   }
 
   function rotate(x, y, z) {
-    home.currentModel.rotation.set(
+    home.model.rotation.set(
       THREE.Math.degToRad(x),
       THREE.Math.degToRad(y),
       THREE.Math.degToRad(z)
@@ -32,11 +32,11 @@ app.factory('ViewerFactory',function(){
   }
 
   function translate(x, y, z){
-    home.currentModel.position.set(x, y, z)
+    home.model.position.set(x, y, z)
   }
 
   function scale(s) {
-    home.currentModel.scale.set(s, s, s);
+    home.model.scale.set(s, s, s);
   }
 
   // #TODO think about other useful functions like invisible foram walls, step by step growth etc.
