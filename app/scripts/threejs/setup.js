@@ -6,25 +6,18 @@
 
 Viewer.Scene = Viewer.Scene || {};
 
-/**
- * Setup the scene objects
- * @param {Object} params
- */
-Viewer.Scene.Setup = function (params) {
-
-  this.context = params.context;
-  this.init();
-};
-
-Viewer.Scene.Setup.prototype = {
-
+Viewer.Scene.Setup = {
   /**
-   * Initialize all of the primary Scene objects
+   * Functions preparing Setup object
+   * @param params
+   * @returns {Viewer.Scene.Setup}
    */
-  init: function () {
-    this.lights();
-    this.createSphere();
+  init: function(params) {
+    this.context = params.context;
+    return this;
   },
+
+  context: null,
 
   /**
    * Add light(s) to the scene
@@ -46,8 +39,6 @@ Viewer.Scene.Setup.prototype = {
     var geometry = new THREE.SphereGeometry( 5, 32, 32 );
     var material = new THREE.MeshPhongMaterial( {color: 0xff0000} );
     var sphere = new THREE.Mesh( geometry, material );
-    this.context.model = sphere;
     this.context.scene.add(sphere);
-
   }
 };

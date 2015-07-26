@@ -34,14 +34,14 @@ Viewer.Scene.prototype = {
     this.camera = new Viewer.Scene.Camera(params);
     this.webGLRenderer = new Viewer.Scene.Renderer(params);
     this.scene = new THREE.Scene();
-    this.setup = new Viewer.Scene.Setup(params);
+    this.setup = Viewer.Scene.Setup.init(params);
     this.controls = new THREE.OrbitControls(this.camera.liveCamera);
     // add the output of the renderer to the html element
     this.container.append(this.webGLRenderer.domElement);
 
     this.listeners();
+    this.setupScene();
   },
-
 
   /**
    * Handles all of events
@@ -60,7 +60,6 @@ Viewer.Scene.prototype = {
       }.bind(this), 100);
     }.bind(this), false );
 
-    this.controls.addEventListener('change', this.webGLRenderer.render(this.scene,this.camera.liveCamera));
   },
 
   /**
@@ -72,5 +71,10 @@ Viewer.Scene.prototype = {
     this.HEIGHT = window.innerHeight*0.8;
     this.camera.resize(this.WIDTH,this.HEIGHT);
     this.webGLRenderer.resize(this.WIDTH,this.HEIGHT);
+  },
+
+  setupScene: function() {
+    this.setup.lights();
+    this.setup.createSphere();
   }
 };
