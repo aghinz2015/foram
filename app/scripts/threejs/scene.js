@@ -21,7 +21,6 @@ Viewer.Scene = function (params) {
   this.setup = null;
   this.camera = null;
   this.init(params);
-
 };
 
 Viewer.Scene.prototype = {
@@ -35,7 +34,7 @@ Viewer.Scene.prototype = {
     this.webGLRenderer = new Viewer.Scene.Renderer(params);
     this.scene = new THREE.Scene();
     this.setup = Viewer.Scene.Setup.init(params);
-    this.controls = new THREE.OrbitControls(this.camera.liveCamera);
+    this.controls = new THREE.OrbitControls(this.camera.liveCamera,this.webGLRenderer.domElement);
     // add the output of the renderer to the html element
     this.container.append(this.webGLRenderer.domElement);
 
@@ -76,5 +75,20 @@ Viewer.Scene.prototype = {
   setupScene: function() {
     this.setup.lights();
     this.setup.createSphere();
+  },
+  animate: function(){
+    render(this.scene,this.camera.liveCamera,this.webGLRenderer.renderer);
   }
 };
+
+
+
+function render(scene,camera,renderer){
+
+  function animate(){
+    requestAnimationFrame(animate);
+    renderer.render(scene,camera);
+  }
+
+  animate();
+}

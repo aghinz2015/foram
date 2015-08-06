@@ -40,5 +40,6 @@ Viewer.Scene.Setup = {
     var material = new THREE.MeshPhongMaterial( {color: 0xff0000} );
     var sphere = new THREE.Mesh( geometry, material );
     this.context.scene.add(sphere);
+    this.context.model = sphere;
   }
 };

@@ -10,12 +10,12 @@
 app.controller('VisualisationCtrl',['$scope','ViewerFactory', function ($scope,ViewerFactory) {
 
   // initialize our ViewerFactory responsible for 3D visualisation
-  ViewerFactory.init({
+  var viewer = new ViewerFactory({
     containerId: '#WebGL-output'
   });
 
   $scope.data = {
-    'scale': 1,
+    'scale': 2,
     'rotateX': 0,
     'rotateY': 0,
     'rotateZ': 0,
@@ -26,12 +26,12 @@ app.controller('VisualisationCtrl',['$scope','ViewerFactory', function ($scope,V
 
   // scale the model.
   $scope.scale = function () {
-    ViewerFactory.scale(this.data.scale);
+    viewer.scale(this.data.scale);
   };
 
   // rotate around an axis
   $scope.rotate = function () {
-    ViewerFactory.rotate(
+    viewer.rotate(
       parseFloat(this.data.rotateX),
       parseFloat(this.data.rotateY),
       parseFloat(this.data.rotateZ))
@@ -39,7 +39,7 @@ app.controller('VisualisationCtrl',['$scope','ViewerFactory', function ($scope,V
 
   // translate around the scene
   $scope.translate = function () {
-    ViewerFactory.translate(
+    viewer.translate(
       parseFloat(this.data.positionX),
       parseFloat(this.data.positionY),
       parseFloat(this.data.positionZ))

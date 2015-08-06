@@ -5,47 +5,34 @@
 
 app.factory('ViewerFactory',function(){
 
-  var home;
+  var SceneViewer = function(params){
+    this.viewer = new Viewer.Scene(params);
+    this.model = this.viewer.model;
+    this.viewer.animate();
+  };
 
-  // initialize 3D scene
-  function init(params) {
-    home = new Viewer.Scene(params);
-    animate();
+  SceneViewer.prototype.render = function(){
+    this.viewer.webGLRenderer.renderer.render(this.viewer.scene,this.viewer.camera.liveCamera);
+  };
 
-  }
-
-  function animate(){
-    requestAnimationFrame(animate);
-    render();
-  }
-
-  function render(){
-    home.webGLRenderer.renderer.render(home.scene,home.camera.liveCamera);
-  }
-
-  function rotate(x, y, z) {
-    home.model.rotation.set(
+  SceneViewer.prototype.rotate = function(x, y, z){
+    this.model.rotation.set(
       THREE.Math.degToRad(x),
       THREE.Math.degToRad(y),
       THREE.Math.degToRad(z)
     );
-  }
+  };
 
-  function translate(x, y, z){
-    home.model.position.set(x, y, z)
-  }
+  SceneViewer.prototype.translate = function(x, y, z){
+    this.model.position.set(x, y, z)
+  };
 
-  function scale(s) {
-    home.model.scale.set(s, s, s);
-  }
+  SceneViewer.prototype.scale = function(s){
+    this.model.scale.set(s, s, s);
+  };
 
-  // #TODO think about other useful functions like invisible foram walls, step by step growth etc.
+// #TODO think about other useful functions like invisible foram walls, step by step growth etc.
 
-  return {
-    init: init,
-    rotate: rotate,
-    translate: translate,
-    scale: scale
-  }
+  return SceneViewer;
 });
 
