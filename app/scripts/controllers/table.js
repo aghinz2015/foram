@@ -2,9 +2,12 @@
  * Created by Eryk on 2015-06-09.
  */
 
-app.controller('TableCtrl',['$location','$scope','$http','DatasetService', function ($location,$scope,$http,DatasetService) {
+app.controller('TableCtrl',['$location','$scope','$http','DatasetService', 'ngDialog', function ($location,$scope,$http,DatasetService, ngDialog) {
+  
+  var dialog;
+  
   $scope.forams = [];
-
+  
   // currentSet represents our currently selected records with start and stop index
   $scope.currentSet = {start: null,stop: null};
 
@@ -88,4 +91,36 @@ app.controller('TableCtrl',['$location','$scope','$http','DatasetService', funct
       $scope.filters.splice(index,1);
       if($scope.filters.length == 0) $scope.hasFilters = false;
     };
+    $scope.maxForamsWithoutWarning = 100; // TODO move to configuration file
+    $scope.getForams = function() {
+        var numberOfForams = getNumberOfForamsInDb();
+        if(numberOfForams > 100) {
+          dialog = ngDialog.open({ template: 'popupTmpl.html', scope: $scope });
+        }
+    };
+    // Mock method to return number of forams in db
+    var getNumberOfForamsInDb = function () {
+      return 101; 
+    };
+    $scope.skipLoading = function() {
+      console.log('closing dialog');
+      dialog.close();
+    };
+    $scope.continueLoading = function() {
+      console.log('closing dialog and loading forams without filter');
+      dialog.close();
+    };
+    $scope.createChart = function() {
+      console.log('moving to charts');
+      dialog.close();
+      $scope.generations = [];
+      $http.get('http://192.168.103:3000/generations').success(function(data, status, headers, config) {
+        $scope.generations = data.generations;
+      });
+      console.log($scope.generations);
+      DatasetService.putProducts($scope.generations);
+      console.log($scope.generations);
+      $location.path('/charts');
+    };
+    $scope.getForams();
 }]);

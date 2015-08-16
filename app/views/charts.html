@@ -2,9 +2,9 @@
 
 <div class="span12">
   <div class="row">
-    Select chart data
-    <select ng-model="currentData" data-ng-change="changeDataSource()">
-      <option ng-repeat="(key,value) in data[0]" value="{{key}}"> {{key}}</option>
+    Select attributes to present
+    <select ng-model="currentData" data-ng-change="changePresentedAttribute()">
+      <option ng-repeat="(key,value) in attributesList" value="{{key}}"> {{key}}</option>
     </select>
   </div>
 
@@ -31,10 +31,11 @@
 
   <div class="large-3 columns" ng-show="chartEditingMode">
     <input ng-repeat="serie in chartConfig.series" ng-model="serie.name">
+    Chart Title
+    <input ng-model = "chartConfig.title.text">
   </div>
 
   <div class="large-3 columns">
     <button ng-click="chartEditingMode = !chartEditingMode"> {{chartEditingModeStatus}}</button>
   </div>
-
  </div>
