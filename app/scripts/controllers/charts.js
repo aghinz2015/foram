@@ -8,54 +8,50 @@
  * Controller of the trunkApp
  */
 
-app.controller('ChartsCtrl',['$scope', '$http', 'DatasetService', function ($scope,$http,DatasetService) {
+app.controller('ChartsCtrl', ['$scope', '$http', 'DatasetService', function ($scope, $http, DatasetService) {
 
   // function which changes current data source
-  $scope.changePresentedAttribute = function() {
+  $scope.changePresentedAttribute = function () {
     $scope.chartConfig.title.text = "Change of attribute " + $scope.currentData;
     $scope.chartConfig.series = [];
-    $scope.chartConfig.xAxis = {categories: []};
+    $scope.chartConfig.xAxis = { categories: [] };
     $scope.chartConfig.xAxis.categories = Object.keys($scope.generations);
     var subAttributes = Object.keys($scope.generations[Object.keys($scope.generations)[0]]
       .attributes[$scope.currentData]);
-    console.log(subAttributes);
-    for(var i in subAttributes) {
-       if(subAttributes[i] != "standard_deviation") pushSeriesData(subAttributes[i], $scope.chartConfig.colors[i]);
-       else pushStandardDeviation("standard_deviation", $scope.chartConfig.colors[i-1]);
+    for (var i in subAttributes) {
+      if (subAttributes[i] != "standard_deviation") pushSeriesData(subAttributes[i], $scope.chartConfig.colors[i]);
+      else pushStandardDeviation("standard_deviation", $scope.chartConfig.colors[i - 1]);
     };
-   };
-   var pushSeriesData = function(value, color) {
-      var toBePushed = {data:[], name: value, color: color};
-      for(var key in $scope.generations) {
-        if(key != "global_averages") {
-            toBePushed.data.push($scope.generations[key].attributes[$scope.currentData][value]);
-        }
-      };
-      $scope.chartConfig.series.push(toBePushed);
-   };
-   var pushStandardDeviation = function(value, color) {
-      console.log($scope.chartConfig.series[$scope.chartConfig.series.length-1])
-      var toBePushed = {data:[], name: value, linkedTo: ':previous', type: 'arearange', color: color, fillOpacity: 0.2, lineWidth: 0};
-      console.log(toBePushed);
-      for(var key in $scope.generations) {
-        if(key != "global_averages") {
-            var standardDeviation = $scope.generations[key].attributes[$scope.currentData][value];
-            var average = $scope.generations[key].attributes[$scope.currentData].average;
-            toBePushed.data.push([average-standardDeviation, average+standardDeviation]);
-        }
-      };
-      console.log("push");
-      $scope.chartConfig.series.push(toBePushed);
- 
-   };
+  };
+  var pushSeriesData = function (value, color) {
+    var toBePushed = { data: [], name: value, color: color };
+    for (var key in $scope.generations) {
+      if (key != "global_averages") {
+        toBePushed.data.push($scope.generations[key].attributes[$scope.currentData][value]);
+      }
+    };
+    $scope.chartConfig.series.push(toBePushed);
+  };
+  var pushStandardDeviation = function (value, color) {
+    var toBePushed = { data: [], name: value, linkedTo: ':previous', type: 'arearange', color: color, fillOpacity: 0.2, lineWidth: 0 };
+    for (var key in $scope.generations) {
+      if (key != "global_averages") {
+        var standardDeviation = $scope.generations[key].attributes[$scope.currentData][value];
+        var average = $scope.generations[key].attributes[$scope.currentData].average;
+        toBePushed.data.push([average - standardDeviation, average + standardDeviation]);
+      }
+    };
+    $scope.chartConfig.series.push(toBePushed);
+
+  };
   // function to restore default colors
-  $scope.restoreDefaultSeriesColor = function() {
+  $scope.restoreDefaultSeriesColor = function () {
+    var i;
     var index = 0;
     var maxIndex = $scope.chartConfig.colors.length - 1;
-    $scope.chartConfig.series.forEach(function(entry) {
-      if(entry.linkedTo == ":previous") {
-        entry.color = $scope.chartConfig.colors[index-1 < maxIndex ? index-1 : maxIndex];
-      } else entry.color = $scope.chartConfig.colors[index < maxIndex ? index : maxIndex];
+    $scope.chartConfig.series.forEach(function (entry) {
+      i = Math.min(entry.linkedTo === ":previous" ? index - 1 : index, maxIndex);
+      entry.color = $scope.chartConfig.colors[i];
       index++;
     });
   };
@@ -63,16 +59,16 @@ app.controller('ChartsCtrl',['$scope', '$http', 'DatasetService', function ($sco
   // variable responsible for current chart mode
   $scope.chartEditingMode = false;
 
-  // get data from API 
+  // get data from API
   // #TODO push address to configuration file
-  $http.get('localhost:3000/generations').success(function(data, status, headers, config) {
-         $scope.generations = data.generations;
-         $scope.attributesList = $scope.generations[Object.keys($scope.generations)[0]].attributes;
+  $http.get('http://192.168.1.27:3000/generations').success(function (data, status, headers, config) {
+    $scope.generations = data.generations;
+    $scope.attributesList = $scope.generations[Object.keys($scope.generations)[0]].attributes;
   });
-  
+
   // watch function to change chartEditingModeStatus depending on chartEditingMode
-  $scope.$watch('chartEditingMode', function(){
-        $scope.chartEditingModeStatus = $scope.chartEditingMode ? 'Finish' : 'Edit chart';
+  $scope.$watch('chartEditingMode', function () {
+    $scope.chartEditingModeStatus = $scope.chartEditingMode ? 'Finish' : 'Edit chart';
   });
 
 
@@ -99,10 +95,10 @@ app.controller('ChartsCtrl',['$scope', '$http', 'DatasetService', function ($sco
       text: ''
     },
     exporting: {
-         enabled: true
+      enabled: true
     }
   };
-  
+
 
   // Highcharts stuff
   // #TODO possibly create a JSON config with Highchart theme
@@ -314,7 +310,7 @@ app.controller('ChartsCtrl',['$scope', '$http', 'DatasetService', function ($sco
     maskColor: 'rgba(255,255,255,0.3)'
   };
 
-// Apply the theme
+  // Apply the theme
   Highcharts.setOptions(Highcharts.theme);
 
 }]);
