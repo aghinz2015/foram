@@ -11,38 +11,32 @@ Viewer.Scene = Viewer.Scene || {};
  * @param {Object} params
  */
 Viewer.Scene.Renderer = function (params) {
-  this.renderer = null;
-  this.context = params.context;
-  this.init();
+  THREE.WebGLRenderer.call(this);
+  this.init(params);
 };
 
-Viewer.Scene.Renderer.prototype = {
 
-  /**
-   * Initialize renderer.
-   */
-  init: function () {
+Viewer.Scene.Renderer.prototype = Object.create( THREE.WebGLRenderer.prototype );
+Viewer.Scene.Renderer.constructor = Viewer.Scene.Renderer;
+
+/**
+ * initialize renderer
+ * @param params
+ */
+Viewer.Scene.Renderer.prototype.init = function (params) {
     // create a render and set the size
-    this.renderer = new THREE.WebGLRenderer();
-    this.renderer.setClearColor(new THREE.Color(0xEEEEEE, 1.0));
-    this.renderer.setSize(window.innerWidth*0.8, window.innerHeight*0.8);
-    this.renderer.shadowMapEnabled = true;
-    this.domElement = this.renderer.domElement;
-  },
+    this.setClearColor(new THREE.Color(0xEEEEEE, 1.0));
+    this.setSize(window.innerWidth*0.8, window.innerHeight*0.8);
+    this.shadowMapEnabled = true;
+  };
 
-  /**
-   * Render current scene and camera.
-   */
-  render: function(scene, camera) {
-    this.renderer.render(scene,camera);
-  },
-
-  /**
-   * Resize current viewport and set size.
-   */
-  resize: function(width,height){
-    this.renderer.setSize(width,height);
-    this.renderer.setViewport(0, 0, width, height);
-  }
-};
+/**
+ *
+ * @param width
+ * @param height
+ */
+Viewer.Scene.Renderer.prototype.resize = function(width,height){
+    this.setSize(width,height);
+    this.setViewport(0, 0, width, height);
+  };
 

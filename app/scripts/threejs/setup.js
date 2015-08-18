@@ -35,7 +35,6 @@ Viewer.Scene.Setup = {
    * Create objects #TODO This object is a demo object just to see something
    */
   createSphere: function(){
-    console.log('Sphere created');
     var geometry = new THREE.SphereGeometry( 5, 32, 32 );
     var material = new THREE.MeshPhongMaterial( {color: 0xff0000} );
     var sphere = new THREE.Mesh( geometry, material );

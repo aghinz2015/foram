@@ -17,7 +17,6 @@ Viewer.Scene = function (params) {
   this.container = $(params.containerId);
   this.model = null;
   this.scene = null;
-  this.renderer = null;
   this.setup = null;
   this.camera = null;
   this.init(params);
@@ -29,12 +28,12 @@ Viewer.Scene.prototype = {
    * Initialize our scene
    */
   init: function (params) {
-    console.log("Scene init");
+
     this.camera = new Viewer.Scene.Camera(params);
     this.webGLRenderer = new Viewer.Scene.Renderer(params);
     this.scene = new THREE.Scene();
     this.setup = Viewer.Scene.Setup.init(params);
-    this.controls = new THREE.OrbitControls(this.camera.liveCamera,this.webGLRenderer.domElement);
+    this.controls = new THREE.OrbitControls(this.camera,this.webGLRenderer.domElement);
     // add the output of the renderer to the html element
     this.container.append(this.webGLRenderer.domElement);
 
@@ -77,7 +76,7 @@ Viewer.Scene.prototype = {
     this.setup.createSphere();
   },
   animate: function(){
-    render(this.scene,this.camera.liveCamera,this.webGLRenderer.renderer);
+    render(this.scene,this.camera,this.webGLRenderer);
   }
 };
 

@@ -15,7 +15,7 @@ app.controller('VisualisationCtrl',['$scope','ViewerFactory', function ($scope,V
   });
 
   $scope.data = {
-    'scale': 2,
+    'scale': 1,
     'rotateX': 0,
     'rotateY': 0,
     'rotateZ': 0,
@@ -45,5 +45,4 @@ app.controller('VisualisationCtrl',['$scope','ViewerFactory', function ($scope,V
       parseFloat(this.data.positionZ))
   };
 
-  // #TODO do we want an AngularJS toolbar to control our WebGL view or just mouse move?s
 }]);

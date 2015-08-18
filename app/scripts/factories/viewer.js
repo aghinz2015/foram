@@ -11,10 +11,6 @@ app.factory('ViewerFactory',function(){
     this.viewer.animate();
   };
 
-  SceneViewer.prototype.render = function(){
-    this.viewer.webGLRenderer.renderer.render(this.viewer.scene,this.viewer.camera.liveCamera);
-  };
-
   SceneViewer.prototype.rotate = function(x, y, z){
     this.model.rotation.set(
       THREE.Math.degToRad(x),
