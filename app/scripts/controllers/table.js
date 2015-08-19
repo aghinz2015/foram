@@ -59,17 +59,12 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', 'DatasetService', '
     });
   });
 
-
   // test function which change view to charts and sends selected data
   $scope.generateChart = function () {
     DatasetService.putProducts($scope.forams.slice($scope.currentSet.start, $scope.currentSet.stop + 1));
     $location.path("/charts");
   };
-  $scope.generateChart = function () {
-    console.log('przenosimy do charts');
-    DatasetService.putProducts($scope.forams.slice($scope.currentSet.start, $scope.currentSet.stop + 1));
-    $location.path("/charts");
-  };
+
   $scope.hasFilters = false;
   $scope.filters = [];
   $scope.filterData = function () {
@@ -99,6 +94,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', 'DatasetService', '
     }
   };
   // Mock method to return number of forams in db
+  // TODO: Implement integration with backend to fetch number of forams in db
   var getNumberOfForamsInDb = function () {
     return 101;
   };
