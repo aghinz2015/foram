@@ -61,7 +61,7 @@ app.controller('ChartsCtrl', ['$scope', '$http', 'DatasetService', function ($sc
 
   // get data from API
   // #TODO push address to configuration file
-  $http.get('http://192.168.1.27:3000/generations').success(function (data, status, headers, config) {
+  $http.get('localhost:3000/generations').success(function (data, status, headers, config) {
     $scope.generations = data.generations;
     $scope.attributesList = $scope.generations[Object.keys($scope.generations)[0]].attributes;
   });
