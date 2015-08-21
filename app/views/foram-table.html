@@ -13,3 +13,30 @@
   </tr>
   </tbody>
 </table>
+<form>
+  <fieldset>
+    <legend> Filters </legend>
+    <div class="row" ng-repeat="filter in filters" ng-model="filter">
+      <div class="large-3 columns">
+       <label for="filter_param"> Filter parameter </label>
+       <select id="filter_param" ng-model="filter.param">
+         <option ng-repeat="(key, value) in forams[0]" ng-if="key != 'id'">{{key}}</option>
+       </select>
+      </div>
+      <div class="large-3 columns">
+        <label for="min_value"> Minimal value </label>
+        <input type="number" id="min_value" step="any" ng-model="filter.min"/>
+      </div>
+      <div class="large-3 columns">
+        <label for="max_value"> Max value</label>
+        <input type="number" id="max_value" step="any" ng-model="filter.max"/>
+      </div>
+      <button ng-click="deleteFilter($index)"> Remove filter </button>
+    </div>
+    <div class="row">
+      <button ng-click="filterData()" ng-show="hasFilters"> Filter data </button>
+      <button ng-click="clearFilters()" ng-show="hasFilters"> Clear filters </button>
+      <button ng-click="addFilter()"> Add new filter </button>
+    </div>
+  </fieldset>
+</form>
