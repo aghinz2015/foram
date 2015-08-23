@@ -6,31 +6,20 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetServi
 
   var dialog;
 
+  // #TODO Improvment on API side or move to configuration file
+  $scope.availableFilterParams = ['deviationAngle', 'growthFactor', 'rotationAngle',
+    'translationFactor', 'wallThicknessFactor'];
+  $scope.foramsLoaded = false;
   $scope.forams = [];
+  $scope.numberOfForams = 1;
+  $scope.foramsPerPage = 1;
+  $scope.currentPage = 1;
 
   // currentSet represents our currently selected records with start and stop index
   $scope.currentSet = { start: null, stop: null };
 
   // reference to our options dropdown
   $scope.optionsWindow = $("#options");
-
-  // code should be used when deployed to PROD - gets forams from API
-  //$http.get('https://foram-api.herokuapp.com/forams').success(function(data, status, headers, config) {
-  //$scope.forams = data.forams;
-  //});
-
-  // mock data used to tests
-  /*
-  $scope.forams = [
-    { "id": { "$oid": "55588ef13338610003000000" }, "kx": 0.1, "ky": 0.2, "kz": 0.35, "tf": 0.4, "phi": 0.5, "beta": 0.6 },
-    { "id": { "$oid": "55588ef13338610003000001" }, "kx": 0.12, "ky": 0.21, "kz": 0.32, "tf": 0.4, "phi": 0.5, "beta": 0.6 },
-    { "id": { "$oid": "55588ef13338610003000002" }, "kx": 0.13, "ky": 0.22, "kz": 0.31, "tf": 0.4, "phi": 0.5, "beta": 0.6 },
-    { "id": { "$oid": "55588ef13338610003000003" }, "kx": 0.14, "ky": 0.23, "kz": 0.32, "tf": 0.4, "phi": 0.5, "beta": 0.6 },
-    { "id": { "$oid": "55588ef13338610003000004" }, "kx": 0.15, "ky": 0.24, "kz": 0.33, "tf": 0.4, "phi": 0.5, "beta": 0.6 },
-    { "id": { "$oid": "55588ef13338610003000005" }, "kx": 0.16, "ky": 0.25, "kz": 0.43, "tf": 0.4, "phi": 0.5, "beta": 0.6 },
-    { "id": { "$oid": "55588ef13338610003000006" }, "kx": 0.17, "ky": 0.2, "kz": 0.53, "tf": 0.4, "phi": 0.5, "beta": 0.6 },
-    { "id": { "$oid": "55588ef13338610003000007" }, "kx": 0.18, "ky": 0.72, "kz": 0.35, "tf": 0.4, "phi": 0.5, "beta": 0.6 }
-  ];*/
 
   // function which is responsible for selecting events
   $(function () {
@@ -68,9 +57,11 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetServi
 
   $scope.hasFilters = false;
   $scope.filters = [];
+  var flatFilters = {};
+
   $scope.filterData = function () {
+    flatFilters = {};
     var i;
-    var flatFilters = {};
     var key;
     for (i in $scope.filters) {
       if ($scope.filters[i].param != undefined) {
@@ -84,9 +75,9 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetServi
         }
       }
     }
-    console.log(flatFilters);
     getForams(flatFilters);
   };
+
   $scope.addFilter = function () {
     $scope.filters.push({});
     $scope.hasFilters = true;
@@ -94,59 +85,132 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetServi
   $scope.clearFilters = function () {
     $scope.hasFilters = false;
     $scope.filters = [];
+    flatFilters = {};
+    getForams();
   };
   $scope.deleteFilter = function (index) {
+    var filter = $scope.filters[index];
+    var key;
+    if (filter.max != undefined) {
+      key = flatFilterName(filter, 'max');
+      flatFilters[key] = undefined;
+    }
+    if (filter.min != undefined) {
+      key = flatFilterName(filter, 'min');
+      flatFilters[key] = undefined;
+    }
     $scope.filters.splice(index, 1);
     if ($scope.filters.length == 0) $scope.hasFilters = false;
+    getForams();
   };
   var flatFilterName = function (filter, suffix) {
     return toUnderScore(filter.param) + "_" + suffix;
   };
-  $scope.maxForamsWithoutWarning = 1001; // TODO move to configuration file
+  $scope.maxForamsWithoutWarning = 100; // TODO move to configuration file
 
-  var getForams = function (filters) {
-    var numberOfForamsPromise = getNumberOfForamsInDb(filters);
-    numberOfForamsPromise.then(function (foramsCount) {
-      if (foramsCount > $scope.maxForamsWithoutWarning) {
+  var getForams = function () {
+    var foramsInfoPromise = getForamsInfo();
+    foramsInfoPromise.then(function (foramsInfo) {
+      $scope.numberOfForams = foramsInfo.total;
+      $scope.foramsPerPage = foramsInfo["per-page"];
+      if ($scope.numberOfForams > $scope.maxForamsWithoutWarning) {
         dialog = ngDialog.open({ template: 'popupTmpl.html', scope: $scope });
       } else {
-        var foramsPromise = getForamsFromDb(filters);
-        foramsPromise.then(function (forams) {
-          $scope.forams = forams;
-        });
+        setForams();
       }
     });
   };
 
-  var getNumberOfForamsInDb = function (filters) {
+  var getForamsInfo = function () {
     var deferred = $q.defer();
-    console.log(filters);
-    $http.head('http://192.168.1.27:3000/forams', {params: filters}).success(function (data, status, headers, config) {
-      deferred.resolve(headers().total);
+    $http.head('localhost:3000/forams', { params: flatFilters }).success(function (data, status, headers, config) {
+      deferred.resolve(headers());
     });
     return deferred.promise;
   };
 
-  var getForamsFromDb = function (filters) {
+  var getForamsFromDb = function () {
     var deferred = $q.defer();
-    // #TODO include filters
-    $http.get('http://192.168.1.27:3000/forams', {params: filters}).success(function (data, status, headers, config) {
+    $http.get('localhost:3000/forams', { params: flatFilters }).success(function (data, status, headers, config) {
       deferred.resolve(data.forams);
     });
     return deferred.promise;
+  };
+
+  var setForams = function (openDialog) {
+    var foramsPromise = getForamsFromDb();
+    foramsPromise.then(function (forams) {
+      $scope.forams = forams;
+      if (openDialog) {
+        dialog.close();
+      }
+    });
   };
 
   var toUnderScore = function (str) {
     return str.replace(/([A-Z])/g, function ($1) { return "_" + $1.toLowerCase(); });
   };
 
+  $scope.prevPage = function () {
+    if ($scope.currentPage > 1) {
+      $scope.currentPage--;
+    }
+  };
+
+  $scope.prevPageDisabled = function () {
+    return $scope.currentPage === 1 ? "disabled" : "";
+  };
+
+  $scope.nextPage = function () {
+    if ($scope.currentPage < $scope.pageCount() - 1) {
+      $scope.currentPage++;
+    }
+  };
+
+  $scope.nextPageDisabled = function () {
+    return $scope.currentPage === $scope.pageCount() - 1 ? "disabled" : "";
+  };
+
+  $scope.pageCount = function () {
+    return Math.ceil($scope.numberOfForams / $scope.foramsPerPage);
+  };
+
+  $scope.setPage = function (n) {
+    if (n > 0 && n < $scope.pageCount()) {
+      $scope.currentPage = n;
+    }
+  };
+
+  $scope.$watch("currentPage", function () {
+    flatFilters['page'] = $scope.currentPage;
+    if ($scope.foramsLoaded) {
+      setForams();
+    }
+  });
+
+  $scope.range = function () {
+    var rangeSize = 5;
+    var ret = [];
+    var start;
+
+    start = $scope.currentPage;
+    if (start > $scope.pageCount() - rangeSize) {
+      start = $scope.pageCount() - rangeSize;
+    }
+
+    for (var i = start; i < start + rangeSize; i++) {
+      ret.push(i);
+    }
+    return ret;
+  };
+
   $scope.skipLoading = function () {
-    console.log('closing dialog');
     dialog.close();
+    $scope.foramsLoaded = false;
   };
   $scope.continueLoading = function () {
-    console.log('closing dialog and loading forams without filter');
-    dialog.close();
+    setForams(true);
+    $scope.foramsLoaded = true;
   };
   $scope.createChart = function () {
     dialog.close();
