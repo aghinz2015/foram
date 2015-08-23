@@ -1,14 +1,14 @@
 <div id="options" ng-click="generateChart()">Generate chart</div>
 <table class="foram-table">
   <thead>
-  <th ng-repeat="(key, value) in forams[0]" ng-if="key != 'id'">
+  <th ng-repeat="(key, value) in forams[0].genotype" ng-if="key != '_id'">
     {{key}}
   </th>
   </thead>
   <tbody id="selectable">
   <tr ng-repeat="foram in forams"  data-index="{{$index}}">
-    <td ng-repeat="(key, value) in foram" ng-if="key != 'id'">
-      {{value}}
+    <td ng-repeat="(key, value) in foram.genotype" ng-if="key != '_id'">
+      {{value.effective}}
     </td>
   </tr>
   </tbody>
@@ -20,7 +20,7 @@
       <div class="large-3 columns">
        <label for="filter_param"> Filter parameter </label>
        <select id="filter_param" ng-model="filter.param">
-         <option ng-repeat="(key, value) in forams[0]" ng-if="key != 'id'">{{key}}</option>
+         <option ng-repeat="(key, value) in forams[0].genotype" ng-if="key != 'id'">{{key}}</option>
        </select>
       </div>
       <div class="large-3 columns">

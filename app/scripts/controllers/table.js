@@ -2,7 +2,7 @@
  * Created by Eryk on 2015-06-09.
  */
 
-app.controller('TableCtrl', ['$location', '$scope', '$http', 'DatasetService', 'ngDialog', function ($location, $scope, $http, DatasetService, ngDialog) {
+app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetService', 'ngDialog', function ($location, $scope, $http, $q, DatasetService, ngDialog) {
 
   var dialog;
 
@@ -20,6 +20,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', 'DatasetService', '
   //});
 
   // mock data used to tests
+  /*
   $scope.forams = [
     { "id": { "$oid": "55588ef13338610003000000" }, "kx": 0.1, "ky": 0.2, "kz": 0.35, "tf": 0.4, "phi": 0.5, "beta": 0.6 },
     { "id": { "$oid": "55588ef13338610003000001" }, "kx": 0.12, "ky": 0.21, "kz": 0.32, "tf": 0.4, "phi": 0.5, "beta": 0.6 },
@@ -29,7 +30,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', 'DatasetService', '
     { "id": { "$oid": "55588ef13338610003000005" }, "kx": 0.16, "ky": 0.25, "kz": 0.43, "tf": 0.4, "phi": 0.5, "beta": 0.6 },
     { "id": { "$oid": "55588ef13338610003000006" }, "kx": 0.17, "ky": 0.2, "kz": 0.53, "tf": 0.4, "phi": 0.5, "beta": 0.6 },
     { "id": { "$oid": "55588ef13338610003000007" }, "kx": 0.18, "ky": 0.72, "kz": 0.35, "tf": 0.4, "phi": 0.5, "beta": 0.6 }
-  ];
+  ];*/
 
   // function which is responsible for selecting events
   $(function () {
@@ -69,10 +70,22 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', 'DatasetService', '
   $scope.filters = [];
   $scope.filterData = function () {
     var i;
+    var flatFilters = {};
+    var key;
     for (i in $scope.filters) {
-      $scope.filters[i].param.trim();
+      if ($scope.filters[i].param != undefined) {
+        if ($scope.filters[i].min != undefined) {
+          key = flatFilterName($scope.filters[i], 'min');
+          flatFilters[key] = $scope.filters[i].min
+        }
+        if ($scope.filters[i].max != undefined) {
+          key = flatFilterName($scope.filters[i], 'max');
+          flatFilters[key] = $scope.filters[i].max
+        }
+      }
     }
-    console.log($scope.filters);
+    console.log(flatFilters);
+    getForams(flatFilters);
   };
   $scope.addFilter = function () {
     $scope.filters.push({});
@@ -86,18 +99,47 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', 'DatasetService', '
     $scope.filters.splice(index, 1);
     if ($scope.filters.length == 0) $scope.hasFilters = false;
   };
-  $scope.maxForamsWithoutWarning = 100; // TODO move to configuration file
-  $scope.getForams = function () {
-    var numberOfForams = getNumberOfForamsInDb();
-    if (numberOfForams > 100) {
-      dialog = ngDialog.open({ template: 'popupTmpl.html', scope: $scope });
-    }
+  var flatFilterName = function (filter, suffix) {
+    return toUnderScore(filter.param) + "_" + suffix;
   };
-  // Mock method to return number of forams in db
-  // TODO: Implement integration with backend to fetch number of forams in db
-  var getNumberOfForamsInDb = function () {
-    return 101;
+  $scope.maxForamsWithoutWarning = 1001; // TODO move to configuration file
+
+  var getForams = function (filters) {
+    var numberOfForamsPromise = getNumberOfForamsInDb(filters);
+    numberOfForamsPromise.then(function (foramsCount) {
+      if (foramsCount > $scope.maxForamsWithoutWarning) {
+        dialog = ngDialog.open({ template: 'popupTmpl.html', scope: $scope });
+      } else {
+        var foramsPromise = getForamsFromDb(filters);
+        foramsPromise.then(function (forams) {
+          $scope.forams = forams;
+        });
+      }
+    });
   };
+
+  var getNumberOfForamsInDb = function (filters) {
+    var deferred = $q.defer();
+    console.log(filters);
+    $http.head('http://192.168.1.27:3000/forams', {params: filters}).success(function (data, status, headers, config) {
+      deferred.resolve(headers().total);
+    });
+    return deferred.promise;
+  };
+
+  var getForamsFromDb = function (filters) {
+    var deferred = $q.defer();
+    // #TODO include filters
+    $http.get('http://192.168.1.27:3000/forams', {params: filters}).success(function (data, status, headers, config) {
+      deferred.resolve(data.forams);
+    });
+    return deferred.promise;
+  };
+
+  var toUnderScore = function (str) {
+    return str.replace(/([A-Z])/g, function ($1) { return "_" + $1.toLowerCase(); });
+  };
+
   $scope.skipLoading = function () {
     console.log('closing dialog');
     dialog.close();
@@ -110,5 +152,5 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', 'DatasetService', '
     dialog.close();
     $location.path('/charts');
   };
-  $scope.getForams();
+  getForams();
 }]);
