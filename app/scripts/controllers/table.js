@@ -9,6 +9,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetServi
   // #TODO Improvment on API side or move to configuration file
   $scope.availableFilterParams = ['deviationAngle', 'growthFactor', 'rotationAngle',
     'translationFactor', 'wallThicknessFactor'];
+  $scope.unavaiableParams = [];
   $scope.foramsLoaded = false;
   $scope.forams = [];
   $scope.numberOfForams = 1;
@@ -58,6 +59,10 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetServi
   $scope.hasFilters = false;
   $scope.filters = [];
   var flatFilters = {};
+
+  $scope.isParamUnavailable = function (paramName) {
+    return ($scope.unavaiableParams.indexOf(paramName) > -1);
+  };
 
   $scope.filterData = function () {
     flatFilters = {};
@@ -117,6 +122,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetServi
         dialog = ngDialog.open({ template: 'popupTmpl.html', scope: $scope });
       } else {
         setForams();
+        $scope.foramsLoaded = true;
       }
     });
   };
@@ -187,6 +193,18 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetServi
       setForams();
     }
   });
+
+  $scope.$watch("filters", function (newFilters, oldFilters) {
+    oldFilters.forEach(function (element) {
+      if ($scope.isParamUnavailable(element.param)) {
+        var index = $scope.unavaiableParams.indexOf(element.param);
+        $scope.unavaiableParams.splice(index, 1);
+      }
+    });
+    newFilters.forEach(function (element) {
+      $scope.unavaiableParams.push(element.param);
+    });
+  }, true);
 
   $scope.range = function () {
     var rangeSize = 5;
