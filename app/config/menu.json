@@ -1,0 +1,36 @@
+{
+  "name": "FORAM",
+  "icon": "bars",
+  "list": [
+    {
+      "name": "Home",
+      "icon": "home",
+      "args": "/"
+    },
+    {
+      "name": "Databases",
+      "icon": "database",
+      "args": "/databases"
+    },
+    {
+      "name": "Browse",
+      "icon": "folder-open",
+      "args": "/table"
+    },
+    {
+      "name": "3D Visualisation",
+      "icon": "cube",
+      "args": "/visualisation"
+    },
+    {
+      "name": "Charts",
+      "icon": "pie-chart",
+      "args": "/charts"
+    },
+    {
+      "name": "Settings",
+      "icon": "gear",
+      "args": "/settings"
+    }
+  ]
+}

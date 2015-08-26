@@ -32,7 +32,7 @@ app.directive('menuPosition',function($compile,$templateCache){
         template += '<ul  class="submenu"><menu-position ng-repeat="subposition in position.list" position="subposition"></menu-position></ul>';
       }
 
-      template = '<li class="menu-option" id="{{position.args}}" ng-click="position.click(position.args)">'+template+'</li>';
+      template = '<li class="menu-option" id="{{position.args}}" ng-click="scope.go(position.args)">'+template+'</li>';
       var newElement = angular.element(template);
       $compile(newElement)(scope);
 

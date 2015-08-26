@@ -3,7 +3,7 @@
  */
 'use strict';
 
-app.controller('menuCtrl',function($scope,$location){
+app.controller('menuCtrl',['$scope', '$location', 'ConfigService', function($scope, $location, ConfigService){
 
   // simple function to change location, works like a tag
   // #TODO create a service with this function
@@ -12,50 +12,13 @@ app.controller('menuCtrl',function($scope,$location){
     $location.path(url);
   };
 
-
-  // menu config - #TODO put it into JSON file
-  $scope.menu = {
-    name: 'FORAM',
-    icon: 'bars',
-    list: [
-      {
-        name: 'Home',
-        icon: 'home',
-        args: '/',
-        click: $scope.go
+  ConfigService.getMenu()
+    .then(
+      function(res){
+        console.log(res.data);
+        $scope.menu = res.data;
       },
-      {
-        name: 'Databases',
-        icon: 'database',
-        args: '/databases',
-        click: $scope.go
-      },
-      {
-        name: 'Browse',
-        icon: 'folder-open',
-        args: '/table',
-        click: $scope.go
-      },
-      {
-        name: '3D Visualisation',
-        icon: 'cube',
-        args: '/visualisation',
-        click: $scope.go
-
-      },
-      {
-        name: 'Charts',
-        icon: 'pie-chart',
-        args: '/charts',
-        click: $scope.go
-      },
-      {
-        name: 'Settings',
-        icon: 'gear',
-        args: '/settings',
-        click: $scope.go
-
-      }
-    ]
-  };
-});
+      function(error){
+        throw error.status+" : "+error.statusText;
+      });
+}]);
