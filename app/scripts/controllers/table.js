@@ -50,11 +50,19 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetServi
     });
   });
 
-  // test function which change view to charts and sends selected data
+  $scope.selectedForams = function() {
+    return $scope.forams.slice($scope.currentSet.start, $scope.currentSet.stop + 1);
+  }
+
   $scope.generateChart = function () {
-    DatasetService.putProducts($scope.forams.slice($scope.currentSet.start, $scope.currentSet.stop + 1));
+    DatasetService.putProducts($scope.selectedForams());
     $location.path("/charts");
   };
+
+  $scope.visualize = function() {
+    DatasetService.putProducts($scope.selectedForams());
+    $location.path("/visualisation");
+  }
 
   $scope.hasFilters = false;
   $scope.filters = [];
@@ -234,5 +242,6 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetServi
     dialog.close();
     $location.path('/charts');
   };
+
   getForams();
 }]);

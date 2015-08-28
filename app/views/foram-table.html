@@ -1,4 +1,8 @@
-<div id="options" ng-click="generateChart()">Generate chart</div>
+<ul id="options" class="context-menu">
+  <li ng-click="generateChart()">Generate chart</li>
+  <li ng-click="visualize()">Perform visualization</li>
+</ul>
+
 <table class="foram-table">
   <thead>
     <th ng-repeat="(key, value) in forams[0].genotype" ng-if="key != '_id'">

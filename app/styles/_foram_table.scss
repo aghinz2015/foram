@@ -52,13 +52,30 @@ table.foram-table {
   }
 }
 
-#options {
-  height: 25px;
-  width: 120px;
-  background: rgb(96, 70, 30);
-  position: fixed;
+.context-menu {
+  position: absolute;
+  z-index: 9999;
+  width: 250px;
+  margin: 0px;
+  padding: 10px;
   display: none;
-  text-align: center;
-  color: white;
-  cursor: pointer;
+
+  list-style: none;
+  background: #222;
+
+  li {
+    padding: 5px;
+    border-bottom: 1px solid #444;
+
+    text-align: center;
+    color: #fff;
+
+    &:hover {
+      background: #444;
+    }
+
+    &:last-child {
+      border: none
+    }
+  }
 }
