@@ -129,7 +129,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetServi
 
   var getForamsInfo = function () {
     var deferred = $q.defer();
-    $http.head('localhost:3000/forams', { params: flatFilters }).success(function (data, status, headers, config) {
+    $http.head('http://localhost:3000/forams', { params: flatFilters }).success(function (data, status, headers, config) {
       deferred.resolve(headers());
     });
     return deferred.promise;
@@ -137,7 +137,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetServi
 
   var getForamsFromDb = function () {
     var deferred = $q.defer();
-    $http.get('localhost:3000/forams', { params: flatFilters }).success(function (data, status, headers, config) {
+    $http.get('http://localhost:3000/forams', { params: flatFilters }).success(function (data, status, headers, config) {
       deferred.resolve(data.forams);
     });
     return deferred.promise;
