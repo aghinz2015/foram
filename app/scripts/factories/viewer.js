@@ -27,8 +27,9 @@ app.factory('ViewerFactory',function(){
     this.model.scale.set(s, s, s);
   };
 
-// #TODO think about other useful functions like invisible foram walls, step by step growth etc.
+  SceneViewer.prototype.simulate = function() {
+    this.model.simulate();
+  }
 
   return SceneViewer;
 });
-

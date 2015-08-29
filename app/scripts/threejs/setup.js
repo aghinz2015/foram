@@ -31,14 +31,22 @@ Viewer.Scene.Setup = {
     this.context.scene.add(light);
   },
 
-  /**
-   * Create objects #TODO This object is a demo object just to see something
-   */
-  createSphere: function(){
-    var geometry = new THREE.SphereGeometry( 5, 32, 32 );
-    var material = new THREE.MeshPhongMaterial( {color: 0xff0000} );
-    var sphere = new THREE.Mesh( geometry, material );
-    this.context.scene.add(sphere);
-    this.context.model = sphere;
+  createForam: function(genotype) {
+    if (!genotype) return;
+
+    var normalizedGenotype = {
+      translationFactor: genotype.translation_factor.effective,
+      growthFactor:      genotype.growth_factor.effective,
+      beta:              genotype.deviation_angle.effective,
+      phi:               genotype.rotation_angle.effective,
+      initialRadius:     3
+    };
+
+    var foram = new Foram(normalizedGenotype);
+
+    foram.buildChambers(7);
+
+    this.context.model = foram;
+    this.context.scene.add(foram);
   }
 };
