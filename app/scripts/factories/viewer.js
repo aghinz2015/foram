@@ -27,9 +27,13 @@ app.factory('ViewerFactory',function(){
     this.model.scale.set(s, s, s);
   };
 
-  SceneViewer.prototype.simulate = function() {
-    this.model.simulate();
-  }
+  SceneViewer.prototype.evolve = function() {
+    this.model.evolve();
+  };
+
+  SceneViewer.prototype.regress = function() {
+    this.model.regress();
+  };
 
   return SceneViewer;
 });

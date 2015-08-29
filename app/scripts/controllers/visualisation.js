@@ -56,7 +56,11 @@ app.controller('VisualisationCtrl', ['$scope', 'ViewerFactory', 'DatasetService'
       parseFloat(this.data.positionZ))
   };
 
-  $scope.visualize = function() {
-    viewer.simulate();
+  $scope.evolve = function() {
+    viewer.evolve();
+  };
+
+  $scope.regress = function() {
+    viewer.regress();
   };
 }]);
