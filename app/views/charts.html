@@ -4,7 +4,7 @@
   <div class="row">
     Select attributes to present
     <select ng-model="currentData" data-ng-change="changePresentedAttribute()">
-      <option ng-repeat="(key,value) in attributesList" value="{{key}}"> {{key}}</option>
+      <option ng-repeat="attribute in attributes"> {{attribute}}</option>
     </select>
   </div>
 

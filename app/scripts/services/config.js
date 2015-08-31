@@ -9,8 +9,12 @@ app.service('ConfigService',['$http','appConfig',function($http,appConfig){
    * Get HighChart Theme
    * @returns data
    */
-  this.getHighchartTheme = function() {
-    return $http.get("/config/highchart-theme.json")
+  this.getHighchart = function() {
+    return $http.get("/config/highchart.json");
+  };
+
+  this.getFilterConfig= function() {
+    return $http.get("/config/filter.json")
       .then(
       function(data){
         return data;

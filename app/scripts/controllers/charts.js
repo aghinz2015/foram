@@ -8,13 +8,195 @@
  * Controller of the trunkApp
  */
 
-app.controller('ChartsCtrl',['$scope','DatasetService', 'ConfigService', function ($scope, DatasetService, ConfigService) {
+app.controller('ChartsCtrl',['$scope','DatasetService', 'ConfigService', 'ForamAPIService', function ($scope, DatasetService, ConfigService) {
+
+  $scope.chartConfig = {};
+  $scope.chart = {};
+
+  ConfigService.getHighchart()
+    .then(
+    function(res){
+      $scope.chartConfig = res.data;
+      $scope.chart = res.data.config;
+      Highcharts.theme = res.data.theme;
+    },
+    function(error){
+      throw error.status+" : "+error.statusText;
+    });
+  //var data = ForamAPIService.getAllForams();
+
+  var data = {
+    "generations":
+      {
+        "15":
+        {
+          "attributes":
+          {
+            "x":
+            {
+              "min": 4,
+              "max": 7,
+              "average": 5.75,
+              "standard_deviation": 1.09
+            },
+            "y":
+            {
+              "min": 1,
+              "max": 7,
+              "average": 4.75,
+              "standard_deviation": 2.28
+            },
+            "z":
+            {
+              "min": 1,
+              "max": 8,
+              "average": 5.0,
+              "standard_deviation": 2.74
+            },
+            "age":
+            {
+              "min": 15,
+              "max": 15,
+              "average": 15.0,
+              "standard_deviation": 0.0
+            }
+          },
+          "size": 4
+        },
+        "16":
+        {
+          "attributes":
+          {
+            "x":
+            {
+              "min": 4,
+              "max": 7,
+              "average": 5.76,
+              "standard_deviation": 1.09
+            },
+            "y":
+            {
+              "min": 1,
+              "max": 7,
+              "average": 4.75,
+              "standard_deviation": 2.28
+            },
+            "z":
+            {
+              "min": 1,
+              "max": 8,
+              "average": 5.0,
+              "standard_deviation": 2.74
+            },
+            "age":
+            {
+              "min": 15,
+              "max": 15,
+              "average": 15.0,
+              "standard_deviation": 0.0
+            }
+          },
+          "size": 4
+        },
+    "global_averages": {
+      "x": 4.61,
+      "y": 4.56,
+      "z": 4.58,
+      "age": 9.87
+      }
+    },
+    "attributes": [
+      "x",
+      "y",
+      "z",
+      "age"
+    ],
+    "subAttributes": [
+      "min",
+      "max",
+      "average",
+      "standard_deviation"
+    ]
+
+  };
+
+  $scope.generations = data.generations;
+  $scope.attributes = data.attributes;
+  $scope.subAttributes = data.subAttributes;
+
+
+  // function which changes current data source
+  $scope.changePresentedAttribute = function () {
+    $scope.chart.title.text = "Change of attribute " + $scope.currentData;
+    $scope.chart.series = [];
+    $scope.chart.xAxis = { categories: Object.keys(data.generations) };
+
+
+    for (var i in data.subAttributes) {
+      if (data.subAttributes[i] != "standard_deviation")
+        pushSeriesData(data.subAttributes[i], $scope.chart.colors[i]);
+      else
+        pushStandardDeviation("standard_deviation", $scope.chart.colors[i - 1]);
+    }
+  };
+
+  var pushSeriesData = function (value, color) {
+    var toBePushed = { data: [], name: value, color: color };
+    for (var key in data.generations) {
+      if (key != "global_averages") {
+        toBePushed.data.push(data.generations[key].attributes[$scope.currentData]);
+      }
+    };
+    $scope.chart.series.push(toBePushed);
+  };
+
+
+  var pushStandardDeviation = function (value, color) {
+    var toBePushed = { data: [], name: value, linkedTo: ':previous', type: 'arearange', color: color, fillOpacity: 0.2, lineWidth: 0 };
+    for (var key in data.generations) {
+      if (key != "global_averages") {
+
+        var standardDeviation = data.generations[key].attributes["x"][value];
+        var average = data.generations[key].attributes["x"].average;
+        toBePushed.data.push([average - standardDeviation, average + standardDeviation]);
+      }
+    };
+    $scope.chart.series.push(toBePushed);
+
+  };
+  // function to restore default colors
+  $scope.restoreDefaultSeriesColor = function () {
+    var i;
+    var index = 0;
+    var maxIndex = $scope.chart.colors.length - 1;
+    $scope.chart.series.forEach(function (entry) {
+      i = Math.min(entry.linkedTo === ":previous" ? index - 1 : index, maxIndex);
+      entry.color = $scope.chart.colors[i];
+      index++;
+    });
+  };
+
+  // variable responsible for current chart mode
+  $scope.chartEditingMode = false;
+
+
+  // watch function to change chartEditingModeStatus depending on chartEditingMode
+  $scope.$watch('chartEditingMode', function () {
+    $scope.chartEditingModeStatus = $scope.chartEditingMode ? 'Finish' : 'Edit chart';
+  });
+
+
+  // chart configuaration variables
+  // #TODO try to make it more readable
+  $scope.colors = [];
+  $scope.currentData = undefined;
+
 
   // function which changes current data source
   $scope.changeDataSource = function() {
-    $scope.chartConfig.series = [];
+    $scope.chart.series = [];
     var toBePushed = {data:[], name: "Series 1"};
-    $scope.data.forEach(function(entry) {
+    data.forEach(function(entry) {
       toBePushed.name = $scope.currentData;
       toBePushed.data.push(entry[$scope.currentData]);
     });
@@ -43,38 +225,6 @@ app.controller('ChartsCtrl',['$scope','DatasetService', 'ConfigService', functio
   });
 
 
-  // chart configuaration variables
-  // #TODO try to make it more readable
-  $scope.colors = [];
-  $scope.currentData = undefined;
-  $scope.chartConfig = {
-    colors: ["#2b908f", "#90ee7e", "#f45b5b", "#7798BF", "#aaeeee", "#ff0066", "#eeaaee",
-      "#55BF3B", "#DF5353", "#7798BF", "#aaeeee"],
-    options: {
-      chart: {
-        zoomType: 'x'
-      },
-      rangeSelector: {
-        enabled: true
-      },
-      navigator: {
-        enabled: true
-      }
-    },
-    series: [],
-    title: {
-      text: 'Hello'
-    },
-    exporting: {
-         enabled: true
-    }
-  };
-
-
-  // Highcharts stuff
-  // #TODO possibly create a JSON config with Highchart theme
-
-
   Highcharts.createElement('link', {
     href: '//fonts.googleapis.com/css?family=Unica+One',
     rel: 'stylesheet',
@@ -82,10 +232,10 @@ app.controller('ChartsCtrl',['$scope','DatasetService', 'ConfigService', functio
   }, null, document.getElementsByTagName('head')[0]);
 
 
-  Highcharts.theme = ConfigService.getHighchartTheme();
+
 
 // Apply the theme
-  Highcharts.setOptions(Highcharts.theme);
+  Highcharts.setOptions(Highcharts.theme)
 
 }]);
 

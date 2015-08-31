@@ -21,5 +21,8 @@
     "angular-mocks": "^1.3.0"
   },
   "appPath": "app",
-  "moduleName": "trunkApp"
+  "moduleName": "trunkApp",
+  "resolutions": {
+    "angular": "^1.3.0"
+  }
 }

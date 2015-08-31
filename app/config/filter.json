@@ -1,0 +1,9 @@
+{
+  "availableFilterParams": [
+    "deviationAngle",
+    "growthFactor",
+    "rotationAngle",
+    "translationFactor",
+    "wallThicknessFactor"
+  ]
+}

@@ -2,13 +2,12 @@
  * Created by Eryk on 2015-06-09.
  */
 
-app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetService', 'ngDialog', function ($location, $scope, $http, $q, DatasetService, ngDialog) {
+app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetService', 'ngDialog','ConfigService', function ($location, $scope, $http, $q, DatasetService, ngDialog,ConfigService) {
 
   var dialog;
 
   // #TODO Improvment on API side or move to configuration file
-  $scope.availableFilterParams = ['deviationAngle', 'growthFactor', 'rotationAngle',
-    'translationFactor', 'wallThicknessFactor'];
+  $scope.availableFilterParams = ConfigService.getFilterConfig();
   $scope.unavaiableParams = [];
   $scope.foramsLoaded = false;
   $scope.forams = [];
@@ -16,8 +15,8 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetServi
   $scope.foramsPerPage = 1;
   $scope.currentPage = 1;
 
-  // currentSet represents our currently selected records with start and stop index
-  $scope.currentSet = { start: null, stop: null };
+  //currentSet represents our currently selected records with start and stop index
+  var currentSet = { start: null, stop: null };
 
   // reference to our options dropdown
   $scope.optionsWindow = $("#options");
@@ -27,17 +26,17 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetServi
     $("#selectable").selectable({
       filter: 'tr',
       start: function (event, ui) {
-        $scope.currentSet.start = undefined;
-        $scope.currentSet.stop = null;
+        currentSet.start = undefined;
+        currentSet.stop = null;
       },
       selected: function (event, ui) {
         var index = parseInt(ui.selected.getAttribute('data-index'));
-        if ($scope.currentSet.start === undefined) {
-          $scope.currentSet.start = index;
+        if (currentSet.start === undefined) {
+          currentSet.start = index;
         }
 
-        if (index > $scope.currentSet.stop || !$scope.currentSet.stop) {
-          $scope.currentSet.stop = index;
+        if (index > $scope.currentSet.stop || !currentSet.stop) {
+          currentSet.stop = index;
         }
       },
       stop: function (event, ui) {
@@ -52,7 +51,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetServi
 
   // test function which change view to charts and sends selected data
   $scope.generateChart = function () {
-    DatasetService.putProducts($scope.forams.slice($scope.currentSet.start, $scope.currentSet.stop + 1));
+    DatasetService.putProducts($scope.forams.slice($scope.currentSet.start, currentSet.stop + 1));
     $location.path("/charts");
   };
 

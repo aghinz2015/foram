@@ -4,6 +4,11 @@
     <a href="#/" class="smartHide">{{menu.name}}</a>
   </header>
   <ul class="side-nav">
-    <menu-position ng-repeat="position in menu.list" position="position"></menu-position>
+    <li ng-repeat="position in menu.list" ng-click="$parent.goTo(position.args,'menu-option')" class="menu-option" id="{{position.args}}">
+      <div class="menu-position">
+        <span class="fa fa-fw fa-{{position.icon}}"></span>
+        <span class="text smartHide">{{position.name}}</span>
+      </div>
+    </li>
   </ul>
 </div>
