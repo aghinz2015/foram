@@ -45,6 +45,10 @@ var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.m
         templateUrl: 'views/login.html',
         controller: 'LoginCtrl'
       })
+      .when('/register', {
+        templateUrl: 'views/register.html',
+        controller: 'RegisterCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
@@ -58,6 +62,28 @@ var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.m
     return function(input){
       return parseFloat(input);
     }
+  });
+
+  app.run(function($rootScope, $location, $cookies, $http) {
+    // keep user logged in after page refresh
+    try {
+      $rootScope.globals = $cookies.getObject('globals') || {};
+    }
+    catch (e) {
+      $rootScope.globals = {};
+    }
+    if($rootScope.globals.currentUser) {
+      $http.defaults.headers.common['Authorization'] = 'Token token="' + $rootScope.globals.currentUser.token + '", email="' + $rootScope.globals.currentUser.email + '"';
+    }
+
+    $rootScope.$on('$locationChangeStart', function(event, next, current) {
+      // redirect to login page if not logged in and trying to access a restricted page
+      var restrictedPage = $.inArray($location.path(), ['/login', '/register']) === -1;
+      var loggedIn = $rootScope.globals.currentUser;
+      if(restrictedPage && !loggedIn) {
+        $location.path('/login');
+      }
+    })
   });
 
   // mock service to set and get data between controllers

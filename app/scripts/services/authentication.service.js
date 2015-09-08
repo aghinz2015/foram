@@ -1,11 +1,8 @@
 'use strict';
 
 app.service('AuthenticationService', ['$http', '$cookies', '$rootScope', function($http, $cookies, $rootScope) {
-  this.login = function(email, password, callback) {
-    $http.post('http://localhost:3000/users/login', { user: { email: email, password: password } })
-      .success(function(response) {
-        callback(response);
-      });
+  this.login = function(email, password) {
+    return $http.post('http://localhost:3000/users/login', { user: { email: email, password: password } })
   };
 
   this.setCredentials = function(email, token) {
@@ -17,7 +14,7 @@ app.service('AuthenticationService', ['$http', '$cookies', '$rootScope', functio
     };
 
     $http.defaults.headers.common['Authorization'] = 'Token token="' + token + '", email="' + email + '"';
-    $cookies.put('globals', $rootScope.globals);
+    $cookies.putObject('globals', $rootScope.globals);
   };
 
   this.clearCredentials = function() {
