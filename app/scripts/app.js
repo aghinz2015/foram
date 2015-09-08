@@ -8,7 +8,7 @@
  *
  * Main module of the application.
  */
-var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.module','ngDialog']);
+var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.module','ngDialog', 'ngCookies']);
 
   // basic routing config
   app.config(function ($routeProvider) {
@@ -40,6 +40,10 @@ var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.m
       .when('/visualisation', {
         templateUrl: 'views/visualisation.html',
         controller: 'VisualisationCtrl'
+      })
+      .when('/login', {
+        templateUrl: 'views/login.html',
+        controller: 'LoginCtrl'
       })
       .otherwise({
         redirectTo: '/'
