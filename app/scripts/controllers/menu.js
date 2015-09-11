@@ -3,7 +3,7 @@
  */
 'use strict';
 
-app.controller('menuCtrl',function($scope,$location){
+app.controller('menuCtrl', ['$scope', '$location', 'AuthenticationService', function($scope,$location, AuthenticationService){
 
   // simple function to change location, works like a tag
   // #TODO create a service with this function
@@ -12,9 +12,14 @@ app.controller('menuCtrl',function($scope,$location){
     $location.path(url);
   };
 
+  $scope.logout = function() {
+    AuthenticationService.clearCredentials();
+    $location.path('/login');
+  };
 
   // menu config - #TODO put it into JSON file
   $scope.menu = {
+    isCurrentUser: !!$scope.globals.currentUser,
     name: 'FORAM',
     icon: 'bars',
     list: [
@@ -54,8 +59,12 @@ app.controller('menuCtrl',function($scope,$location){
         icon: 'gear',
         args: '/settings',
         click: $scope.go
-
+      },
+      {
+        name: 'Logout',
+        icon: 'sign-out',
+        click: $scope.logout
       }
     ]
   };
-});
+}]);

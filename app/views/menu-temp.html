@@ -4,6 +4,7 @@
     <a href="#/" class="smartHide">{{menu.name}}</a>
   </header>
   <ul class="side-nav">
-    <menu-position ng-repeat="position in menu.list" position="position"></menu-position>
+    <menu-position ng-if="menu.isCurrentUser" ng-repeat="position in menu.list" position="position"></menu-position>
+    <li ng-show="!menu.isCurrentUser" ng-click="go('/login')">Login</li>
   </ul>
 </div>

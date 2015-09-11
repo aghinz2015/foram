@@ -11,7 +11,7 @@
 var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.module','ngDialog', 'ngCookies']);
 
   // basic routing config
-  app.config(function ($routeProvider) {
+  app.config(function ($routeProvider, $httpProvider) {
     $routeProvider
       .when('/', {
         templateUrl: 'views/main.html',
@@ -52,6 +52,8 @@ var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.m
       .otherwise({
         redirectTo: '/'
       });
+
+    $httpProvider.interceptors.push('APIInterceptor');
   })
     .filter('forceInt', function(){
     return function(input) {
@@ -85,6 +87,18 @@ var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.m
       }
     })
   });
+
+  app.service('APIInterceptor', ['$location', function($location) {
+    return {
+      responseError: function(response) {
+        if (response.status === 401) {
+          $location.path('/login');
+        }
+        return response;
+      }
+    }
+  }]);
+
 
   // mock service to set and get data between controllers
   // #TODO in PROD version this is to be removed or replaced with better solution (factory with API methods?)

@@ -2,7 +2,7 @@
 
 app.service('AuthenticationService', ['$http', '$cookies', '$rootScope', function($http, $cookies, $rootScope) {
   this.login = function(email, password) {
-    return $http.post('http://localhost:3000/users/login', { user: { email: email, password: password } })
+    return $http.post('http://localhost:3000/user/login', { user: { email: email, password: password } })
   };
 
   this.setCredentials = function(email, token) {
