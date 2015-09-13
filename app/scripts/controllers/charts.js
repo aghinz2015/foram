@@ -10,15 +10,43 @@
 
 app.controller('ChartsCtrl',['$scope','DatasetService', 'ConfigService', 'ForamAPIService', function ($scope, DatasetService, ConfigService) {
 
-  $scope.chartConfig = {};
+
   $scope.chart = {};
+  $scope.currentData = undefined;
+
+  // watch function to change chartEditingModeStatus depending on chartEditingMode
+  $scope.$watch('chartEditingMode', function () {
+    $scope.chartEditingModeStatus = $scope.chartEditingMode ? 'up' : 'down';
+  });
+
+  $scope.$watch('currentColor', function() {
+    if($scope.currentSerie)
+      $scope.chart.series[$scope.currentSerie].color = $scope.currentColor;
+  });
+
+
+  $scope.$watch('currentSerie', function() {
+    if($scope.currentSerie)
+      $scope.currentColor = $scope.chart.series[$scope.currentSerie].color;
+  });
+
+  // chart configuaration variables
+  // #TODO try to make it more readable
+  $scope.colors = [];
+
+
+  // variable responsible for current chart mode
+  $scope.chartEditingMode = false;
+
+  // get data from our mock service
+  $scope.data = DatasetService.getProducts();
 
   ConfigService.getHighchart()
     .then(
     function(res){
-      $scope.chartConfig = res.data;
       $scope.chart = res.data.config;
-      Highcharts.theme = res.data.theme;
+      //Highcharts.theme = res.data.theme;
+      //Highcharts.setOptions(Highcharts.theme)
     },
     function(error){
       throw error.status+" : "+error.statusText;
@@ -27,82 +55,82 @@ app.controller('ChartsCtrl',['$scope','DatasetService', 'ConfigService', 'ForamA
 
   var data = {
     "generations":
+    {
+      "15":
       {
-        "15":
+        "attributes":
         {
-          "attributes":
+          "x":
           {
-            "x":
-            {
-              "min": 4,
-              "max": 7,
-              "average": 5.75,
-              "standard_deviation": 1.09
-            },
-            "y":
-            {
-              "min": 1,
-              "max": 7,
-              "average": 4.75,
-              "standard_deviation": 2.28
-            },
-            "z":
-            {
-              "min": 1,
-              "max": 8,
-              "average": 5.0,
-              "standard_deviation": 2.74
-            },
-            "age":
-            {
-              "min": 15,
-              "max": 15,
-              "average": 15.0,
-              "standard_deviation": 0.0
-            }
+            "min": 4,
+            "max": 7,
+            "average": 5.75,
+            "standard_deviation": 1.09
           },
-          "size": 4
+          "y":
+          {
+            "min": 1,
+            "max": 7,
+            "average": 4.75,
+            "standard_deviation": 2.28
+          },
+          "z":
+          {
+            "min": 1,
+            "max": 8,
+            "average": 5.0,
+            "standard_deviation": 2.74
+          },
+          "age":
+          {
+            "min": 15,
+            "max": 15,
+            "average": 15.0,
+            "standard_deviation": 0.0
+          }
         },
-        "16":
+        "size": 4
+      },
+      "16":
+      {
+        "attributes":
         {
-          "attributes":
+          "x":
           {
-            "x":
-            {
-              "min": 4,
-              "max": 7,
-              "average": 5.76,
-              "standard_deviation": 1.09
-            },
-            "y":
-            {
-              "min": 1,
-              "max": 7,
-              "average": 4.75,
-              "standard_deviation": 2.28
-            },
-            "z":
-            {
-              "min": 1,
-              "max": 8,
-              "average": 5.0,
-              "standard_deviation": 2.74
-            },
-            "age":
-            {
-              "min": 15,
-              "max": 15,
-              "average": 15.0,
-              "standard_deviation": 0.0
-            }
+            "min": 4,
+            "max": 7,
+            "average": 5.76,
+            "standard_deviation": 1.09
           },
-          "size": 4
+          "y":
+          {
+            "min": 1,
+            "max": 7,
+            "average": 4.75,
+            "standard_deviation": 2.28
+          },
+          "z":
+          {
+            "min": 1,
+            "max": 8,
+            "average": 5.0,
+            "standard_deviation": 2.74
+          },
+          "age":
+          {
+            "min": 15,
+            "max": 15,
+            "average": 15.0,
+            "standard_deviation": 0.0
+          }
         },
-    "global_averages": {
-      "x": 4.61,
-      "y": 4.56,
-      "z": 4.58,
-      "age": 9.87
+        "size": 4
+      },
+      "global_averages": {
+        "x": 4.61,
+        "y": 4.56,
+        "z": 4.58,
+        "age": 9.87
       }
     },
     "attributes": [
@@ -126,11 +154,10 @@ app.controller('ChartsCtrl',['$scope','DatasetService', 'ConfigService', 'ForamA
 
 
   // function which changes current data source
-  $scope.changePresentedAttribute = function () {
-    $scope.chart.title.text = "Change of attribute " + $scope.currentData;
+  $scope.changePresentedAttribute = function (current) {
+    $scope.chart.title.text = "Change of attribute " + data.attributes[$scope.currentData];
     $scope.chart.series = [];
     $scope.chart.xAxis = { categories: Object.keys(data.generations) };
-
 
     for (var i in data.subAttributes) {
       if (data.subAttributes[i] != "standard_deviation")
@@ -142,28 +169,30 @@ app.controller('ChartsCtrl',['$scope','DatasetService', 'ConfigService', 'ForamA
 
   var pushSeriesData = function (value, color) {
     var toBePushed = { data: [], name: value, color: color };
-    for (var key in data.generations) {
+    for (var key in $scope.generations) {
       if (key != "global_averages") {
-        toBePushed.data.push(data.generations[key].attributes[$scope.currentData]);
+        console.log($scope.currentData);
+        console.log();
+        toBePushed.data.push($scope.generations[key].attributes[$scope.attributes[$scope.currentData]][value]);
       }
-    };
+    }
     $scope.chart.series.push(toBePushed);
   };
 
 
   var pushStandardDeviation = function (value, color) {
     var toBePushed = { data: [], name: value, linkedTo: ':previous', type: 'arearange', color: color, fillOpacity: 0.2, lineWidth: 0 };
-    for (var key in data.generations) {
+    for (var key in $scope.generations) {
       if (key != "global_averages") {
-
-        var standardDeviation = data.generations[key].attributes["x"][value];
-        var average = data.generations[key].attributes["x"].average;
+        var standardDeviation = $scope.generations[key].attributes[$scope.attributes[$scope.currentData]].standard_deviation;
+        var average = $scope.generations[key].attributes[$scope.attributes[$scope.currentData]].average;
         toBePushed.data.push([average - standardDeviation, average + standardDeviation]);
       }
     };
     $scope.chart.series.push(toBePushed);
 
   };
+
   // function to restore default colors
   $scope.restoreDefaultSeriesColor = function () {
     var i;
@@ -176,54 +205,6 @@ app.controller('ChartsCtrl',['$scope','DatasetService', 'ConfigService', 'ForamA
     });
   };
 
-  // variable responsible for current chart mode
-  $scope.chartEditingMode = false;
-
-
-  // watch function to change chartEditingModeStatus depending on chartEditingMode
-  $scope.$watch('chartEditingMode', function () {
-    $scope.chartEditingModeStatus = $scope.chartEditingMode ? 'Finish' : 'Edit chart';
-  });
-
-
-  // chart configuaration variables
-  // #TODO try to make it more readable
-  $scope.colors = [];
-  $scope.currentData = undefined;
-
-
-  // function which changes current data source
-  $scope.changeDataSource = function() {
-    $scope.chart.series = [];
-    var toBePushed = {data:[], name: "Series 1"};
-    data.forEach(function(entry) {
-      toBePushed.name = $scope.currentData;
-      toBePushed.data.push(entry[$scope.currentData]);
-    });
-    $scope.chartConfig.series.push(toBePushed);
-  };
-
-  // function to restore default colors
-  $scope.restoreDefaultSeriesColor = function() {
-    var index = 0;
-    var maxIndex = $scope.chartConfig.colors.length - 1;
-    $scope.chartConfig.series.forEach(function(entry) {
-      entry.color = $scope.chartConfig.colors[index < maxIndex ? index : maxIndex];
-      index++;
-    });
-  };
-
-  // variable responsible for current chart mode
-  $scope.chartEditingMode = false;
-
-  // get data from our mock service
-  $scope.data = DatasetService.getProducts();
-
-  // watch function to change chartEditingModeStatus depending on chartEditingMode
-  $scope.$watch('chartEditingMode', function(){
-        $scope.chartEditingModeStatus = $scope.chartEditingMode ? 'Finish' : 'Edit chart';
-  });
-
 
   Highcharts.createElement('link', {
     href: '//fonts.googleapis.com/css?family=Unica+One',
@@ -235,7 +216,7 @@ app.controller('ChartsCtrl',['$scope','DatasetService', 'ConfigService', 'ForamA
 
 
 // Apply the theme
-  Highcharts.setOptions(Highcharts.theme)
+
 
 }]);
 

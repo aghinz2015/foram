@@ -72,7 +72,7 @@ var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.m
   });
 
 app.constant('appConfig',{
-  apiUrl:'foram.com.pl/api'
+  apiForamsUrl:'http://localhost:3000/forams'
 });
 
 var Viewer = {

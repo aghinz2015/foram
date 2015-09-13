@@ -45,4 +45,11 @@ app.controller('VisualisationCtrl',['$scope','ViewerFactory', function ($scope,V
       parseFloat(this.data.positionZ))
   };
 
+  $scope.modelEditingMode = false;
+
+  // watch function to change chartEditingModeStatus depending on chartEditingMode
+  $scope.$watch('modelEditingMode', function () {
+    $scope.modelEditingModeStatus = $scope.modelEditingMode ? 'up' : 'down';
+  });
+
 }]);

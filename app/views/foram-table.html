@@ -1,59 +1,78 @@
-<div id="options" ng-click="generateChart()">Generate chart</div>
-<table class="foram-table">
-  <thead>
-    <th ng-repeat="(key, value) in forams[0].genotype" ng-if="key != '_id'">
-      {{key}}
-    </th>
-  </thead>
-  <tbody id="selectable">
-    <tr ng-repeat="foram in forams" data-index="{{$index}}">
-      <td ng-repeat="(key, value) in foram.genotype" ng-if="key != '_id'">
-        {{value.effective}}
-      </td>
-    </tr>
-  </tbody>
-  <tfoot>
-    <td colspan="3">
-      <div ng-show="pageCount() > 1 && foramsLoaded">
-        <ul class="pagination">
-          <li ng-class="prevPageDisabled()">
-            <a href ng-click="prevPage()">« Prev</a>
-          </li>
-          <li ng-repeat="n in range()" ng-class="{active: n == currentPage}" ng-click="setPage(n)">
-            <a>{{n}}</a>
-          </li>
-          <li ng-class="nextPageDisabled()">
-            <a href ng-click="nextPage()">Next »</a>
-          </li>
-        </ul>
-      </div>
-    </td>
-  </tfoot>
-</table>
+<h1 class="main-section-header">
+  Browse
+</h1>
+
 <form>
   <fieldset>
     <legend> Filters </legend>
-    <div class="row" ng-repeat="filter in filters" ng-model="filter">
+    <div class="row"  ng-model="newFilter">
       <div class="large-3 columns">
-        <label for="filter_param"> Filter parameter </label>
-        <select id="filter_param" ng-model="filter.param">
-          <option ng-repeat="param in availableFilterParams" ng-hide="isParamUnavailable(param)">{{param}}</option>
+        <label for="filter-param"> Filter parameter </label>
+        <select id="filter-param" ng-model="newFilter.param">
+          <option ng-repeat="param in availableFilterParams">{{param}}</option>
         </select>
       </div>
       <div class="large-3 columns">
-        <label for="min_value"> Minimal value </label>
-        <input type="number" id="min_value" step="any" ng-model="filter.min" />
+        <label for="min-value"> Minimal value </label>
+        <input type="number" id="min-value" step="any" ng-model="newFilter.min" />
       </div>
       <div class="large-3 columns">
-        <label for="max_value"> Max value</label>
-        <input type="number" id="max_value" step="any" ng-model="filter.max" />
+        <label for="max-value"> Max value</label>
+        <input type="number" id="max-value" step="any" ng-model="newFilter.max" />
       </div>
-      <button ng-click="deleteFilter($index)"> Remove filter </button>
+
     </div>
     <div class="row">
-      <button ng-click="filterData()" ng-show="hasFilters"> Filter data </button>
-      <button ng-click="clearFilters()" ng-show="hasFilters"> Clear filters </button>
-      <button ng-click="addFilter()"> Add new filter </button>
+      <button ng-click="filterData()">Filter</button>
+      <button ng-click="clearFilters()">Clear</button>
+      <button ng-click="addFilter()">Add new filter</button>
     </div>
   </fieldset>
 </form>
+
+<div>
+  <ul>
+    <li ng-repeat="filter in filters">
+      <span>{{filter.min+" < "}}</span> {{filter.param}} {{" < "+filter.max}}
+      <button ng-click="deleteFilter($index)"> Remove filter </button>
+    </li>
+  </ul>
+</div>
+
+<div class="forams-info" ng-hide="foramTableVisible">
+  <h1>Warning</h1>
+  <p>{{numberOfForams}} forams found.</p>
+  <p>Suggested table data limit was exceeded.</p>
+  <button ng-click="continueLoading()">Continue</button>
+  <button ng-click="skipLoading()">Skip</button>
+</div>
+
+<div class="forams-table-container" ng-show="foramTableVisible">
+  <table class="foram-table">
+    <thead>
+      <th ng-repeat="(key, value) in forams[0].genotype" ng-if="key != '_id'">
+        {{key}}
+      </th>
+    </thead>
+    <tbody id="selectable">
+      <tr ng-repeat="foram in forams" data-index="{{$index}}">
+        <td ng-repeat="(key, value) in foram.genotype" ng-if="key != '_id'">
+          {{value.effective}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div ng-show="pagination.pageCount() > 1 && foramsLoaded">
+    <ul class="pagination">
+      <li ng-class="pagination.prevPageDisabled()">
+        <a href ng-click="pagination.prevPage()">« Prev</a>
+      </li>
+      <li ng-repeat="n in range()" ng-class="{active: n == currentPage}" ng-click="pagination.setPage(n)">
+        <a>{{n}}</a>
+      </li>
+      <li ng-class="pagination.nextPageDisabled()">
+        <a href ng-click="pagination.nextPage()">Next »</a>
+      </li>
+    </ul>
+  </div>
+</div>

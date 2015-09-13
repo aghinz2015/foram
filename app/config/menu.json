@@ -8,7 +8,7 @@
       "args": "/"
     },
     {
-      "name": "Databases",
+      "name": "Datasets",
       "icon": "database",
       "args": "/databases"
     },

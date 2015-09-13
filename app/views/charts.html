@@ -1,41 +1,66 @@
-<p>charts</p>
+<h1 class="main-section-header">
+  Chart
+</h1>
 
-<div class="span12">
-  <div class="row">
-    Select attributes to present
-    <select ng-model="currentData" data-ng-change="changePresentedAttribute()">
-      <option ng-repeat="attribute in attributes"> {{attribute}}</option>
-    </select>
-  </div>
-
-</div>
-<div class="row">
-  <highchart id="chart1" config="chartConfig" class="span10"></highchart>
-</div>
-
-<div class="row">
-
-  <div class="large-3 columns" ng-show="chartEditingMode">
-    <form class="form">X-Axis min:
-      <input type="number" ng-model="chartConfig.xAxis.currentMin"> X-Axis max:
-      <input type="number" ng-model="chartConfig.xAxis.currentMax">
-    </form>
-    <button ng-click="restoreDefaultSeriesColor()"> Default Colors </button>
-  </div>
-
-  <div class="large-3 columns" ng-show="chartEditingMode">
-    <div class="row" ng-repeat="serie in chartConfig.series">
-      Color of {{serie.name}}
-      <input colorpicker ng-model="serie.color" type="text">
+<section id="charts-section">
+  <div class="chart-config">
+    <div class="row">
+      <div class="small-6 columns config-option">
+        <span class="selector-label">Attribute</span>
+        <span class="attribute-form">
+          <select class="attribute-selector" ng-model="currentData" data-ng-change="changePresentedAttribute()">
+            <option class="attribute-option" ng-repeat="attribute in attributes" value="{{$index}}"> {{attribute}}</option>
+          </select>
+        </span>
+      </div>
+      <div class="small-6 columns config-option">
+        <span class="selector-label">Generations</span>
+        <div class="generations-form">
+          <span class="small-5 columns">
+            <input  id="start-generation" type="number" ng-model="chart.xAxis.currentMin">
+          </span>
+          <span class="range-separator small-2 columns"> - </span>
+          <span class="small-5 columns">
+            <input id="end-generation" type="number" ng-model="chart.xAxis.currentMax">
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="large-3 columns" ng-show="chartEditingMode">
-    <input ng-repeat="serie in chartConfig.series" ng-model="serie.name"> Chart Title
-    <input ng-model="chartConfig.title.text">
+  <div class="row chart-container">
+    <highchart id="chart1" config="chart" class="span10"></highchart>
   </div>
 
-  <div class="large-3 columns">
-    <button ng-click="chartEditingMode = !chartEditingMode"> {{chartEditingModeStatus}}</button>
+  <div class="chart-options">
+    <div class="row">
+      <div class="large-3 columns">
+        <button class="chart-options-button" ng-click="chartEditingMode = !chartEditingMode">
+          <span>Edit</span>
+          <span class="fa fa-chevron-{{chartEditingModeStatus}}"></span>
+        </button>
+      </div>
+    </div>
+    <div class="options-list" ng-show="chartEditingMode">
+      <div class="row">
+        <div class="small-4 columns" >
+          <span class="small-6 columns">Color of</span>
+          <select class="color-selector small-6 columns" ng-model="currentSerie">
+            <option type="text" class="attribute-option" ng-repeat="serie in chart.series" value="{{$index}}"> {{serie.name}}</option>
+          </select>
+        </div>
+        <div class="small-8 columns">
+            <input colorpicker ng-model="currentColor" type="text">
+        </div>
+      </div>
+      <div class="row">
+        <span class="small-4 columns">Title</span>
+        <input class="small-8 columns" ng-model="chart.title.text">
+      </div>
+      <div class="row">
+        <span class="small-12 columns">Series</span>
+        <input class="small-{{10/chart.series.length}}" ng-repeat="serie in chart.series" ng-model="serie.name">
+      </div>
+    </div>
   </div>
-</div>
+</section>

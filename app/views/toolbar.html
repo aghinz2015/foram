@@ -1,39 +1,48 @@
-<div class="toolbar">
-  <h2>Toolbar</h2>
-  <div class="toolbar-option">
-    <label>Scale:  <span>{{data.scale | forceFloat}}</span><br />
-      <input class="inputControls" type="range" min=0.1 max=10 step=0.1 ng-model="data.scale" ng-change="scale()"/>
-    </label>
+<div class="model-options">
+  <div class="row">
+    <div class="large-3 columns">
+      <button class="chart-options-button" ng-click="modelEditingMode = !modelEditingMode">
+        <span>Edit</span>
+        <span class="fa fa-chevron-{{modelEditingModeStatus}}"></span>
+      </button>
+    </div>
   </div>
-  <div class="toolbar-option">
-    <label>Rotate X: <span>{{data.rotateX | forceInt}}</span><br />
-      <input class="inputControls" type="range" min=0 max=359 step=1 ng-model="data.rotateX" ng-change="rotate()"/>
-    </label>
-  </div>
-  <div class="toolbar-option">
-    <label>Rotate Y: <span>{{data.rotateY | forceInt}}</span><br />
-      <input class="inputControls" type="range" min=0 max=359 step=1 ng-model="data.rotateY" ng-change="rotate()"/>
-    </label>
-  </div>
-  <div class="toolbar-option">
-    <label>Rotate Z: <span>{{data.rotateZ | forceInt}}</span><br />
-      <input class="inputControls" type="range" min=0 max=359 step=1 ng-model="data.rotateZ" ng-change="rotate()"/>
-    </label>
-  </div>
-  <div class="toolbar-option">
-    <label>Translate X: <span>{{data.positionX | forceFloat}}</span><br />
-      <input class="inputControls" type="range" min=-10 max=10 step=0.1 ng-model="data.positionX" ng-change="translate()"/>
-    </label>
-  </div>
-  <div class="toolbar-option">
-    <label>Translate Y: <span>{{data.positionY | forceFloat}}</span><br />
-      <input class="inputControls" type="range" min=-10 max=10 step=0.1 ng-model="data.positionY" ng-change="translate()"/>
-    </label>
-  </div>
-  <div class="toolbar-option">
-    <label>Translate Z: <span>{{data.positionZ | forceFloat}}</span><br />
-      <input class="inputControls" type="range" min=-10 max=10 step=0.1 ng-model="data.positionZ" ng-change="translate()"/>
-    </label>
+  <div class="model-options-list" ng-show="modelEditingMode">
+    <div class="toolbar-option">
+      <label>Scale:  <span>{{data.scale | forceFloat}}</span><br />
+        <input class="inputControls" type="range" min=0.1 max=10 step=0.1 ng-model="data.scale" ng-change="scale()"/>
+      </label>
+    </div>
+    <div class="toolbar-option">
+      <label>Rotate X: <span>{{data.rotateX | forceInt}}</span><br />
+        <input class="inputControls" type="range" min=0 max=359 step=1 ng-model="data.rotateX" ng-change="rotate()"/>
+      </label>
+    </div>
+    <div class="toolbar-option">
+      <label>Rotate Y: <span>{{data.rotateY | forceInt}}</span><br />
+        <input class="inputControls" type="range" min=0 max=359 step=1 ng-model="data.rotateY" ng-change="rotate()"/>
+      </label>
+    </div>
+    <div class="toolbar-option">
+      <label>Rotate Z: <span>{{data.rotateZ | forceInt}}</span><br />
+        <input class="inputControls" type="range" min=0 max=359 step=1 ng-model="data.rotateZ" ng-change="rotate()"/>
+      </label>
+    </div>
+    <div class="toolbar-option">
+      <label>Translate X: <span>{{data.positionX | forceFloat}}</span><br />
+        <input class="inputControls" type="range" min=-10 max=10 step=0.1 ng-model="data.positionX" ng-change="translate()"/>
+      </label>
+    </div>
+    <div class="toolbar-option">
+      <label>Translate Y: <span>{{data.positionY | forceFloat}}</span><br />
+        <input class="inputControls" type="range" min=-10 max=10 step=0.1 ng-model="data.positionY" ng-change="translate()"/>
+      </label>
+    </div>
+    <div class="toolbar-option">
+      <label>Translate Z: <span>{{data.positionZ | forceFloat}}</span><br />
+        <input class="inputControls" type="range" min=-10 max=10 step=0.1 ng-model="data.positionZ" ng-change="translate()"/>
+      </label>
+    </div>
   </div>
 
 </div>

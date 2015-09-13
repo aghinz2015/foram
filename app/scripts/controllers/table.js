@@ -1,25 +1,31 @@
-/**
- * Created by Eryk on 2015-06-09.
- */
+app.controller('TableCtrl', ['$location', '$scope', 'ForamAPIService', 'ConfigService','$q', '$http', function ($location, $scope, ForamAPIService, ConfigService, $q, $http) {
 
-app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetService', 'ngDialog','ConfigService', function ($location, $scope, $http, $q, DatasetService, ngDialog,ConfigService) {
+  var maxForams;
+  var foramsPerPage = 1;
 
-  var dialog;
+  ConfigService.getFilterConfig().then(
+    function(response){
+      var data = response.data;
+      $scope.availableFilterParams = data.availableFilterParams;
+      maxForams = data.maxForams;
+    },function(response){
+      console.log('GetFilterConfig::Error - ',response.status);
+    });
 
-  // #TODO Improvment on API side or move to configuration file
-  $scope.availableFilterParams = ConfigService.getFilterConfig();
   $scope.unavaiableParams = [];
   $scope.foramsLoaded = false;
   $scope.forams = [];
   $scope.numberOfForams = 1;
-  $scope.foramsPerPage = 1;
   $scope.currentPage = 1;
+  $scope.newFilter = {};
+
+  ////////////////////////    SELECTABLES    ///////////////////////////
 
   //currentSet represents our currently selected records with start and stop index
   var currentSet = { start: null, stop: null };
 
   // reference to our options dropdown
-  $scope.optionsWindow = $("#options");
+  var optionsWindow = $("#options");
 
   // function which is responsible for selecting events
   $(function () {
@@ -35,12 +41,12 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetServi
           currentSet.start = index;
         }
 
-        if (index > $scope.currentSet.stop || !currentSet.stop) {
+        if (index > currentSet.stop || !currentSet.stop) {
           currentSet.stop = index;
         }
       },
       stop: function (event, ui) {
-        $scope.optionsWindow.css({
+        optionsWindow.css({
           display: 'block',
           left: (event.clientX) + 'px',
           top: (event.clientY) + 'px'
@@ -55,7 +61,9 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetServi
     $location.path("/charts");
   };
 
-  $scope.hasFilters = false;
+  ////////////////////////    SELECTABLES    ///////////////////////////
+
+
   $scope.filters = [];
   var flatFilters = {};
 
@@ -79,19 +87,19 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetServi
         }
       }
     }
-    getForams(flatFilters);
+    filterForams(flatFilters);
   };
 
   $scope.addFilter = function () {
-    $scope.filters.push({});
-    $scope.hasFilters = true;
+    $scope.filters.push($scope.newFilter);
+    $scope.newFilter = {};
   };
   $scope.clearFilters = function () {
-    $scope.hasFilters = false;
     $scope.filters = [];
     flatFilters = {};
-    getForams();
+    filterForams();
   };
+
   $scope.deleteFilter = function (index) {
     var filter = $scope.filters[index];
     var key;
@@ -104,92 +112,82 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetServi
       flatFilters[key] = undefined;
     }
     $scope.filters.splice(index, 1);
-    if ($scope.filters.length == 0) $scope.hasFilters = false;
-    getForams();
+    filterForams();
   };
+
+
   var flatFilterName = function (filter, suffix) {
     return toUnderScore(filter.param) + "_" + suffix;
   };
-  $scope.maxForamsWithoutWarning = 100; // TODO move to configuration file
 
-  var getForams = function () {
-    var foramsInfoPromise = getForamsInfo();
-    foramsInfoPromise.then(function (foramsInfo) {
-      $scope.numberOfForams = foramsInfo.total;
-      $scope.foramsPerPage = foramsInfo["per-page"];
-      if ($scope.numberOfForams > $scope.maxForamsWithoutWarning) {
-        dialog = ngDialog.open({ template: 'popupTmpl.html', scope: $scope });
-      } else {
-        setForams();
-        $scope.foramsLoaded = true;
-      }
-    });
+
+  var filterForams = function () {
+    ForamAPIService.getForamsInfo()
+      .then(function (response) {
+        var headers = response.headers();
+        $scope.numberOfForams = headers.total;
+        foramsPerPage = headers["per-page"];
+        if ($scope.numberOfForams > maxForams) {
+          $scope.foramTableVisible = false;
+        } else {
+          loadForams();
+          $scope.foramsLoaded = true;
+        }
+    },function(error){
+        console.log("getForamsInfo::")
+      });
   };
 
-  var getForamsInfo = function () {
-    var deferred = $q.defer();
-    $http.head('localhost:3000/forams', { params: flatFilters }).success(function (data, status, headers, config) {
-      deferred.resolve(headers());
-    });
-    return deferred.promise;
-  };
-
-  var getForamsFromDb = function () {
-    var deferred = $q.defer();
-    $http.get('localhost:3000/forams', { params: flatFilters }).success(function (data, status, headers, config) {
-      deferred.resolve(data.forams);
-    });
-    return deferred.promise;
-  };
-
-  var setForams = function (openDialog) {
-    var foramsPromise = getForamsFromDb();
-    foramsPromise.then(function (forams) {
-      $scope.forams = forams;
-      if (openDialog) {
-        dialog.close();
-      }
-    });
+  var loadForams = function () {
+    ForamAPIService.getForams(flatFilters)
+      .then(function(response){
+        $scope.forams = response.data.forams;
+      },function(error){
+        console.log("loadForams::Error - ", error);
+      });
   };
 
   var toUnderScore = function (str) {
     return str.replace(/([A-Z])/g, function ($1) { return "_" + $1.toLowerCase(); });
   };
 
-  $scope.prevPage = function () {
-    if ($scope.currentPage > 1) {
-      $scope.currentPage--;
-    }
-  };
 
-  $scope.prevPageDisabled = function () {
-    return $scope.currentPage === 1 ? "disabled" : "";
-  };
+  $scope.pagination = {
+    prevPage: function () {
+      if ($scope.currentPage > 1) {
+        $scope.currentPage--;
+      }
+    },
 
-  $scope.nextPage = function () {
-    if ($scope.currentPage < $scope.pageCount() - 1) {
-      $scope.currentPage++;
-    }
-  };
+    prevPageDisabled: function () {
+      return $scope.currentPage === 1 ? "disabled" : "";
+    },
 
-  $scope.nextPageDisabled = function () {
-    return $scope.currentPage === $scope.pageCount() - 1 ? "disabled" : "";
-  };
+    nextPage: function () {
+      if ($scope.currentPage < this.pageCount() - 1) {
+        $scope.currentPage++;
+      }
+    },
 
-  $scope.pageCount = function () {
-    return Math.ceil($scope.numberOfForams / $scope.foramsPerPage);
-  };
+    nextPageDisabled: function () {
+      return $scope.currentPage === this.pageCount() - 1 ? "disabled" : "";
+    },
 
-  $scope.setPage = function (n) {
-    if (n > 0 && n < $scope.pageCount()) {
-      $scope.currentPage = n;
+    pageCount: function () {
+      return Math.ceil($scope.numberOfForams / foramsPerPage);
+    },
+
+    setPage: function (n) {
+      if (n > 0 && n < this.pageCount()) {
+        $scope.currentPage = n;
+      }
     }
   };
 
   $scope.$watch("currentPage", function () {
     flatFilters['page'] = $scope.currentPage;
     if ($scope.foramsLoaded) {
-      setForams();
+      loadForams();
     }
   });
 
@@ -211,8 +209,8 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetServi
     var start;
 
     start = $scope.currentPage;
-    if (start > $scope.pageCount() - rangeSize) {
-      start = $scope.pageCount() - rangeSize;
+    if (start > $scope.pagination.pageCount() - rangeSize) {
+      start = $scope.pagination.pageCount() - rangeSize;
     }
 
     for (var i = start; i < start + rangeSize; i++) {
@@ -222,16 +220,16 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetServi
   };
 
   $scope.skipLoading = function () {
-    dialog.close();
     $scope.foramsLoaded = false;
+    $scope.foramTableVisible = false;
   };
+
   $scope.continueLoading = function () {
-    setForams(true);
+    loadForams();
     $scope.foramsLoaded = true;
+    $scope.foramTableVisible = true;
   };
-  $scope.createChart = function () {
-    dialog.close();
-    $location.path('/charts');
-  };
-  getForams();
+
+  filterForams();
 }]);
+

@@ -1,0 +1,49 @@
+#charts-section {
+  .config-option {
+    text-align: center;
+    padding: 10px;
+
+    .generations-form, .attribute-form {
+      text-align: center;
+      width: 50%;
+      margin: 0 auto;
+
+      span {
+        color: white;
+      }
+
+    }
+
+    .selector-label {
+      font-size: 22px;
+      margin: 8px 0;
+      color: white;
+      text-align: center;
+      width: 100%;
+    }
+  }
+
+  .chart-config {
+    background: $standard-menu-color;
+    margin: 0 -20px;
+  }
+
+  .chart-options-button {
+    background: $standard-menu-color;
+    margin-left: -35px;
+    border-left: 2px solid white;
+    margin-bottom: 0;
+    padding: 10px 25px;
+    border-bottom: 2px solid white;
+    font-size: 20px;
+  }
+
+  .options-list {
+    margin: 0 -20px;
+    border-left: 2px solid white;
+    padding: 0 10px;
+    background: $standard-menu-color;
+    border-right: 2px solid white;
+    color: white;
+  }
+}

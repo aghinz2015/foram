@@ -4,10 +4,12 @@ $standard-menu-color: #434343;
 $standard-light-white-font: #fdffc3;
 $standard-light-menu: #717171;
 $standard-baige-light: #d0b149;
+$standard-baige-dark: #a1833b;
 
 @import "sidebar";
 @import "foram_table";
 @import "foram_visualisation";
+@import "charts";
 
 .browsehappy {
   margin: 0.2em 0;
@@ -24,6 +26,22 @@ body,html {
 .container {
   margin-left: 190px;
 
+  .row {
+    max-width: 100%;
+  }
+
+  .main-section-header {
+    text-transform: uppercase;
+    color: $standard-menu-color;
+    border-bottom: 2px solid $standard-light-menu;
+    width: 250px;
+    padding-left: 30px;
+  }
+
+  section {
+    margin: 10px 20px;
+  }
+
   @media screen and (max-width: 900px){
     margin-left: 135px;
   }
@@ -32,3 +50,5 @@ body,html {
     margin-left: 40px;
   }
 }
+
+
