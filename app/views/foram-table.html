@@ -6,37 +6,61 @@
   <fieldset>
     <legend> Filters </legend>
     <div class="row"  ng-model="newFilter">
-      <div class="large-3 columns">
-        <label for="filter-param"> Filter parameter </label>
+      <div class="small-3 columns">
+        <label for="filter-param">Filter parameter</label>
         <select id="filter-param" ng-model="newFilter.param">
           <option ng-repeat="param in availableFilterParams">{{param}}</option>
         </select>
       </div>
-      <div class="large-3 columns">
-        <label for="min-value"> Minimal value </label>
-        <input type="number" id="min-value" step="any" ng-model="newFilter.min" />
+      <div class="small-3 columns">
+        <label for="min-value">Min value</label>
+        <input type="number" id="min-value" step="any" ng-model="newFilter.min" max="{{newFilter.max}}"/>
       </div>
-      <div class="large-3 columns">
-        <label for="max-value"> Max value</label>
-        <input type="number" id="max-value" step="any" ng-model="newFilter.max" />
+      <div class="small-3 columns">
+        <label for="max-value">Max value</label>
+        <input type="number" id="max-value" step="any" ng-model="newFilter.max" min="{{newFilter.min}}"/>
       </div>
-
+      <div class="small-3 columns">
+        <button ng-click="addFilter()">Add</button>
+      </div>
     </div>
     <div class="row">
-      <button ng-click="filterData()">Filter</button>
-      <button ng-click="clearFilters()">Clear</button>
-      <button ng-click="addFilter()">Add new filter</button>
+      <div class="small-6 columns">
+        <label for="haploid-value">Haploid</label>
+        <input type="checkbox" id="haploid-value" name="gender" ng-model="constantFilters.haploid"/>
+      </div>
+      <div class="small-6 columns">
+        <label for="diploid-value">Diploid</label>
+        <input type="checkbox" id="diploid-value" name="gender" ng-model="constantFilters.diploid" checked/>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-4 columns">
+        <label for="start-value">DeathStepNumber</label>
+      </div>
+      <div class="small-3 columns">
+        <input type="number" id="start-value" step="1" ng-model="constantFilters.start" max="{{constantFilters.end}}"/>
+      </div>
+      <div class="small-2 columns"> - </div>
+      <div class="small-3 columns">
+        <input type="number" id="end-value" step="1" ng-model="constantFilters.end" min="{{constantFilters.start}}"/>
+      </div>
+      </div>
     </div>
   </fieldset>
 </form>
-
 <div>
   <ul>
     <li ng-repeat="filter in filters">
-      <span>{{filter.min+" < "}}</span> {{filter.param}} {{" < "+filter.max}}
+      <span ng-show="filter.min">{{filter.min+" < "}}</span> {{filter.param}} <span ng-show="filter.max">{{" < "+filter.max}}</span>
       <button ng-click="deleteFilter($index)"> Remove filter </button>
     </li>
   </ul>
+</div>
+
+<div class="row">
+  <button ng-click="filterData()">Filter</button>
+  <button ng-click="clearFilters()">Clear</button>
 </div>
 
 <div class="forams-info" ng-hide="foramTableVisible">
@@ -67,7 +91,7 @@
       <li ng-class="pagination.prevPageDisabled()">
         <a href ng-click="pagination.prevPage()">« Prev</a>
       </li>
-      <li ng-repeat="n in range()" ng-class="{active: n == currentPage}" ng-click="pagination.setPage(n)">
+      <li ng-repeat="n in pagination.range()" ng-class="{active: n == currentPage}" ng-click="pagination.setPage(n)">
         <a>{{n}}</a>
       </li>
       <li ng-class="pagination.nextPageDisabled()">

@@ -1,23 +1,5 @@
 app.controller('TableCtrl', ['$location', '$scope', 'ForamAPIService', 'ConfigService','$q', '$http', function ($location, $scope, ForamAPIService, ConfigService, $q, $http) {
 
-  var maxForams;
-  var foramsPerPage = 1;
-
-  ConfigService.getFilterConfig().then(
-    function(response){
-      var data = response.data;
-      $scope.availableFilterParams = data.availableFilterParams;
-      maxForams = data.maxForams;
-    },function(response){
-      console.log('GetFilterConfig::Error - ',response.status);
-    });
-
-  $scope.unavaiableParams = [];
-  $scope.foramsLoaded = false;
-  $scope.forams = [];
-  $scope.numberOfForams = 1;
-  $scope.currentPage = 1;
-  $scope.newFilter = {};
 
   ////////////////////////    SELECTABLES    ///////////////////////////
 
@@ -57,20 +39,24 @@ app.controller('TableCtrl', ['$location', '$scope', 'ForamAPIService', 'ConfigSe
 
   // test function which change view to charts and sends selected data
   $scope.generateChart = function () {
-    DatasetService.putProducts($scope.forams.slice($scope.currentSet.start, currentSet.stop + 1));
+    // #TODO dataset service was removed - create http request for same foram data
+    //DatasetService.putProducts($scope.forams.slice($scope.currentSet.start, currentSet.stop + 1));
     $location.path("/charts");
   };
 
-  ////////////////////////    SELECTABLES    ///////////////////////////
+  ////////////////////////    FILTERS    ///////////////////////////
 
-
+  // variables
   $scope.filters = [];
-  var flatFilters = {};
-
-  $scope.isParamUnavailable = function (paramName) {
-    return ($scope.unavaiableParams.indexOf(paramName) > -1);
+  $scope.newFilter = {};
+  $scope.constantFilters = {
+    diploid: true,
+    haploid: true
   };
 
+  var flatFilters = {};
+
+  // fliter data with current filters
   $scope.filterData = function () {
     flatFilters = {};
     var i;
@@ -78,51 +64,78 @@ app.controller('TableCtrl', ['$location', '$scope', 'ForamAPIService', 'ConfigSe
     for (i in $scope.filters) {
       if ($scope.filters[i].param != undefined) {
         if ($scope.filters[i].min != undefined) {
-          key = flatFilterName($scope.filters[i], 'min');
-          flatFilters[key] = $scope.filters[i].min
+          key = $scope.filters[i].param+'_min';
+          flatFilters[key] = $scope.filters[i].min;
         }
         if ($scope.filters[i].max != undefined) {
-          key = flatFilterName($scope.filters[i], 'max');
-          flatFilters[key] = $scope.filters[i].max
+          key = $scope.filters[i].param+'_max';
+          flatFilters[key] = $scope.filters[i].max;
         }
       }
     }
-    filterForams(flatFilters);
-  };
 
-  $scope.addFilter = function () {
-    $scope.filters.push($scope.newFilter);
-    $scope.newFilter = {};
-  };
-  $scope.clearFilters = function () {
-    $scope.filters = [];
-    flatFilters = {};
+    flatFilters.diploid = $scope.constantFilters.diploid;
+    flatFilters.haploid = $scope.constantFilters.haploid;
+    flatFilters.start = $scope.constantFilters.start;
+    flatFilters.end = $scope.constantFilters.end;
+
     filterForams();
   };
 
+  // add new filter
+  $scope.addFilter = function () {
+    if(!checkIntersectingFilters() && $scope.newFilter.param){
+      $scope.filters.push($scope.newFilter);
+      $scope.newFilter = {};
+    }
+
+  };
+
+  // clear all filters
+  $scope.clearFilters = function () {
+    $scope.filters = [];
+    flatFilters = {};
+    $scope.constantFilters = {
+      diploid: true,
+      haploid: true
+    };
+    filterForams();
+  };
+
+  // delete filter and load forams
   $scope.deleteFilter = function (index) {
     var filter = $scope.filters[index];
     var key;
     if (filter.max != undefined) {
-      key = flatFilterName(filter, 'max');
+      key = filter.param+'_max';
       flatFilters[key] = undefined;
     }
     if (filter.min != undefined) {
-      key = flatFilterName(filter, 'min');
+      key = filter.param+'_min';
       flatFilters[key] = undefined;
     }
     $scope.filters.splice(index, 1);
     filterForams();
   };
 
+  // check filters for intersecting
+  var checkIntersectingFilters = function(){
+    var result = false;
 
-  var flatFilterName = function (filter, suffix) {
-    return toUnderScore(filter.param) + "_" + suffix;
+    for (i in $scope.filters) {
+      if($scope.filters[i].param == $scope.newFilter.param){
+        $scope.filters[i] = $scope.newFilter;
+        result = true;
+        break;
+      }
+    }
+
+    return result;
   };
 
-
+  // filter forams - get total number and then load forams
   var filterForams = function () {
-    ForamAPIService.getForamsInfo()
+    ForamAPIService.getForamsInfo(flatFilters)
       .then(function (response) {
         var headers = response.headers();
         $scope.numberOfForams = headers.total;
@@ -134,10 +147,11 @@ app.controller('TableCtrl', ['$location', '$scope', 'ForamAPIService', 'ConfigSe
           $scope.foramsLoaded = true;
         }
     },function(error){
-        console.log("getForamsInfo::")
+        console.log("getForamsInfo::Error - ", error)
       });
   };
 
+  // load forams with current filters
   var loadForams = function () {
     ForamAPIService.getForams(flatFilters)
       .then(function(response){
@@ -147,11 +161,11 @@ app.controller('TableCtrl', ['$location', '$scope', 'ForamAPIService', 'ConfigSe
       });
   };
 
-  var toUnderScore = function (str) {
-    return str.replace(/([A-Z])/g, function ($1) { return "_" + $1.toLowerCase(); });
-  };
+  ////////////////////////    PAGINATION    ///////////////////////////
 
+  $scope.currentPage = 1;
 
+  // all pagination functions
   $scope.pagination = {
     prevPage: function () {
       if ($scope.currentPage > 1) {
@@ -181,9 +195,26 @@ app.controller('TableCtrl', ['$location', '$scope', 'ForamAPIService', 'ConfigSe
       if (n > 0 && n < this.pageCount()) {
         $scope.currentPage = n;
       }
+    },
+
+    range : function () {
+      var rangeSize = 5;
+      var ret = [];
+      var start;
+
+      start = $scope.currentPage;
+      if (start > $scope.pagination.pageCount() - rangeSize) {
+        start = $scope.pagination.pageCount() - rangeSize;
+      }
+
+      for (var i = start; i < start + rangeSize; i++) {
+        ret.push(i);
+      }
+      return ret;
     }
   };
 
+  // watching current page number and loading forams
   $scope.$watch("currentPage", function () {
     flatFilters['page'] = $scope.currentPage;
     if ($scope.foramsLoaded) {
@@ -191,33 +222,23 @@ app.controller('TableCtrl', ['$location', '$scope', 'ForamAPIService', 'ConfigSe
     }
   });
 
-  $scope.$watch("filters", function (newFilters, oldFilters) {
-    oldFilters.forEach(function (element) {
-      if ($scope.isParamUnavailable(element.param)) {
-        var index = $scope.unavaiableParams.indexOf(element.param);
-        $scope.unavaiableParams.splice(index, 1);
-      }
+  ////////////////////////    LOADING    ///////////////////////////
+
+  var maxForams;
+  var foramsPerPage = 1;
+
+  $scope.foramsLoaded = false;
+  $scope.forams = [];
+  $scope.numberOfForams = 1;
+
+  ConfigService.getFilterConfig().then(
+    function(response){
+      var data = response.data;
+      $scope.availableFilterParams = data.availableFilterParams;
+      maxForams = data.maxForams;
+    },function(response){
+      console.log('GetFilterConfig::Error - ',response.status);
     });
-    newFilters.forEach(function (element) {
-      $scope.unavaiableParams.push(element.param);
-    });
-  }, true);
-
-  $scope.range = function () {
-    var rangeSize = 5;
-    var ret = [];
-    var start;
-
-    start = $scope.currentPage;
-    if (start > $scope.pagination.pageCount() - rangeSize) {
-      start = $scope.pagination.pageCount() - rangeSize;
-    }
-
-    for (var i = start; i < start + rangeSize; i++) {
-      ret.push(i);
-    }
-    return ret;
-  };
 
   $scope.skipLoading = function () {
     $scope.foramsLoaded = false;
@@ -230,6 +251,9 @@ app.controller('TableCtrl', ['$location', '$scope', 'ForamAPIService', 'ConfigSe
     $scope.foramTableVisible = true;
   };
 
+  ////////////////////////    INIT     ///////////////////////////
+
   filterForams();
+
 }]);
 
