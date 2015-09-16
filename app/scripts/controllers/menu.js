@@ -13,8 +13,10 @@ app.controller('menuCtrl', ['$scope', '$location', 'AuthenticationService', func
   };
 
   $scope.logout = function() {
-    AuthenticationService.clearCredentials();
-    $location.path('/login');
+    AuthenticationService.logout().success(function() {
+      AuthenticationService.clearCredentials();
+      $location.path('/login');
+    });
   };
 
   // menu config - #TODO put it into JSON file

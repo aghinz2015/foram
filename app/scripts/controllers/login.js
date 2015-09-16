@@ -1,7 +1,10 @@
 app.controller('LoginCtrl', ['$location', '$scope', 'AuthenticationService', function($location, $scope, AuthenticationService) {
   $scope.init = function() {
+    if($scope.globals && $scope.globals.currentUser) {
+      $location.path('/');
+    }
     // reset login status
-    AuthenticationService.clearCredentials();
+    //AuthenticationService.clearCredentials();
   };
 
   $scope.login = function() {

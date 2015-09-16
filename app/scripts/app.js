@@ -91,6 +91,7 @@ var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.m
   app.service('APIInterceptor', ['$location', function($location) {
     return {
       responseError: function(response) {
+        // redirect to login page if api returns unauthorized
         if (response.status === 401) {
           $location.path('/login');
         }

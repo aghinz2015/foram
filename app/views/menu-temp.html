@@ -5,6 +5,11 @@
   </header>
   <ul class="side-nav">
     <menu-position ng-if="menu.isCurrentUser" ng-repeat="position in menu.list" position="position"></menu-position>
-    <li ng-show="!menu.isCurrentUser" ng-click="go('/login')">Login</li>
+    <li class="menu-option ng-scope" ng-show="!menu.isCurrentUser" ng-click="go('/login')">
+      <div class="menu-position">
+        <span class="fa fa-fw fa-sign-in"></span>
+        Login
+      </div>
+    </li>
   </ul>
 </div>

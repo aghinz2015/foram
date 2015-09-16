@@ -23,6 +23,7 @@
   </div>
   <div class="form-actions">
     <button type="submit" ng-disable="form.$invalid || dataLoading" class="btn btn-primary">Register</button>
+    <i class="fa fa-spinner fa-spin" ng-show="dataLoading"></i>
     <a href="#/login" class="btn btn-link">Login</a>
   </div>
 </form>
