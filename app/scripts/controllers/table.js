@@ -1,4 +1,4 @@
-app.controller('TableCtrl', ['$location', '$scope', 'ForamAPIService', 'ConfigService','$q', '$http', function ($location, $scope, ForamAPIService, ConfigService, $q, $http) {
+app.controller('TableCtrl', ['$location', '$scope', 'ForamAPIService', 'ConfigService', function ($location, $scope, ForamAPIService, ConfigService) {
 
 
   ////////////////////////    SELECTABLES    ///////////////////////////
@@ -41,6 +41,7 @@ app.controller('TableCtrl', ['$location', '$scope', 'ForamAPIService', 'ConfigSe
   $scope.generateChart = function () {
     // #TODO dataset service was removed - create http request for same foram data
     //DatasetService.putProducts($scope.forams.slice($scope.currentSet.start, currentSet.stop + 1));
+    $location.search(prepareFilters());
     $location.path("/charts");
   };
 
@@ -49,36 +50,43 @@ app.controller('TableCtrl', ['$location', '$scope', 'ForamAPIService', 'ConfigSe
   // variables
   $scope.filters = [];
   $scope.newFilter = {};
-  $scope.constantFilters = {
-    diploid: true,
-    haploid: true
-  };
+  $scope.constantFilters = {};
 
   var flatFilters = {};
 
-  // fliter data with current filters
-  $scope.filterData = function () {
-    flatFilters = {};
+  // prepare flat filters
+  var prepareFilters = function(){
+    var filters = {};
     var i;
     var key;
     for (i in $scope.filters) {
       if ($scope.filters[i].param != undefined) {
         if ($scope.filters[i].min != undefined) {
           key = $scope.filters[i].param+'_min';
-          flatFilters[key] = $scope.filters[i].min;
+          filters[key] = $scope.filters[i].min;
         }
         if ($scope.filters[i].max != undefined) {
           key = $scope.filters[i].param+'_max';
-          flatFilters[key] = $scope.filters[i].max;
+          filters[key] = $scope.filters[i].max;
         }
       }
     }
 
-    flatFilters.diploid = $scope.constantFilters.diploid;
-    flatFilters.haploid = $scope.constantFilters.haploid;
-    flatFilters.start = $scope.constantFilters.start;
-    flatFilters.end = $scope.constantFilters.end;
+    if(($scope.constantFilters.is_diploid && $scope.constantFilters.is_haploid) || (!$scope.constantFilters.is_diploid && !$scope.constantFilters.is_haploid)){
+      filters.is_diploid = undefined;
+    } else {
+      filters.is_diploid = $scope.constantFilters.is_diploid;
+    }
 
+    filters.death_step_no_min = $scope.constantFilters.death_step_no_min;
+    filters.death_step_no_max = $scope.constantFilters.death_step_no_max;
+
+    return filters;
+  };
+
+  // fliter data with current filters
+  $scope.filterData = function () {
+    flatFilters = prepareFilters();
     filterForams();
   };
 
@@ -254,6 +262,7 @@ app.controller('TableCtrl', ['$location', '$scope', 'ForamAPIService', 'ConfigSe
   ////////////////////////    INIT     ///////////////////////////
 
   filterForams();
+  console.log($location.search());
 
 }]);
 

@@ -3,35 +3,10 @@
 </h1>
 
 <section id="charts-section">
-  <div class="chart-config">
-    <div class="row">
-      <div class="small-6 columns config-option">
-        <span class="selector-label">Attribute</span>
-        <span class="attribute-form">
-          <select class="attribute-selector" ng-model="currentData" data-ng-change="changePresentedAttribute()">
-            <option class="attribute-option" ng-repeat="attribute in attributes" value="{{$index}}"> {{attribute}}</option>
-          </select>
-        </span>
-      </div>
-      <div class="small-6 columns config-option">
-        <span class="selector-label">Generations</span>
-        <div class="generations-form">
-          <span class="small-5 columns">
-            <input  id="start-generation" type="number" ng-model="chart.xAxis.currentMin">
-          </span>
-          <span class="range-separator small-2 columns"> - </span>
-          <span class="small-5 columns">
-            <input id="end-generation" type="number" ng-model="chart.xAxis.currentMax">
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <div class="row chart-container">
+  <div class="row chart-container" style="height: 500px">
     <highchart id="chart1" config="chart" class="span10"></highchart>
   </div>
-
   <div class="chart-options">
     <div class="row">
       <div class="large-3 columns">

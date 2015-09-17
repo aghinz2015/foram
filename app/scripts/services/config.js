@@ -13,8 +13,20 @@ app.service('ConfigService',['$http','appConfig',function($http,appConfig){
     return $http.get("/config/highchart.json");
   };
 
+  /**
+   *
+   * @returns {HttpPromise}
+   */
   this.getFilterConfig= function() {
     return $http.get("/config/filter.json");
+  };
+
+  /**
+   *
+   * @returns {HttpPromise}
+   */
+  this.getChartConfig= function() {
+    return $http.get("/config/chart.json");
   };
 
   /**

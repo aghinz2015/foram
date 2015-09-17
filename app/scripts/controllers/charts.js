@@ -8,10 +8,126 @@
  * Controller of the trunkApp
  */
 
-app.controller('ChartsCtrl',['$scope','DatasetService', 'ConfigService', 'ForamAPIService', function ($scope, DatasetService, ConfigService) {
+app.controller('ChartsCtrl',['$scope', 'ConfigService', 'ForamAPIService', 'ngDialog', function ($scope, ConfigService, ForamAPIService, ngDialog) {
 
+  ////////////////////////    DIALOG    ///////////////////////////
 
+  var dialog;
+  $scope.availableGenes = [];
+
+  ConfigService.getChartConfig().then(
+    function(response){
+      var data = response.data;
+      $scope.availableGenes = data.availableGenesParams;
+    },function(response){
+      console.log('GetChartConfig::Error - ',response.status);
+    });
+
+  $scope.openDialog = function () {
+    dialog = ngDialog.open(
+      {
+        template: 'views/chart-dialog.html',
+        scope: $scope
+      });
+  };
+
+  ////////////////////////    CHART    ///////////////////////////
+
+  $scope.chartParams = {};
   $scope.chart = {};
+
+  var generations;
+
+  ConfigService.getHighchart()
+    .then(
+    function(res){
+      $scope.chart = res.data.config;
+    },
+    function(error){
+      console.log('getHighchart::Error - ',error);
+    });
+
+  $scope.createChart = function() {
+    dialog.close();
+    generateChart();
+  };
+
+  var pushSeries = function(geneSeries){
+    var toBePushed = [];
+    for (var key in geneSeries) {
+      if (key != "name" && geneSeries.hasOwnProperty(key)) {
+        for(var k in geneSeries[key])
+        if(geneSeries[key].hasOwnProperty(k)) {
+          var serie;
+          if(k == 'standard_deviation'){
+            serie =  { data: [], name: geneSeries.name+"_"+key+"_"+k, linkedTo: ':previous', type: 'arearange', fillOpacity: 0.1, lineWidth: 0 };
+            for(var i in geneSeries[key].average){
+              serie.data.push([geneSeries[key].average[i]-geneSeries[key][k][i],geneSeries[key].average[i]+geneSeries[key][k][i]]);
+            }
+          } else {
+            serie = {data: geneSeries[key][k], name: geneSeries.name+"_"+key+"_"+k};
+          }
+
+          toBePushed.push(serie);
+        }
+      }
+    }
+    $scope.chart.series = toBePushed;
+    for(var i in $scope.chart.series){
+      if(!$scope.chart.series[i].name.indexOf('effective')){
+        $scope.chart.series[i].hide();
+      }
+    }
+  };
+
+  var generateChart = function() {
+    if($scope.chartParams.gene1 || $scope.chartParams.gene2) {
+
+      var flatParams = {
+        start: $scope.chartParams.start,
+        stop: $scope.chartParams.stop,
+        "genes[]": [
+          $scope.chartParams.gene1,
+          $scope.chartParams.gene2
+        ].filter(function(e){return e})
+      };
+      ForamAPIService.getGenerations(flatParams)
+        .then(function (response) {
+          console.log(response.data.result);
+          $scope.chartParams = {};
+          generations = response.data.result;
+
+          $scope.chart.xAxis.categories = generations.grouping_parameter.values;
+          $scope.chart.xAxis.title = {};
+          $scope.chart.xAxis.title.text = generations.grouping_parameter.name;
+          $scope.chart.xAxis.crosshair = true;
+
+
+
+
+
+          pushSeries(generations.gene1);
+          if (generations.gene2) {
+            pushSeries(generations.gene2,1);
+          }
+        }, function (error) {
+          console.log("generateChart::Error - ", error);
+        });
+    }
+
+
+  };
+
+
+
+  ////////////////////////    INIT    ///////////////////////////
+
+  $scope.openDialog();
+
+
+
+/*
+
   $scope.currentData = undefined;
 
   // watch function to change chartEditingModeStatus depending on chartEditingMode
@@ -32,166 +148,11 @@ app.controller('ChartsCtrl',['$scope','DatasetService', 'ConfigService', 'ForamA
 
   // chart configuaration variables
   // #TODO try to make it more readable
-  $scope.colors = [];
-
 
   // variable responsible for current chart mode
   $scope.chartEditingMode = false;
 
-  // get data from our mock service
-  $scope.data = DatasetService.getProducts();
 
-  ConfigService.getHighchart()
-    .then(
-    function(res){
-      $scope.chart = res.data.config;
-      //Highcharts.theme = res.data.theme;
-      //Highcharts.setOptions(Highcharts.theme)
-    },
-    function(error){
-      throw error.status+" : "+error.statusText;
-    });
-  //var data = ForamAPIService.getAllForams();
-
-  var data = {
-    "generations":
-    {
-      "15":
-      {
-        "attributes":
-        {
-          "x":
-          {
-            "min": 4,
-            "max": 7,
-            "average": 5.75,
-            "standard_deviation": 1.09
-          },
-          "y":
-          {
-            "min": 1,
-            "max": 7,
-            "average": 4.75,
-            "standard_deviation": 2.28
-          },
-          "z":
-          {
-            "min": 1,
-            "max": 8,
-            "average": 5.0,
-            "standard_deviation": 2.74
-          },
-          "age":
-          {
-            "min": 15,
-            "max": 15,
-            "average": 15.0,
-            "standard_deviation": 0.0
-          }
-        },
-        "size": 4
-      },
-      "16":
-      {
-        "attributes":
-        {
-          "x":
-          {
-            "min": 4,
-            "max": 7,
-            "average": 5.76,
-            "standard_deviation": 1.09
-          },
-          "y":
-          {
-            "min": 1,
-            "max": 7,
-            "average": 4.75,
-            "standard_deviation": 2.28
-          },
-          "z":
-          {
-            "min": 1,
-            "max": 8,
-            "average": 5.0,
-            "standard_deviation": 2.74
-          },
-          "age":
-          {
-            "min": 15,
-            "max": 15,
-            "average": 15.0,
-            "standard_deviation": 0.0
-          }
-        },
-        "size": 4
-      },
-      "global_averages": {
-        "x": 4.61,
-        "y": 4.56,
-        "z": 4.58,
-        "age": 9.87
-      }
-    },
-    "attributes": [
-      "x",
-      "y",
-      "z",
-      "age"
-    ],
-    "subAttributes": [
-      "min",
-      "max",
-      "average",
-      "standard_deviation"
-    ]
-
-  };
-
-  $scope.generations = data.generations;
-  $scope.attributes = data.attributes;
-  $scope.subAttributes = data.subAttributes;
-
-
-  // function which changes current data source
-  $scope.changePresentedAttribute = function (current) {
-    $scope.chart.title.text = "Change of attribute " + data.attributes[$scope.currentData];
-    $scope.chart.series = [];
-    $scope.chart.xAxis = { categories: Object.keys(data.generations) };
-
-    for (var i in data.subAttributes) {
-      if (data.subAttributes[i] != "standard_deviation")
-        pushSeriesData(data.subAttributes[i], $scope.chart.colors[i]);
-      else
-        pushStandardDeviation("standard_deviation", $scope.chart.colors[i - 1]);
-    }
-  };
-
-  var pushSeriesData = function (value, color) {
-    var toBePushed = { data: [], name: value, color: color };
-    for (var key in $scope.generations) {
-      if (key != "global_averages") {
-        console.log($scope.currentData);
-        console.log();
-        toBePushed.data.push($scope.generations[key].attributes[$scope.attributes[$scope.currentData]][value]);
-      }
-    }
-    $scope.chart.series.push(toBePushed);
-  };
-
-
-  var pushStandardDeviation = function (value, color) {
-    var toBePushed = { data: [], name: value, linkedTo: ':previous', type: 'arearange', color: color, fillOpacity: 0.2, lineWidth: 0 };
-    for (var key in $scope.generations) {
-      if (key != "global_averages") {
-        var standardDeviation = $scope.generations[key].attributes[$scope.attributes[$scope.currentData]].standard_deviation;
-        var average = $scope.generations[key].attributes[$scope.attributes[$scope.currentData]].average;
-        toBePushed.data.push([average - standardDeviation, average + standardDeviation]);
-      }
-    };
-    $scope.chart.series.push(toBePushed);
-
-  };
 
   // function to restore default colors
   $scope.restoreDefaultSeriesColor = function () {
@@ -205,7 +166,7 @@ app.controller('ChartsCtrl',['$scope','DatasetService', 'ConfigService', 'ForamA
     });
   };
 
-
+*/
   Highcharts.createElement('link', {
     href: '//fonts.googleapis.com/css?family=Unica+One',
     rel: 'stylesheet',

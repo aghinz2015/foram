@@ -15,6 +15,16 @@ app.service('ForamAPIService',['$http','appConfig',function($http,appConfig){
     return $http.get(appConfig.apiForamsUrl,{params: params});
   };
 
+
+  /**
+   *
+   * @param params
+   * @returns {HttpPromise}
+   */
+  this.getGenerations = function(params) {
+    return $http.get(appConfig.apiGenerationsUrl,{params: params});
+  };
+
   /**
    *
    * @param params

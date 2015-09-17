@@ -25,13 +25,13 @@
       </div>
     </div>
     <div class="row">
-      <div class="small-6 columns">
+      <div class="small-4 columns">
         <label for="haploid-value">Haploid</label>
-        <input type="checkbox" id="haploid-value" name="gender" ng-model="constantFilters.haploid"/>
+        <input type="checkbox" id="haploid-value" name="gender" ng-model="constantFilters.is_haploid" checked/>
       </div>
-      <div class="small-6 columns">
+      <div class="small-4 columns">
         <label for="diploid-value">Diploid</label>
-        <input type="checkbox" id="diploid-value" name="gender" ng-model="constantFilters.diploid" checked/>
+        <input type="checkbox" id="diploid-value" name="gender" ng-model="constantFilters.is_diploid" checked/>
       </div>
     </div>
     <div class="row">
@@ -39,11 +39,11 @@
         <label for="start-value">DeathStepNumber</label>
       </div>
       <div class="small-3 columns">
-        <input type="number" id="start-value" step="1" ng-model="constantFilters.start" max="{{constantFilters.end}}"/>
+        <input type="number" id="start-value" step="1" ng-model="constantFilters.death_step_no_min" max="{{constantFilters.death_step_no_max}}"/>
       </div>
       <div class="small-2 columns"> - </div>
       <div class="small-3 columns">
-        <input type="number" id="end-value" step="1" ng-model="constantFilters.end" min="{{constantFilters.start}}"/>
+        <input type="number" id="end-value" step="1" ng-model="constantFilters.death_step_no_max" min="{{constantFilters.death_step_no_min}}"/>
       </div>
       </div>
     </div>
@@ -61,6 +61,7 @@
 <div class="row">
   <button ng-click="filterData()">Filter</button>
   <button ng-click="clearFilters()">Clear</button>
+  <button ng-click="generateChart()">Chart</button>
 </div>
 
 <div class="forams-info" ng-hide="foramTableVisible">

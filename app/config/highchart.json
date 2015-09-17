@@ -13,10 +13,11 @@
       "#7798BF",
       "#aaeeee"
     ],
+    "height": 800,
     "options": {
       "chart":
         {
-          "zoomType": "x"
+          "zoomType": "xy"
         },
       "rangeSelector":
         {
@@ -25,7 +26,16 @@
       "navigator":
         {
           "enabled": true
+        },
+      "tooltip":
+        {
+          "shared": true
         }
+    },
+    "xAxis": {
+      "title": {
+        "text": ""
+      }
     },
     "series": [],
     "title":

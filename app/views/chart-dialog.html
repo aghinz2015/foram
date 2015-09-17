@@ -1,0 +1,33 @@
+<div>
+  <h1>Choose genes</h1>
+  <div class="row">
+    <div class="small-12 columns">
+      <label for="gene1-param">Gene 1</label>
+      <select id="gene1-param" ng-model="$parent.chartParams.gene1">
+        <option ng-repeat="gene in availableGenes">{{gene}}</option>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-12 columns">
+      <label for="gene2-param">Gene 2 (optional)</label>
+      <select id="gene2-param" ng-model="$parent.chartParams.gene2">
+        <option ng-repeat="gene in availableGenes">{{gene}}</option>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-4 columns">
+      <label for="start-value">DeathStepNumber</label>
+    </div>
+    <div class="small-3 columns">
+      <input type="number" id="start-value" step="1" ng-model="$parent.chartParams.start" max="{{newChart.stop}}"/>
+    </div>
+    <div class="small-2 columns"> - </div>
+    <div class="small-3 columns">
+      <input type="number" id="end-value" step="1" ng-model="$parent.chartParams.stop" min="{{newChart.start}}"/>
+    </div>
+  </div>
+  <button ng-click="$parent.createChart()">Create</button>
+  <button ng-click="closeThisDialog()">Cancel</button>
+</div>
