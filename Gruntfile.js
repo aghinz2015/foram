@@ -418,9 +418,57 @@ module.exports = function (grunt) {
         configFile: 'test/karma.conf.js',
         singleRun: true
       }
+    },
+
+    // Deployment
+    deploy: {
+      servers: [{
+        host: '46.101.145.100',
+        username: 'deploy'
+      }],
+      before: ["curl -X POST --data-urlencode \"payload={\\\"channel\\\": \\\"#hooks\\\", \\\"username\\\": \\\"Deployer\\\", \\\"icon_url\\\": \\\"http://gravatar.com/avatar/885e1c523b7975c4003de162d8ee8fee?r=g&s=40\\\", \\\"text\\\": \\\"`echo $USER` has started deploying branch `git symbolic-ref HEAD | sed -e \\\"s,.*/\\(.*\\),\\1,\\\"` of foram to production\\\"}\" https://hooks.slack.com/services/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"],
+      after: ["curl -X POST --data-urlencode \"payload={\\\"channel\\\": \\\"#hooks\\\", \\\"username\\\": \\\"Deployer\\\", \\\"icon_url\\\": \\\"http://gravatar.com/avatar/885e1c523b7975c4003de162d8ee8fee?r=g&s=40\\\", \\\"text\\\": \\\"`echo $USER` has finished deploying branch `git symbolic-ref HEAD | sed -e \\\"s,.*/\\(.*\\),\\1,\\\"` of foram to production\\\"}\" https://hooks.slack.com/services/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"],
+      deploy_path: '/apps/foram_production',
+      source_path: 'dist/'
     }
   });
 
+  grunt.registerTask('push_code', 'Deploy code to the production server', function (target) {
+    var config = grunt.config.get('deploy');
+    var exec = require('child_process').exec;
+    var timeStamp = require('moment')().format('YYYYMMDDHHmmss');
+    var basePath = config.deploy_path;
+    var deployPath = basePath + '/releases/' + timeStamp;
+    var command;
+
+    config.servers.forEach(function (server) {
+      var ssh = function (command) {
+        command = 'ssh -t ' + server.username + "@" + server.host + ' "' + command + '"';
+        console.log(command);
+        return exec(command);
+      }
+
+      ssh('mkdir -p ' + deployPath + '; rm ' + basePath + '/current; ln -s ' + deployPath + ' ' + basePath + '/current');
+      command = '(cd ' + config.source_path + '; ' + 'scp -rp . ' + server.username + "@" + server.host + ':' + deployPath + ')';
+      console.log(command);
+      exec(command);
+    });
+
+    config.after.forEach(function (hook) {
+      exec(hook);
+    });
+  });
+
+  grunt.registerTask('deploy', 'Compile and deploy code', function (target) {
+    var config = grunt.config.get('deploy');
+    var exec = require('child_process').exec;
+
+    config.before.forEach(function (hook) {
+      exec(hook);
+    });
+
+    grunt.task.run(['build', 'push_code']);
+  });
 
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
     if (target === 'dist') {
