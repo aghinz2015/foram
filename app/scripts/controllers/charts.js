@@ -67,7 +67,6 @@ app.controller('ChartsCtrl',['$scope', 'ConfigService', 'ForamAPIService', 'ngDi
           } else {
             serie = {data: geneSeries[key][k], name: geneSeries.name+"_"+key+"_"+k};
           }
-
           toBePushed.push(serie);
         }
       }
@@ -103,12 +102,9 @@ app.controller('ChartsCtrl',['$scope', 'ConfigService', 'ForamAPIService', 'ngDi
           $scope.chart.xAxis.crosshair = true;
 
 
-
-
-
           pushSeries(generations.gene1);
           if (generations.gene2) {
-            pushSeries(generations.gene2,1);
+            pushSeries(generations.gene2);
           }
         }, function (error) {
           console.log("generateChart::Error - ", error);
@@ -172,8 +168,6 @@ app.controller('ChartsCtrl',['$scope', 'ConfigService', 'ForamAPIService', 'ngDi
     rel: 'stylesheet',
     type: 'text/css'
   }, null, document.getElementsByTagName('head')[0]);
-
-
 
 
 // Apply the theme

@@ -96,7 +96,6 @@ app.controller('TableCtrl', ['$location', '$scope', 'ForamAPIService', 'ConfigSe
       $scope.filters.push($scope.newFilter);
       $scope.newFilter = {};
     }
-
   };
 
   // clear all filters
@@ -137,7 +136,6 @@ app.controller('TableCtrl', ['$location', '$scope', 'ForamAPIService', 'ConfigSe
         break;
       }
     }
-
     return result;
   };
 
@@ -262,7 +260,6 @@ app.controller('TableCtrl', ['$location', '$scope', 'ForamAPIService', 'ConfigSe
   ////////////////////////    INIT     ///////////////////////////
 
   filterForams();
-  console.log($location.search());
 
 }]);
 
