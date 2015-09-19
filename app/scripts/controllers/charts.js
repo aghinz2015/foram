@@ -8,7 +8,7 @@
  * Controller of the trunkApp
  */
 
-app.controller('ChartsCtrl', ['$scope', '$http', 'DatasetService', function ($scope, $http, DatasetService) {
+app.controller('ChartsCtrl', ['$scope', '$http', 'DatasetService', 'api_host', function ($scope, $http, DatasetService, api_host) {
 
   // function which changes current data source
   $scope.changePresentedAttribute = function () {
@@ -61,7 +61,7 @@ app.controller('ChartsCtrl', ['$scope', '$http', 'DatasetService', function ($sc
 
   // get data from API
   // #TODO push address to configuration file
-  $http.get('http://localhost:3000/generations').success(function (data, status, headers, config) {
+  $http.get(api_host + 'generations').success(function (data, status, headers, config) {
     $scope.generations = data.generations;
     $scope.attributesList = $scope.generations[Object.keys($scope.generations)[0]].attributes;
   });

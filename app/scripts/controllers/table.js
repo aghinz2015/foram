@@ -2,7 +2,7 @@
  * Created by Eryk on 2015-06-09.
  */
 
-app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetService', 'ngDialog', function ($location, $scope, $http, $q, DatasetService, ngDialog) {
+app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetService', 'ngDialog', 'api_host', function ($location, $scope, $http, $q, DatasetService, ngDialog, api_host) {
 
   var dialog;
 
@@ -137,7 +137,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetServi
 
   var getForamsInfo = function () {
     var deferred = $q.defer();
-    $http.head('http://localhost:3000/forams', { params: flatFilters }).success(function (data, status, headers, config) {
+    $http.head(api_host + 'forams', { params: flatFilters }).success(function (data, status, headers, config) {
       deferred.resolve(headers());
     });
     return deferred.promise;
@@ -145,7 +145,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$http', '$q', 'DatasetServi
 
   var getForamsFromDb = function () {
     var deferred = $q.defer();
-    $http.get('http://localhost:3000/forams', { params: flatFilters }).success(function (data, status, headers, config) {
+    $http.get(api_host + 'forams', { params: flatFilters }).success(function (data, status, headers, config) {
       deferred.resolve(data.forams);
     });
     return deferred.promise;

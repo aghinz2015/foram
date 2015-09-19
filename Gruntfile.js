@@ -430,7 +430,27 @@ module.exports = function (grunt) {
       after: ["curl -X POST --data-urlencode \"payload={\\\"channel\\\": \\\"#hooks\\\", \\\"username\\\": \\\"Deployer\\\", \\\"icon_url\\\": \\\"http://gravatar.com/avatar/885e1c523b7975c4003de162d8ee8fee?r=g&s=40\\\", \\\"text\\\": \\\"`echo $USER` has finished deploying branch `git symbolic-ref HEAD | sed -e \\\"s,.*/\\(.*\\),\\1,\\\"` of foram to production\\\"}\" https://hooks.slack.com/services/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"],
       deploy_path: '/apps/foram_production',
       source_path: 'dist/'
-    }
+    },
+
+    // Environments
+    ngconstant: {
+      options: {
+        name: 'config',
+        dest: 'app/scripts/config.js'
+      },
+      development: {
+        constants: {
+          env: 'development',
+          api_host: 'http://localhost:3000/'
+        }
+      },
+      production: {
+        constants: {
+          env: 'production',
+          api_host: 'http://46.101.145.100/'
+        }
+      }
+    },
   });
 
   grunt.registerTask('push_code', 'Deploy code to the production server', function (target) {
@@ -467,7 +487,7 @@ module.exports = function (grunt) {
       exec(hook);
     });
 
-    grunt.task.run(['build', 'push_code']);
+    grunt.task.run(['ngconstant:production', 'build', 'push_code', 'ngconstant:development']);
   });
 
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
@@ -477,6 +497,7 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
+      'ngconstant:development',
       'wiredep',
       'concurrent:server',
       'autoprefixer:server',
