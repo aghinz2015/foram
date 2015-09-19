@@ -10,5 +10,11 @@
         <span class="text smartHide">{{position.name}}</span>
       </div>
     </li>
+    <li class="menu-option ng-scope" ng-show="!menu.isCurrentUser" ng-click="$parent.goTo('/login')">
+      <div class="menu-position">
+        <span class="fa fa-fw fa-sign-in"></span>
+        Login
+      </div>
+    </li>
   </ul>
 </div>

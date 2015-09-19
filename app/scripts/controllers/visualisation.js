@@ -7,11 +7,22 @@
  * # VisualisationCtrl
  * Controller of the trunkApp
  */
-app.controller('VisualisationCtrl',['$scope','ViewerFactory', function ($scope,ViewerFactory) {
+app.controller('VisualisationCtrl', ['$scope', 'ViewerFactory', 'DatasetService', function ($scope, ViewerFactory, DatasetService) {
+
+  var fetchGenotype = function() {
+    var foram = DatasetService.getProducts()[0];
+
+    if (foram) {
+      return foram.genotype;
+    } else {
+      return null;
+    }
+  };
 
   // initialize our ViewerFactory responsible for 3D visualisation
   var viewer = new ViewerFactory({
-    containerId: '#WebGL-output'
+    containerId: '#WebGL-output',
+    genotype:    fetchGenotype()
   });
 
   $scope.data = {
@@ -45,11 +56,11 @@ app.controller('VisualisationCtrl',['$scope','ViewerFactory', function ($scope,V
       parseFloat(this.data.positionZ))
   };
 
-  $scope.modelEditingMode = false;
+  $scope.evolve = function() {
+    viewer.evolve();
+  };
 
-  // watch function to change chartEditingModeStatus depending on chartEditingMode
-  $scope.$watch('modelEditingMode', function () {
-    $scope.modelEditingModeStatus = $scope.modelEditingMode ? 'up' : 'down';
-  });
-
+  $scope.regress = function() {
+    viewer.regress();
+  };
 }]);

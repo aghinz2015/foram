@@ -12,8 +12,9 @@
  * @constructor
  */
 Viewer.Scene = function (params) {
-
   params.context = this;
+
+  this.params = params;
   this.container = $(params.containerId);
   this.model = null;
   this.scene = null;
@@ -73,14 +74,13 @@ Viewer.Scene.prototype = {
 
   setupScene: function() {
     this.setup.lights();
-    this.setup.createSphere();
+    this.setup.createForam(this.params.genotype);
   },
+
   animate: function(){
     render(this.scene,this.camera,this.webGLRenderer);
   }
 };
-
-
 
 function render(scene,camera,renderer){
 

@@ -8,10 +8,10 @@
  *
  * Main module of the application.
  */
-var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.module','ngDialog']);
+var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.module','ngDialog', 'ngCookies']);
 
   // basic routing config
-  app.config(function ($routeProvider) {
+  app.config(function ($routeProvider, $httpProvider) {
     $routeProvider
       .when('/', {
         templateUrl: 'views/main.html',
@@ -41,9 +41,19 @@ var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.m
         templateUrl: 'views/visualisation.html',
         controller: 'VisualisationCtrl'
       })
+      .when('/login', {
+        templateUrl: 'views/login.html',
+        controller: 'LoginCtrl'
+      })
+      .when('/register', {
+        templateUrl: 'views/register.html',
+        controller: 'RegisterCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
+
+    $httpProvider.interceptors.push('APIInterceptor');
   })
     .filter('forceInt', function(){
     return function(input) {
@@ -55,6 +65,41 @@ var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.m
       return parseFloat(input);
     }
   });
+
+  app.run(function($rootScope, $location, $cookies, $http) {
+    // keep user logged in after page refresh
+    try {
+      $rootScope.globals = $cookies.getObject('globals') || {};
+    }
+    catch (e) {
+      $rootScope.globals = {};
+    }
+    if($rootScope.globals.currentUser) {
+      $http.defaults.headers.common['Authorization'] = 'Token token="' + $rootScope.globals.currentUser.token + '", email="' + $rootScope.globals.currentUser.email + '"';
+    }
+
+    $rootScope.$on('$locationChangeStart', function(event, next, current) {
+      // redirect to login page if not logged in and trying to access a restricted page
+      var restrictedPage = $.inArray($location.path(), ['/login', '/register']) === -1;
+      var loggedIn = $rootScope.globals.currentUser;
+      if(restrictedPage && !loggedIn) {
+        $location.path('/login');
+      }
+    })
+  });
+
+  app.service('APIInterceptor', ['$location', function($location) {
+    return {
+      responseError: function(response) {
+        // redirect to login page if api returns unauthorized
+        if (response.status === 401) {
+          $location.path('/login');
+        }
+        return response;
+      }
+    }
+  }]);
+
 
   // mock service to set and get data between controllers
   // #TODO in PROD version this is to be removed or replaced with better solution (factory with API methods?)
