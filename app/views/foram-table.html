@@ -52,7 +52,7 @@
 <div>
   <ul>
     <li ng-repeat="filter in filters">
-      <span ng-show="filter.min">{{filter.min+" < "}}</span> {{filter.param}} <span ng-show="filter.max">{{" < "+filter.max}}</span>
+      <span ng-show="filter.min">{{filter.min}} &#60 </span> {{filter.param}} <span ng-show="filter.max"> &#60 {{filter.max}}</span>
       <button ng-click="deleteFilter($index)"> Remove filter </button>
     </li>
   </ul>
