@@ -1,7 +1,7 @@
 'use strict';
 
-app.service('UserService', ['$http', function($http) {
+app.service('UserService', ['$http', 'api_host', function($http, api_host) {
   this.create = function(user) {
-    return $http.post('http://localhost:3000/user', { user: user });
+    return $http.post(api_host + 'user', { user: user });
   };
 }]);
