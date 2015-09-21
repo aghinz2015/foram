@@ -1,6 +1,5 @@
 app.controller('LoginCtrl', ['$location', '$scope', 'AuthenticationService', function($location, $scope, AuthenticationService) {
   $scope.init = function() {
-    console.log("jestem");
     if($scope.globals && $scope.globals.currentUser) {
       $location.path('/');
     }

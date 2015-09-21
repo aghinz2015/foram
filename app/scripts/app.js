@@ -8,7 +8,7 @@
  *
  * Main module of the application.
  */
-var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.module','ngDialog', 'ngCookies', 'config']);
+var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.module','ngDialog', 'ngCookies']);
 
   // basic routing config
   app.config(function ($routeProvider, $httpProvider) {
@@ -107,7 +107,8 @@ var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.m
 
   app.constant('appConfig',{
     apiForamsUrl:'http://localhost:3000/forams',
-    apiGenerationsUrl:'http://localhost:3000/generations'
+    apiGenerationsUrl:'http://localhost:3000/generations',
+    apiUserUrl: 'http://localhost:3000/user'
   });
 
   var Viewer = {

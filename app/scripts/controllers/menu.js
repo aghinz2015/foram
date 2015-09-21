@@ -5,9 +5,6 @@
 
 app.controller('menuCtrl',['$scope', '$location', 'ConfigService', 'AuthenticationService', function($scope, $location, ConfigService, AuthenticationService){
 
-
-
-
   ConfigService.getMenu()
     .then(
       function(res){
