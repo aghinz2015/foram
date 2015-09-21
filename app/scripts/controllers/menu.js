@@ -5,19 +5,8 @@
 
 app.controller('menuCtrl',['$scope', '$location', 'ConfigService', 'AuthenticationService', function($scope, $location, ConfigService, AuthenticationService){
 
-  // simple function to change location, works like a tag
-  // #TODO create a service with this function
-  $scope.go = function(url) {
-    angular.element(document.getElementsByClassName('menu-option active')).toggleClass('active');
-    $location.path(url);
-  };
 
-  $scope.logout = function() {
-    AuthenticationService.logout().success(function() {
-      AuthenticationService.clearCredentials();
-      $location.path('/login');
-    });
-  };
+
 
   ConfigService.getMenu()
     .then(

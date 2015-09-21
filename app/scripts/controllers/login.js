@@ -1,5 +1,6 @@
 app.controller('LoginCtrl', ['$location', '$scope', 'AuthenticationService', function($location, $scope, AuthenticationService) {
   $scope.init = function() {
+    console.log("jestem");
     if($scope.globals && $scope.globals.currentUser) {
       $location.path('/');
     }
@@ -13,6 +14,7 @@ app.controller('LoginCtrl', ['$location', '$scope', 'AuthenticationService', fun
       .then(function(response) {
         AuthenticationService.setCredentials(response.data.user.email, response.data.user.authentication_token);
         $location.path('/');
+        $scope.dataLoading = false;
       }, function(response) {
         $scope.error = response.data.error;
         $scope.dataLoading = false;

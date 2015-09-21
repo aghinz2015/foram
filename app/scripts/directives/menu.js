@@ -11,10 +11,18 @@ app.directive('menu', function(){
       menu: "="
     },
     templateUrl: '/views/menu-temp.html',
-    controller: function($scope, Utils) {
+    controller: function($scope, Utils,AuthenticationService,$location) {
       $scope.goTo = function(location, className) {
         Utils.goTo(location, className);
-      }
+      };
+
+      $scope.logout = function() {
+        AuthenticationService.logout().success(function() {
+          AuthenticationService.clearCredentials();
+          $location.path('/sign');
+        });
+      };
+
     }
   }
 });

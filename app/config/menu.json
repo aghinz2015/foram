@@ -3,11 +3,6 @@
   "icon": "bars",
   "list": [
     {
-      "name": "Home",
-      "icon": "home",
-      "args": "/"
-    },
-    {
       "name": "Datasets",
       "icon": "database",
       "args": "/databases"
@@ -26,6 +21,11 @@
       "name": "Charts",
       "icon": "pie-chart",
       "args": "/charts"
+    },
+    {
+      "name": "User",
+      "icon": "user",
+      "args": "/user"
     },
     {
       "name": "Settings",

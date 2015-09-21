@@ -11,6 +11,7 @@ app.service('Utils',['$location',function($location){
    */
   this.goTo = function(location,className) {
       angular.element(document.getElementsByClassName(className+" active")).toggleClass('active');
+      console.log("goto");
       $location.path(location);
   };
 }]);
