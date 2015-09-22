@@ -19,6 +19,7 @@ app.controller('ChartsCtrl',['$scope', 'ConfigService', 'ForamAPIService', 'ngDi
     function(response){
       var data = response.data;
       $scope.availableGenes = data.availableGenesParams;
+
     },function(response){
       console.log('GetChartConfig::Error - ',response.status);
     });
@@ -82,14 +83,21 @@ app.controller('ChartsCtrl',['$scope', 'ConfigService', 'ForamAPIService', 'ngDi
   var generateChart = function() {
     if($scope.chartParams.gene1 || $scope.chartParams.gene2) {
 
+      var gene1 = $scope.chartParams.gene1.replace(/\s+/g, '');
+      console.log(gene1);
+
       var flatParams = {
         start: $scope.chartParams.start,
         stop: $scope.chartParams.stop,
         "genes[]": [
-          $scope.chartParams.gene1,
-          $scope.chartParams.gene2
-        ].filter(function(e){return e})
+          gene1
+        ]
       };
+
+      if($scope.chartParams.gene2){
+        var gene2 = $scope.chartParams.gene1.replace(/\s+/g, '');
+        flatParams["genes[]"].push(gene2);
+      }
       ForamAPIService.getGenerations(flatParams)
         .then(function (response) {
           console.log(response.data.result);
