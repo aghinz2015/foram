@@ -1,0 +1,29 @@
+{
+	"export": {
+		"color": {
+			"chart": {
+				"height": 720,
+				"width": 1280
+			}
+		},
+		"blackAndWhite": {
+			"chart": {
+				"height": 720,
+				"width": 1280,
+				"backgroundColor": "#FFFFFF"
+			}
+		},
+		"jpegExport": {
+			"type": "image/jpeg"
+		},
+		"pngExport": {
+			"type": "image/png"
+		},
+		"svgExport": {
+			"type": "image/svg+xml"
+		},
+		"pdfExport": {
+			"type": "application/pdf"
+		}
+	}
+}
