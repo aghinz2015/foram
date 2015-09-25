@@ -1,9 +1,9 @@
-app.controller('TableCtrl', ['$location', '$scope', 'ForamAPIService', 'ConfigService', function ($location, $scope, ForamAPIService, ConfigService) {
+app.controller('TableCtrl', ['$location', '$scope', 'ForamAPIService', 'ConfigService', 'DatasetService', function ($location, $scope, ForamAPIService, ConfigService, DatasetService) {
 
 
   ////////////////////////    SELECTABLES    ///////////////////////////
 
-  //currentSet represents our currently selected records with start and stop index
+  //currentSet represents our currently  records with start and stop index
   var currentSet = { start: null, stop: null };
 
   // reference to our options dropdown
@@ -37,13 +37,19 @@ app.controller('TableCtrl', ['$location', '$scope', 'ForamAPIService', 'ConfigSe
     });
   });
 
-  // test function which change view to charts and sends selected data
+  $scope.selectedForams = function() {
+    return $scope.forams.slice(currentSet.start, currentSet.stop + 1);
+  }
+
   $scope.generateChart = function () {
-    // #TODO dataset service was removed - create http request for same foram data
-    //DatasetService.putProducts($scope.forams.slice($scope.currentSet.start, currentSet.stop + 1));
     $location.search(prepareFilters());
     $location.path("/charts");
   };
+
+  $scope.visualize = function() {
+    DatasetService.putProducts($scope.selectedForams());
+    $location.path("/visualization");
+  }
 
   ////////////////////////    FILTERS    ///////////////////////////
 
@@ -264,4 +270,3 @@ app.controller('TableCtrl', ['$location', '$scope', 'ForamAPIService', 'ConfigSe
   filterForams();
 
 }]);
-

@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name trunkApp.controller:VisualisationCtrl
+ * @name trunkApp.controller:VisualizationCtrl
  * @description
- * # VisualisationCtrl
+ * # VisualizationCtrl
  * Controller of the trunkApp
  */
-app.controller('VisualisationCtrl', ['$scope', 'ViewerFactory', 'DatasetService', function ($scope, ViewerFactory, DatasetService) {
+app.controller('VisualizationCtrl', ['$scope', 'ViewerFactory', 'DatasetService', function ($scope, ViewerFactory, DatasetService) {
 
   var fetchGenotype = function() {
     var foram = DatasetService.getProducts()[0];
@@ -19,7 +19,7 @@ app.controller('VisualisationCtrl', ['$scope', 'ViewerFactory', 'DatasetService'
     }
   };
 
-  // initialize our ViewerFactory responsible for 3D visualisation
+  // initialize our ViewerFactory responsible for 3D visualization
   var viewer = new ViewerFactory({
     containerId: '#WebGL-output',
     genotype:    fetchGenotype()

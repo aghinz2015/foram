@@ -37,9 +37,9 @@ var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.m
         templateUrl: 'views/settings.html',
         controller: 'SettingsCtrl'
       })
-      .when('/visualisation', {
-        templateUrl: 'views/visualisation.html',
-        controller: 'VisualisationCtrl'
+      .when('/visualization', {
+        templateUrl: 'views/visualization.html',
+        controller: 'VisualizationCtrl'
       })
       .when('/sign', {
         templateUrl: 'views/login.html',
@@ -104,6 +104,17 @@ var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.m
     }
   }]);
 
+  app.service('DatasetService', function() {
+    var productList = [];
+
+    this.putProducts = function(newDataset) {
+      productList = newDataset;
+    };
+
+    this.getProducts = function(){
+      return productList;
+    };
+  });
 
   app.constant('appConfig',{
     apiForamsUrl:'http://localhost:3000/forams',
@@ -114,4 +125,3 @@ var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.m
   var Viewer = {
     'Scene': null
   };
-

@@ -13,9 +13,9 @@
       "args": "/table"
     },
     {
-      "name": "3D Visualisation",
+      "name": "3D Visualization",
       "icon": "cube",
-      "args": "/visualisation"
+      "args": "/visualization"
     },
     {
       "name": "Charts",
