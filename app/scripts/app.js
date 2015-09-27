@@ -119,7 +119,8 @@ var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.m
   app.constant('appConfig',{
     apiForamsUrl:'http://localhost:3000/forams',
     apiGenerationsUrl:'http://localhost:3000/generations',
-    apiUserUrl: 'http://localhost:3000/user'
+    apiUserUrl: 'http://localhost:3000/user',
+    apiDatabasesUrl: 'http://localhost:3000/user/mongo_sessions'
   });
 
   var Viewer = {
