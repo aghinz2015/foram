@@ -21,13 +21,21 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
       $scope.availableGenes = data.availableGenesParams;
 
     }, function (response) {
-      console.log('GetChartConfig::Error - ', response.status);
+      $scope.openErrorDialog();
     });
 
   $scope.openDialog = function () {
     dialog = ngDialog.open(
       {
         template: 'views/chart-dialog.html',
+        scope: $scope
+      });
+  };
+
+  $scope.openErrorDialog = function () {
+    dialog = ngDialog.open(
+      {
+        template: 'views/chart-error-dialog.html',
         scope: $scope
       });
   };
@@ -40,14 +48,13 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
 
   var generations;
 
-  ConfigService.getHighchart()
-    .then(
-      function (res) {
-        $scope.chart = res.data.config;
-      },
-      function (error) {
-        console.log('getHighchart::Error - ', error);
-      });
+  ConfigService.getHighchart().then(
+    function (res) {
+      $scope.chart = res.data.config;
+    },
+    function (error) {
+      $scope.openErrorDialog();
+    });
 
   $scope.createChart = function () {
     dialog.close();
@@ -61,13 +68,14 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
         for (var k in geneSeries[key])
           if (geneSeries[key].hasOwnProperty(k)) {
             var serie;
+            var name = [geneSeries.name, key, k].join("_");
             if (k == 'standard_deviation') {
-              serie = { data: [], name: geneSeries.name + "_" + key + "_" + k, linkedTo: ':previous', type: 'arearange', fillOpacity: 0.1, lineWidth: 0 };
+              serie = { data: [], name: name, linkedTo: ':previous', type: 'arearange', fillOpacity: 0.1, lineWidth: 0 };
               for (var i in geneSeries[key].average) {
                 serie.data.push([geneSeries[key].average[i] - geneSeries[key][k][i], geneSeries[key].average[i] + geneSeries[key][k][i]]);
               }
             } else {
-              serie = { data: geneSeries[key][k], name: geneSeries.name + "_" + key + "_" + k };
+              serie = { data: geneSeries[key][k], name: name };
             }
             toBePushed.push(serie);
           }
@@ -85,7 +93,6 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
     if ($scope.chartParams.gene1 || $scope.chartParams.gene2) {
 
       var gene1 = $scope.chartParams.gene1.replace(/\s+/g, '');
-      console.log(gene1);
 
       var flatParams = {
         start: $scope.chartParams.start,
@@ -99,28 +106,24 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
         var gene2 = $scope.chartParams.gene1.replace(/\s+/g, '');
         flatParams["genes[]"].push(gene2);
       }
-      ForamAPIService.getGenerations(flatParams)
-        .then(function (response) {
-          console.log(response.data.result);
-          $scope.chartParams = {};
-          generations = response.data.result;
+      ForamAPIService.getGenerations(flatParams).then(function (response) {
+        $scope.chartParams = {};
+        generations = response.data.result;
 
-          $scope.chart.xAxis.categories = generations.grouping_parameter.values;
-          $scope.chart.xAxis.title = {};
-          $scope.chart.xAxis.title.text = generations.grouping_parameter.name;
-          $scope.chart.xAxis.crosshair = true;
+        $scope.chart.xAxis.categories = generations.grouping_parameter.values;
+        $scope.chart.xAxis.title = {};
+        $scope.chart.xAxis.title.text = generations.grouping_parameter.name;
+        $scope.chart.xAxis.crosshair = true;
 
 
-          pushSeries(generations.gene1);
-          if (generations.gene2) {
-            pushSeries(generations.gene2);
-          }
-        }, function (error) {
-          console.log("generateChart::Error - ", error);
-        });
+        pushSeries(generations.gene1);
+        if (generations.gene2) {
+          pushSeries(generations.gene2);
+        }
+      }, function (error) {
+        $scope.openErrorDialog();
+      });
     }
-
-
   };
 
   ////////////////////////    EXPORT   ///////////////////////////
@@ -130,12 +133,10 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
   ConfigService.getExportOptions().then(
     function (response) {
       $scope.export = response.data.export;
-      console.log($scope.export);
     },
     function (error) {
-      console.log('getExportOptions::Error - ', error);
-    }
-    );
+      $scope.openErrorDialog();
+    });
 
   var setAllSeriesToOneColor = function (series, color) {
     var previousColors = [];
@@ -159,7 +160,6 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
   }
 
   var blackAndWhiteExport = function (exportType) {
-    console.log(exportType)
     var chart = Highcharts.charts.filter(function (item) {
       return item !== undefined;
     })[0];
@@ -252,50 +252,8 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
 
   ////////////////////////    INIT    ///////////////////////////
 
-  console.log($scope.export);
   $scope.openDialog();
 
-  /*
-
-    $scope.currentData = undefined;
-
-    // watch function to change chartEditingModeStatus depending on chartEditingMode
-    $scope.$watch('chartEditingMode', function () {
-      $scope.chartEditingModeStatus = $scope.chartEditingMode ? 'up' : 'down';
-    });
-
-    $scope.$watch('currentColor', function() {
-      if($scope.currentSerie)
-        $scope.chart.series[$scope.currentSerie].color = $scope.currentColor;
-    });
-
-
-    $scope.$watch('currentSerie', function() {
-      if($scope.currentSerie)
-        $scope.currentColor = $scope.chart.series[$scope.currentSerie].color;
-    });
-
-    // chart configuaration variables
-    // #TODO try to make it more readable
-
-    // variable responsible for current chart mode
-    $scope.chartEditingMode = false;
-
-
-
-    // function to restore default colors
-    $scope.restoreDefaultSeriesColor = function () {
-      var i;
-      var index = 0;
-      var maxIndex = $scope.chart.colors.length - 1;
-      $scope.chart.series.forEach(function (entry) {
-        i = Math.min(entry.linkedTo === ":previous" ? index - 1 : index, maxIndex);
-        entry.color = $scope.chart.colors[i];
-        index++;
-      });
-    };
-
-  */
   Highcharts.createElement('link', {
     href: '//fonts.googleapis.com/css?family=Unica+One',
     rel: 'stylesheet',
@@ -303,7 +261,5 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
   }, null, document.getElementsByTagName('head')[0]);
 
   Highcharts.setOptions(options);
-  // Apply the theme
 
-  console.log($scope.exportOptions);
 }]);
