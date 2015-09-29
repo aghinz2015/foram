@@ -1,0 +1,8 @@
+<div class="text-editor">
+  <div class="label-element" ng-click="activateEditor()">
+    {{value}}
+  </div>
+  <div class="editor-element">
+    <input ng-model="value" type="text" ng-change="changeValue()" ng-blur="deactivateEditor()" class="text-field-element"></input>
+  </div>
+</div>
