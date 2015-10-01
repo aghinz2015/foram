@@ -43,6 +43,13 @@ app.directive('inplaceArrayEditor', function () {
         $scope.bindableValue.splice($scope.bindableValue.indexOf(value), 1);
         $scope.updateValue();
       }
+
+      $scope.$watch('value', function () {
+        $scope.bindableValue = [];
+        $scope.value.forEach(function (val) {
+          $scope.bindableValue.push({ val: val });
+        });
+      })
     },
     link: function ($scope, $element) {
       $scope.labelElement = $element.find(".label-element");

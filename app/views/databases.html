@@ -6,35 +6,22 @@
   <error>{{error}}</error>
 </div>
 
-<table class="databases small-12" role="grid" ng-show="databases.length > 0">
-  <thead>
-    <tr>
-      <th scope="column" ng-repeat="header in headers">
-        <span class="databases-header">{{header}}</span>
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr ng-repeat="database in databases">
-      <td class="small-2"><span class="databases-field databases-name">{{database.name}}</span></td>
-      <td class="small-2">
-        <ul class="no-bullet databases-field databases-hosts">
-          <li class="databases-host" ng-repeat="host in database.hosts">{{host}}</li>
-        </ul>
-      </td>
-      <td class="small-2"><span class="databases-field databases-database">{{database.database}}</span></td>
-      <td class="small-2"><span class="databases-field databases-username">{{database.username}}</span></td>
-      <td class="small-4">
-        <span class="databases-field databases-actions">
-          <span class="databases-field databases-status">
-            <button ng-click="changeDatabaseStatus(database.id, true)" ng-hide="database.active" class="button tiny success">Enable</button>
-            <button ng-click="changeDatabaseStatus(database.id, false)" ng-show="database.active" class="button tiny alert">Disable</button>
-          </span>
-        </span>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div>
+  <table class="databases small-12" ng-show="loaded" role="grid" ng-show="databases.length > 0">
+    <thead>
+      <tr>
+        <th scope="column" ng-repeat="header in headers">{{header}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="database in databases" database-entry="database"></tr>
+    </tbody>
+  </table>
+</div>
 <div ng-show="!(databases.length > 0)">
   <notice>You haven't configured any MongoDB databases.</notice>
+</div>
+
+<div>
+  <button ng-click="databases.push({hosts:[]})">New database</button>
 </div>

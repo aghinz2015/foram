@@ -12,37 +12,27 @@ app.controller('DatabasesCtrl', ['$scope', '$http', '$q', 'ForamAPIService', fun
     api.getDatabases().then(
       function (response) {
         $scope.databases = response.data.mongo_sessions;
-
-        var db = findDatabaseByName(response.data.active_id);
-        if (db !== undefined) db.status = 'enabled';
+        $scope.loaded = true;
       }, function (error) {
         $scope.error = error;
       }
     );
   };
 
-  var findDatabaseByName = function (id) {
-    for (var i in $scope.databases) {
-      if ($scope.databases[i].id === id) return $scope.databases[i];
-    }
-  }
+  $scope.$on('database-status-changed', function(event, newActiveDatabase) {
+    if (!newActiveDatabase.active) return;
 
-  $scope.changeDatabaseStatus = function (id, newStatus) {
-    api.changeDatabaseStatus(id, newStatus).then(
-      function (result) {
-        $scope.databases.forEach(function (database) {
-          if (database.id == id)
-            database.active = result.data.mongo_session.active;
-          else
-            database.active = false;
-        });
-      }, function (error) {
-        $scope.error = error;
-      }
-    );
-  }
+    $scope.databases.forEach(function (database) {
+      if (database.active && database.id != newActiveDatabase.id)
+        database.active = false;
+    });
+  });
 
-  $scope.headers = ["Name", "Hosts", "Database", "Username", "Actions"]
+  $scope.$on('deleting-database', function(event, params) {
+    $scope.databases.splice($scope.databases.indexOf(params, 1));
+  });
+
+  $scope.headers = ["Name", "Hosts", "Database", "Username", "Password", "Actions"]
 
   $scope.init();
 }]);

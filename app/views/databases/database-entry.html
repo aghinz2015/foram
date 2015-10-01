@@ -1,0 +1,27 @@
+<td class="small-2">
+  <inplace-text-editor value="database.name" name="name"></inplace-text-editor>
+</td>
+<td class="small-2">
+  <inplace-array-editor value="database.hosts" name="hosts"></inplace-text-editor>
+</td>
+<td class="small-2">
+  <inplace-text-editor value="database.database" name="database"></inplace-text-editor>
+</td>
+<td class="small-2">
+  <inplace-text-editor value="database.username" name="username"></inplace-text-editor>
+</td>
+<td class="small-2">
+  <inplace-password-editor value="database.password" name="password"></inplace-text-editor>
+</td>
+<td class="small-2">
+  <span class="status-buttons">
+    <button ng-click="changeDatabaseStatus(true)" ng-hide="database.active" class="button tiny success">Enable</button>
+    <button ng-click="changeDatabaseStatus(false)" ng-show="database.active" class="button tiny alert">Disable</button>
+  </span>
+  <span class="editing">
+    <button ng-click="edit()" ng-hide="editing" class="button tiny">Edit</button>
+    <button ng-click="save()" ng-show="editing" class="button tiny success">Save</button>
+    <button ng-click="cancel()" ng-show="editing" class="button tiny alert">Cancel</button>
+  </span>
+  <button ng-click="delete()" ng-show="database.id" class="button tiny alert">Delete</button>
+</td>

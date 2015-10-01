@@ -50,5 +50,28 @@ app.service('ForamAPIService',['$http','appConfig',function($http,appConfig){
     var data = { mongo_session: { active: enable } };
     return $http.patch(appConfig.apiDatabasesUrl + '/' + databaseId, data);
   }
-}]);
 
+  this.saveDatabase = function (database) {
+    var data = {
+      mongo_session: {
+        name: database.name,
+        database: database.database,
+        hosts: database.hosts,
+        username: database.username,
+        active: database.active ? true : false,
+      }
+    };
+
+    if (database.password) data.mongo_session.password = database.password;
+
+    if (database.id) {
+      return $http.patch(appConfig.apiDatabasesUrl + '/' + database.id, data);
+    } else {
+      return $http.post(appConfig.apiDatabasesUrl, data);
+    }
+  }
+
+  this.deleteDatabase = function (database) {
+    return $http.delete(appConfig.apiDatabasesUrl + '/' + database.id);
+  }
+}]);

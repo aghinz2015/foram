@@ -21,3 +21,17 @@
   }
 }
 
+.label-element {
+  width: 100%;
+  height: 100%;
+
+  .fa-wrench {
+    opacity: 0.5;
+  }
+}
+
+.label-element:hover {
+  .fa-wrench {
+    opacity: 1;
+  }
+}
