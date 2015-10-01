@@ -25,37 +25,6 @@ app.controller('VisualizationCtrl', ['$scope', 'ViewerFactory', 'DatasetService'
     genotype:    fetchGenotype()
   });
 
-  $scope.data = {
-    'scale': 1,
-    'rotateX': 0,
-    'rotateY': 0,
-    'rotateZ': 0,
-    'positionX': 0,
-    'positionY': 0,
-    'positionZ': 0
-  };
-
-  // scale the model.
-  $scope.scale = function () {
-    viewer.scale(this.data.scale);
-  };
-
-  // rotate around an axis
-  $scope.rotate = function () {
-    viewer.rotate(
-      parseFloat(this.data.rotateX),
-      parseFloat(this.data.rotateY),
-      parseFloat(this.data.rotateZ))
-  };
-
-  // translate around the scene
-  $scope.translate = function () {
-    viewer.translate(
-      parseFloat(this.data.positionX),
-      parseFloat(this.data.positionY),
-      parseFloat(this.data.positionZ))
-  };
-
   $scope.evolve = function() {
     viewer.evolve();
   };
