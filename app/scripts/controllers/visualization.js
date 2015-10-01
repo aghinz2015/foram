@@ -1,7 +1,7 @@
 'use strict';
 
 app.controller('VisualizationCtrl', ['$scope', 'SimulationFactory', 'GenotypeService', function ($scope, simulationFactory, genotypeService) {
-  var simulation = simulationFactory($('#WebGL-output'));
+  var simulation = simulationFactory($('#visualization'));
   simulation.animate();
 
   $scope.data = {
