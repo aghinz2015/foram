@@ -1,35 +1,33 @@
 'use strict';
 
-/**
- * @ngdoc function
- * @name trunkApp.controller:VisualizationCtrl
- * @description
- * # VisualizationCtrl
- * Controller of the trunkApp
- */
-app.controller('VisualizationCtrl', ['$scope', 'ViewerFactory', 'DatasetService', function ($scope, ViewerFactory, DatasetService) {
-
+app.controller('VisualizationCtrl', ['$scope', 'SimulationFactory', 'DatasetService', function ($scope, simulationFactory, datasetService) {
   var fetchGenotype = function() {
-    var foram = DatasetService.getProducts()[0];
+    var foram = datasetService.getFirstProduct();
 
     if (foram) {
-      return foram.genotype;
-    } else {
-      return null;
+      var genotype = foram.genotype;
+
+      return {
+        translationFactor: genotype.translation_factor.effective,
+        growthFactor:      genotype.growth_factor.effective,
+        beta:              genotype.deviation_angle.effective,
+        phi:               genotype.rotation_angle.effective,
+        numChambers:       7,
+        initialRadius:     3
+      };
     }
+    else
+      return null;
   };
 
-  // initialize our ViewerFactory responsible for 3D visualization
-  var viewer = new ViewerFactory({
-    containerId: '#WebGL-output',
-    genotype:    fetchGenotype()
-  });
+  var simulation = simulationFactory($('#WebGL-output'));
+  simulation.animate();
 
-  $scope.evolve = function() {
-    viewer.evolve();
+  $scope.data = {
+    genotype: fetchGenotype()
   };
 
-  $scope.regress = function() {
-    viewer.regress();
+  $scope.simulate = function() {
+    simulation.simulate($scope.data.genotype);
   };
 }]);

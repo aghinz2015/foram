@@ -114,6 +114,10 @@ var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.m
     this.getProducts = function(){
       return productList;
     };
+
+    this.getFirstProduct = function() {
+      return productList[0];
+    };
   });
 
   app.constant('appConfig',{
