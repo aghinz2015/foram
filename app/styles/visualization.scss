@@ -9,7 +9,7 @@
   top: 0px;
   left: 0px;
   right: 0px;
-  z-index: 0;
+  height: 0px;
 
   ul {
     width: 300px;
@@ -17,6 +17,7 @@
     padding: 15px;
     list-style: none;
     background: #1a1a1a;
+    color: #fff;
 
     li {
       border-bottom: #2c2c2c;

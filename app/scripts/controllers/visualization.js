@@ -6,9 +6,10 @@ app.controller('VisualizationCtrl', ['$scope', 'SimulationFactory', 'GenotypeSer
 
   $scope.data = {
     genotype: genotypeService.fetchGenotype(),
+    options:  { numChambers: 7 }
   };
 
   $scope.simulate = function() {
-    simulation.simulate($scope.data.genotype);
+    simulation.simulate($scope.data.genotype, $scope.data.options);
   };
 }]);
