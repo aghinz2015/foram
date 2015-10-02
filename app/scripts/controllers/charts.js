@@ -130,6 +130,32 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
 
   $scope.export = {};
 
+  var getRgbFromHex = function (hexColor) {
+    return {
+      r: parseInt(hexColor.substring(1, 3), 16),
+      g: parseInt(hexColor.substring(3, 5), 16),
+      b: parseInt(hexColor.substring(5, 7), 16)
+    }
+  }
+
+  var componentToHex = function (component) {
+    var hex = component.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+  }
+
+  var rgbToHex = function (rgbColor) {
+    return "#" + componentToHex(rgbColor.r) + componentToHex(rgbColor.g) + componentToHex(rgbColor.b);
+  }
+
+  var getGrayScaleColor = function (hexColor) {
+    var rgbColor = getRgbFromHex(hexColor);
+    var grayScaleMax = Math.max(rgbColor.r, rgbColor.g, rgbColor.b);
+    var grayScaleMin = Math.min(rgbColor.r, rgbColor.g, rgbColor.b);
+    var grayScale = Math.round((grayScaleMax + grayScaleMin) / 2);
+    var grayScaleRgbColor = { r: grayScale, g: grayScale, b: grayScale }
+    return rgbToHex(grayScaleRgbColor);
+  }
+
   ConfigService.getExportOptions().then(
     function (response) {
       $scope.export = response.data.export;
@@ -138,14 +164,17 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
       $scope.openErrorDialog();
     });
 
-  var setAllSeriesToOneColor = function (series, color) {
+  var setAllSeriesToGrayScale = function (series) {
     var previousColors = [];
     for (var i = 0; i < series.length; i++) {
       previousColors.push(series[i].color);
-      series[i].update({ color: color, fillOpacity: series[i].fillOpacity });
+      var grayScaleColor = getGrayScaleColor(series[i].color);
+      series[i].update({ color: grayScaleColor, fillOpacity: series[i].fillOpacity });
     }
     return previousColors;
   }
+
+
 
   var updateSeriesColors = function (series, colorList) {
     for (var i = 0; i < series.length; i++) {
@@ -156,7 +185,7 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
   }
 
   var getSerieTypeOpacity = function (serie) {
-    return serie.type === 'line' ? 1 : 0.2;
+    return serie.type === 'line' ? 1 : 0.1;
   }
 
   var blackAndWhiteExport = function (exportType) {
@@ -164,7 +193,7 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
       return item !== undefined;
     })[0];
     var series = chart.series;
-    var previousColors = setAllSeriesToOneColor(series, '#000000');
+    var previousColors = setAllSeriesToGrayScale(series);
     chart.exportChart(exportType, $scope.export.blackAndWhite);
     updateSeriesColors(series, previousColors);
   };
@@ -192,7 +221,7 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
         contextButton: {
           menuItems: [
             {
-              text: 'Export to PNG (Black&White)',
+              text: 'Export to PNG (Grayscale)',
               onclick: blackAndWhitePngExport
             },
             {
@@ -203,7 +232,7 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
               separator: false
             },
             {
-              text: 'Export to JPEG (Black&White)',
+              text: 'Export to JPEG (Grayscale)',
               onclick: blackAndWhiteJpegExport
             },
             {
@@ -214,7 +243,7 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
               separator: false
             },
             {
-              text: 'Export to PDF (Black&White)',
+              text: 'Export to PDF (Grayscale)',
               onclick: blackAndWhitePdfExport,
               separator: false
             },
@@ -226,7 +255,7 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
               separator: false
             },
             {
-              text: 'Export to SVG (Black&White)',
+              text: 'Export to SVG (Grayscale)',
               onclick: blackAndWhiteSvgExport,
               separator: false
             },
