@@ -149,9 +149,7 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
 
   var getGrayScaleColor = function (hexColor) {
     var rgbColor = getRgbFromHex(hexColor);
-    var grayScaleMax = Math.max(rgbColor.r, rgbColor.g, rgbColor.b);
-    var grayScaleMin = Math.min(rgbColor.r, rgbColor.g, rgbColor.b);
-    var grayScale = Math.round((grayScaleMax + grayScaleMin) / 2);
+    var grayScale = Math.round(rgbColor.r * 0.21 + rgbColor.g * 0.72 + rgbColor.b * 0.07);
     var grayScaleRgbColor = { r: grayScale, g: grayScale, b: grayScale }
     return rgbToHex(grayScaleRgbColor);
   }
@@ -169,7 +167,7 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
     for (var i = 0; i < series.length; i++) {
       previousColors.push(series[i].color);
       var grayScaleColor = getGrayScaleColor(series[i].color);
-      series[i].update({ color: grayScaleColor, fillOpacity: series[i].fillOpacity });
+      series[i].update({ color: grayScaleColor, fillOpacity: 0.2 });
     }
     return previousColors;
   }
@@ -185,7 +183,7 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
   }
 
   var getSerieTypeOpacity = function (serie) {
-    return serie.type === 'line' ? 1 : 0.1;
+    return serie.type === 'line' ? 1 : 0.2;
   }
 
   var blackAndWhiteExport = function (exportType) {
