@@ -1,1 +1,27 @@
-<p>databases</p>
+<h1 class="main-section-header">
+  Databases
+</h1>
+
+<div ng-show="!!error">
+  <error>{{error}}</error>
+</div>
+
+<div>
+  <table class="databases small-12" ng-show="loaded" role="grid" ng-show="databases.length > 0">
+    <thead>
+      <tr>
+        <th scope="column" ng-repeat="header in headers">{{header}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="database in databases" database-entry="database"></tr>
+    </tbody>
+  </table>
+</div>
+<div ng-show="!(databases.length > 0)">
+  <notice>You haven't configured any MongoDB databases.</notice>
+</div>
+
+<div>
+  <button ng-click="databases.push({hosts:[]})">New database</button>
+</div>

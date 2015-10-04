@@ -10,6 +10,8 @@ $standard-baige-dark: #a1833b;
 @import "foram_table";
 @import "foram_visualization";
 @import "charts";
+@import "inplace_editors";
+@import "databases";
 
 .browsehappy {
   margin: 0.2em 0;
@@ -48,5 +50,11 @@ body,html {
 
   @media screen and (max-width: 670px){
     margin-left: 40px;
+  }
+
+  table {
+    button, ul {
+      margin-bottom: 0px;
+    }
   }
 }

@@ -1,0 +1,32 @@
+<div class="array-editor">
+  <div class="label-element">
+    <ul>
+      <li ng-repeat="elementValue in bindableValue">{{elementValue.val}}</li>
+    </ul>
+  </div>
+  <div class="editor-element">
+    <div class="input-field row collapse">
+      <div class="small-10 columns">
+        <input class="new-array-element" placeholder="Add new..." type="text" ng-keypress="$event.keyCode == 13 && addNewElement()"></input>
+      </div>
+      <div class="small-2 columns">
+        <span class="postfix action-button fa fa-plus" ng-click="addNewElement()"></span>
+      </div>
+    </div>
+    <div>
+      <ul>
+        <li ng-repeat="elementValue in bindableValue">
+          <div class="input-field row collapse">
+            <div class="small-10 columns">
+              <input type="text" ng-model="elementValue.val" placeholder="elementValue.val" value="elementValue.val" ng-change="updateValue()"></input>
+            </div>
+            <div class="small-2 columns">
+              <span class="postfix action-button fa fa-remove" ng-click="removeElement(elementValue)"></span>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <button ng-click="deactivateEditor()" class="button tiny">Accept changes</button>
+  </div>
+</div>
