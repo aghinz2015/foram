@@ -32,7 +32,7 @@ module.exports = function(config) {
       'bower_components/angular-touch/angular-touch.js',
       'bower_components/dat.gui/dat.gui.js',
       'bower_components/three.js/build/three.js',
-      'bower_components/trackball_controls/index.js',
+      'bower_components/threejs-trackball-controls/TrackballControls.js',
       'bower_components/foram-3d/dist/js/foram_3d.js',
       'bower_components/highcharts-ng/dist/highcharts-ng.js',
       'bower_components/jquery-ui/jquery-ui.js',
