@@ -1,5 +1,6 @@
 {
   "defaults": {
-    "numChambers": 7
+    "numChambers": 7,
+    "opacity": 1.0
   }
 }

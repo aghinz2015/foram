@@ -13,4 +13,24 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
   $scope.simulate = function() {
     simulation.simulate($scope.genotype, $scope.options);
   };
+
+  $scope.evolve = function() {
+    simulation.evolve();
+  };
+
+  $scope.regress = function() {
+    simulation.regress();
+  };
+
+  $scope.toggleChambers = function() {
+    simulation.toggleChambers();
+  };
+
+  $scope.toggleCentroidsLine = function() {
+    simulation.toggleCentroidsLine();
+  };
+
+  $scope.applyOpacity = function() {
+    simulation.applyOpacity($scope.options.opacity);
+  };
 }]);

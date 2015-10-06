@@ -8,5 +8,26 @@
     <li>
       <button ng-click="simulate()">Simulate</button>
     </li>
+
+    <li>
+      <button ng-click="evolve()">Evolve</button>
+    </li>
+
+    <li>
+      <button ng-click="regress()">Regress</button>
+    </li>
+
+    <li>
+      <button ng-click="toggleChambers()">Toggle chambers</button>
+    </li>
+
+    <li>
+      <button ng-click="toggleCentroidsLine()">Toggle centroids line</button>
+    </li>
+
+    <li>
+      <label for="opacity">Opacity</label>
+      <input type="range" id="opacity" ng-change="applyOpacity()" ng-model="options.opacity" min="0" max="1" step="0.01">
+    </li>
   </ul>
 </div>
