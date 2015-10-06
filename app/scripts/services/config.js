@@ -4,6 +4,9 @@
 'use strict';
 
 app.service('ConfigService',['$http','appConfig',function($http,appConfig){
+  this.getConfig = function(name) {
+    return $http.get("/config/" + name + ".json");
+  };
 
   /**
    * Get HighChart Theme
@@ -41,4 +44,3 @@ app.service('ConfigService',['$http','appConfig',function($http,appConfig){
     return $http.get("/config/export_options.json")
   }
 }]);
-

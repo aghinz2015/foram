@@ -1,15 +1,16 @@
 'use strict';
 
-app.controller('VisualizationCtrl', ['$scope', 'SimulationFactory', 'GenotypeService', function ($scope, simulationFactory, genotypeService) {
+app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFactory', 'GenotypeService', function ($scope, configService, simulationFactory, genotypeService) {
   var simulation = simulationFactory($('#visualization'));
   simulation.animate();
 
-  $scope.data = {
-    genotype: genotypeService.fetchGenotype(),
-    options:  { numChambers: 7 }
-  };
+  $scope.genotype = genotypeService.fetchGenotype();
+
+  configService.getConfig('visualization').then(function(response) {
+    $scope.options = response.data.defaults;
+  });
 
   $scope.simulate = function() {
-    simulation.simulate($scope.data.genotype, $scope.data.options);
+    simulation.simulate($scope.genotype, $scope.options);
   };
 }]);
