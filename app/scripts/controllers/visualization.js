@@ -2,12 +2,13 @@
 
 app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFactory', 'GenotypeService', function ($scope, configService, simulationFactory, genotypeService) {
   var simulation = simulationFactory($('#visualization'));
-  simulation.animate();
-
-  $scope.genotype = genotypeService.fetchGenotype();
 
   configService.getConfig('visualization').then(function(response) {
-    $scope.options = response.data.defaults;
+    $scope.genotype = genotypeService.fetchGenotype();
+    $scope.options  = response.data.defaults;
+
+    simulation.simulate($scope.genotype, $scope.options);
+    simulation.animate();
   });
 
   $scope.simulate = function() {
