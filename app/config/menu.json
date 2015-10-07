@@ -13,11 +13,6 @@
       "args": "/table"
     },
     {
-      "name": "3D Visualization",
-      "icon": "cube",
-      "args": "/visualization"
-    },
-    {
       "name": "Charts",
       "icon": "pie-chart",
       "args": "/charts"
