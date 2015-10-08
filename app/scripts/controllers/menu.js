@@ -8,7 +8,6 @@ app.controller('menuCtrl',['$scope', '$location', 'ConfigService', 'Authenticati
   ConfigService.getMenu()
     .then(
       function(res){
-        console.log(res.data);
         $scope.menu = res.data;
       },
       function(error){
