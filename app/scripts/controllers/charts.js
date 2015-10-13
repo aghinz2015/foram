@@ -63,30 +63,43 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
 
   var pushSeries = function (geneSeries) {
     var toBePushed = [];
+    var dev_flag = true;
     for (var key in geneSeries) {
       if (key != "name" && geneSeries.hasOwnProperty(key)) {
+        dev_flag = true;
         for (var k in geneSeries[key])
           if (geneSeries[key].hasOwnProperty(k)) {
-            var serie;
+            var serie = null;
             var name = [geneSeries.name, key, k].join("_");
-            if (k == 'standard_deviation') {
-              serie = { data: [], name: name, linkedTo: ':previous', type: 'arearange', fillOpacity: 0.1, lineWidth: 0 };
-              for (var i in geneSeries[key].average) {
-                serie.data.push([geneSeries[key].average[i] - geneSeries[key][k][i], geneSeries[key].average[i] + geneSeries[key][k][i]]);
+            console.log(name);
+            if (name.indexOf('standard_deviation') > -1) {
+              if(dev_flag) {
+                serie = {
+                  data: [],
+                  name: name,
+                  linkedTo: ':previous',
+                  type: 'arearange',
+                  fillOpacity: 0.1,
+                  lineWidth: 0
+                };
+                dev_flag = false;
+                for (var i in geneSeries[key].average) {
+                  serie.data.push([geneSeries[key]['minus_standard_deviation'][i], geneSeries[key]['plus_standard_deviation'][i]]);
+                }
               }
             } else {
               serie = { data: geneSeries[key][k], name: name };
             }
-            toBePushed.push(serie);
+            if(serie) {
+              if (!(name.indexOf('effective') > -1)) {
+                serie.visible = false;
+              }
+              toBePushed.push(serie);
+            }
           }
       }
     }
     $scope.chart.series = toBePushed;
-    for (var i in $scope.chart.series) {
-      if (!$scope.chart.series[i].name.indexOf('effective')) {
-        $scope.chart.series[i].hide();
-      }
-    }
   };
 
   var generateChart = function () {
@@ -136,23 +149,23 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
       g: parseInt(hexColor.substring(3, 5), 16),
       b: parseInt(hexColor.substring(5, 7), 16)
     }
-  }
+  };
 
   var componentToHex = function (component) {
     var hex = component.toString(16);
     return hex.length == 1 ? "0" + hex : hex;
-  }
+  };
 
   var rgbToHex = function (rgbColor) {
     return "#" + componentToHex(rgbColor.r) + componentToHex(rgbColor.g) + componentToHex(rgbColor.b);
-  }
+  };
 
   var getGrayScaleColor = function (hexColor) {
     var rgbColor = getRgbFromHex(hexColor);
     var grayScale = Math.round(rgbColor.r * 0.21 + rgbColor.g * 0.72 + rgbColor.b * 0.07);
     var grayScaleRgbColor = { r: grayScale, g: grayScale, b: grayScale }
     return rgbToHex(grayScaleRgbColor);
-  }
+  };
 
   ConfigService.getExportOptions().then(
     function (response) {
@@ -170,7 +183,7 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
       series[i].update({ color: grayScaleColor, fillOpacity: 0.2 });
     }
     return previousColors;
-  }
+  };
 
 
 
@@ -180,7 +193,7 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
       var opacity = getSerieTypeOpacity(series[i]);
       series[i].update({ color: colorList[index], fillOpacity: opacity });
     }
-  }
+  };
 
   var getSerieTypeOpacity = function (serie) {
     return serie.type === 'line' ? 1 : 0.2;
@@ -202,15 +215,15 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
 
   var blackAndWhiteJpegExport = function () {
     blackAndWhiteExport($scope.export.jpegExport)
-  }
+  };
 
   var blackAndWhitePdfExport = function () {
     blackAndWhiteExport($scope.export.pdfExport);
-  }
+  };
 
   var blackAndWhiteSvgExport = function () {
     blackAndWhiteExport($scope.export.svgExport);
-  }
+  };
 
   var options = {
     exporting: {
