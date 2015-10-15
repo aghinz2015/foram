@@ -3,7 +3,7 @@
  */
 'use strict';
 
-app.service('ForamAPIService',['$http','appConfig',function($http,appConfig){
+app.service('ForamAPIService', ['$http', 'api_host', function($http, api_host){
 
 
   /**
@@ -12,7 +12,7 @@ app.service('ForamAPIService',['$http','appConfig',function($http,appConfig){
    * @returns {HttpPromise}
    */
   this.getForams = function(params) {
-    return $http.get(appConfig.apiForamsUrl,{params: params});
+    return $http.get(api_host + 'forams',{params: params});
   };
 
 
@@ -22,7 +22,7 @@ app.service('ForamAPIService',['$http','appConfig',function($http,appConfig){
    * @returns {HttpPromise}
    */
   this.getGenerations = function(params) {
-    return $http.get(appConfig.apiGenerationsUrl,{params: params});
+    return $http.get(api_host + 'generations',{params: params});
   };
 
   /**
@@ -31,8 +31,7 @@ app.service('ForamAPIService',['$http','appConfig',function($http,appConfig){
    * @returns {HttpPromise}
    */
   this.getForamsInfo = function(params) {
-    return $http.head(appConfig.apiForamsUrl, {params: params});
+    return $http.head(api_host + 'forams', {params: params});
   }
 
 }]);
-

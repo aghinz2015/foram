@@ -1,8 +1,8 @@
 'use strict';
 
-app.service('AuthenticationService', ['$http', '$cookies', '$rootScope','appConfig', function($http, $cookies, $rootScope, appConfig) {
+app.service('AuthenticationService', ['$http', '$cookies', '$rootScope','api_host', function($http, $cookies, $rootScope, api_host) {
   this.login = function(email, password) {
-    return $http.post(appConfig.apiUserUrl + '/login', { user: { email: email, password: password } });
+    return $http.post(api_host + 'user/login', { user: { email: email, password: password } });
   };
 
   this.setCredentials = function(email, token) {
@@ -18,7 +18,7 @@ app.service('AuthenticationService', ['$http', '$cookies', '$rootScope','appConf
   };
 
   this.logout = function() {
-    return $http.delete(appConfig.apiUserUrl + '/logout');
+    return $http.delete(api_host + 'user/logout');
   };
 
   this.clearCredentials = function() {
