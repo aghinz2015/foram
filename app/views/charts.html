@@ -21,7 +21,7 @@
         <div class="small-4 columns" >
           <span class="small-6 columns">Color of</span>
           <select class="color-selector small-6 columns" ng-model="currentSerie">
-            <option type="text" class="attribute-option" ng-repeat="serie in chart.series" value="{{$index}}"> {{serie.name}}</option>
+            <option type="text" class="attribute-option" ng-repeat="serie in chart.series track by $index" value="{{$index}}"> {{serie.name}}</option>
           </select>
         </div>
         <div class="small-8 columns">
@@ -34,7 +34,7 @@
       </div>
       <div class="row">
         <span class="small-12 columns">Series</span>
-        <input class="small-{{10/chart.series.length}}" ng-repeat="serie in chart.series" ng-model="serie.name">
+        <input class="small-{{10/chart.series.length}}" ng-repeat="serie in chart.series track by $index" ng-model="serie.name">
       </div>
     </div>
   </div>
