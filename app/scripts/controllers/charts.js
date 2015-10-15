@@ -66,14 +66,11 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
     var dev_flag = true;
     for (var key in geneSeries) {
       if (key != "name" && geneSeries.hasOwnProperty(key)) {
-        dev_flag = true;
         for (var k in geneSeries[key])
           if (geneSeries[key].hasOwnProperty(k)) {
             var serie = null;
             var name = [geneSeries.name, key, k].join("_");
-            console.log(name);
             if (name.indexOf('standard_deviation') > -1) {
-              if(dev_flag) {
                 serie = {
                   data: [],
                   name: name,
@@ -82,11 +79,9 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
                   fillOpacity: 0.1,
                   lineWidth: 0
                 };
-                dev_flag = false;
                 for (var i in geneSeries[key].average) {
-                  serie.data.push([geneSeries[key]['minus_standard_deviation'][i], geneSeries[key]['plus_standard_deviation'][i]]);
+                  serie.data.push([geneSeries[key][k]['minus_standard_deviation'][i], geneSeries[key][k]['plus_standard_deviation'][i]]);
                 }
-              }
             } else {
               serie = { data: geneSeries[key][k], name: name };
             }
@@ -163,7 +158,7 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
   var getGrayScaleColor = function (hexColor) {
     var rgbColor = getRgbFromHex(hexColor);
     var grayScale = Math.round(rgbColor.r * 0.21 + rgbColor.g * 0.72 + rgbColor.b * 0.07);
-    var grayScaleRgbColor = { r: grayScale, g: grayScale, b: grayScale }
+    var grayScaleRgbColor = { r: grayScale, g: grayScale, b: grayScale };
     return rgbToHex(grayScaleRgbColor);
   };
 
@@ -197,7 +192,7 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
 
   var getSerieTypeOpacity = function (serie) {
     return serie.type === 'line' ? 1 : 0.2;
-  }
+  };
 
   var blackAndWhiteExport = function (exportType) {
     var chart = Highcharts.charts.filter(function (item) {
@@ -286,7 +281,7 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
             }
           ]
         }
-      },
+      }
     }
   };
 
