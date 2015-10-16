@@ -8,6 +8,8 @@
  *
  * Main module of the application.
  */
+$(document).foundation();
+
 var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.module','ngDialog', 'ngCookies', 'config']);
 
   // basic routing config
