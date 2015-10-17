@@ -10,7 +10,7 @@
  */
 $(document).foundation();
 
-var app = angular.module('trunkApp', ['ngRoute', 'highcharts-ng', 'colorpicker.module','ngDialog', 'ngCookies', 'config']);
+var app = angular.module('trunkApp', ['ngRoute', 'mm.foundation', 'highcharts-ng', 'colorpicker.module', 'ngDialog', 'ngCookies', 'config']);
 
   // basic routing config
   app.config(function ($routeProvider, $httpProvider) {
