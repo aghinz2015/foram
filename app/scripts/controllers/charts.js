@@ -8,7 +8,7 @@
  * Controller of the trunkApp
  */
 
-app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIService', 'ngDialog', function ($scope, $modal, ConfigService, ForamAPIService, ngDialog) {
+app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIService', function ($scope, $modal, ConfigService, ForamAPIService) {
 
   ////////////////////////    DIALOG    ///////////////////////////
 
