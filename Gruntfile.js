@@ -210,7 +210,7 @@ module.exports = function (grunt) {
         cssDir: '.tmp/assets/css',
         generatedImagesDir: '.tmp/images/generated',
         imagesDir: '<%= yeoman.app %>/images',
-        javascriptsDir: '<%= yeoman.app %>/scripts',
+        javascriptsDir: '<%= yeoman.app %>/assets/js',
         fontsDir: '<%= yeoman.app %>/assets/fonts',
         importPath: './bower_components/foundation/scss',
         httpImagesPath: '/images',

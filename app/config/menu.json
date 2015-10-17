@@ -3,7 +3,7 @@
   "icon": "bars",
   "list": [
     {
-      "name": "Datasets",
+      "name": "Databases",
       "icon": "database",
       "args": "/databases"
     },

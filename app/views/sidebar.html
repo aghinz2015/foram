@@ -1,0 +1,18 @@
+<aside class="left-off-canvas-menu">
+  <div class="icon-bar vertical five-up">
+    <a ng-repeat="position in menu.list" ng-click="$parent.goTo(position.args,'item')" ng-show="$root.globals.currentUser" id="{{position.args}}" class="item">
+      <i class="fa fa-fw fa-{{position.icon}}"></i>
+      <label>{{position.name}}</label>
+    </a>
+
+    <a ng-click="goTo('/sign','menu-option')" ng-hide="$root.globals.currentUser" class="item">
+      <i class="fa fa-fw fa-sign-in"></i>
+      <label>Sign in</label>
+    </a>
+
+    <a ng-click="logout()" ng-show="$root.globals.currentUser" class="item">
+      <i class="fa fa-fw fa-sign-out"></i>
+      <label>Sign out</label>
+    </a>
+  </div>
+</aside>

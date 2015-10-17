@@ -10,7 +10,8 @@ app.directive('menu', function(){
     scope: {
       menu: "="
     },
-    templateUrl: '/views/menu-temp.html',
+    templateUrl: '/views/sidebar.html',
+
     controller: function($scope, Utils,AuthenticationService,$location) {
       $scope.goTo = function(location, className) {
         Utils.goTo(location, className);
@@ -26,4 +27,3 @@ app.directive('menu', function(){
     }
   }
 });
-
