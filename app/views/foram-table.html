@@ -1,104 +1,122 @@
-<h1 class="main-section-header">
-  Browse
-</h1>
-
-<form>
-  <fieldset>
-    <legend> Filters </legend>
-    <div class="row"  ng-model="newFilter">
-      <div class="small-3 columns">
-        <label for="filter-param">Filter parameter</label>
-        <select id="filter-param" ng-model="newFilter.param">
-          <option ng-repeat="param in availableFilterParams">{{param}}</option>
-        </select>
-      </div>
-      <div class="small-3 columns">
-        <label for="min-value">Min value</label>
-        <input type="number" id="min-value" step="any" ng-model="newFilter.min" max="{{newFilter.max}}"/>
-      </div>
-      <div class="small-3 columns">
-        <label for="max-value">Max value</label>
-        <input type="number" id="max-value" step="any" ng-model="newFilter.max" min="{{newFilter.min}}"/>
-      </div>
-      <div class="small-3 columns">
-        <button ng-click="addFilter()">Add</button>
-      </div>
-    </div>
-    <div class="row">
-      <div class="small-4 columns">
-        <label for="haploid-value">Haploid</label>
-        <input type="checkbox" id="haploid-value" name="gender" ng-model="constantFilters.is_haploid" checked/>
-      </div>
-      <div class="small-4 columns">
-        <label for="diploid-value">Diploid</label>
-        <input type="checkbox" id="diploid-value" name="gender" ng-model="constantFilters.is_diploid" checked/>
-      </div>
-    </div>
-    <div class="row">
-      <div class="small-4 columns">
-        <label for="start-value">DeathStepNumber</label>
-      </div>
-      <div class="small-3 columns">
-        <input type="number" id="start-value" step="1" ng-model="constantFilters.death_step_no_min" max="{{constantFilters.death_step_no_max}}"/>
-      </div>
-      <div class="small-2 columns"> - </div>
-      <div class="small-3 columns">
-        <input type="number" id="end-value" step="1" ng-model="constantFilters.death_step_no_max" min="{{constantFilters.death_step_no_min}}"/>
-      </div>
-      </div>
-    </div>
-  </fieldset>
-</form>
-<div>
-  <ul>
-    <li ng-repeat="filter in filters">
-      <span ng-show="filter.min">{{filter.min}} &#60 </span> {{filter.param}} <span ng-show="filter.max"> &#60 {{filter.max}}</span>
-      <button ng-click="deleteFilter($index)"> Remove filter </button>
-    </li>
-  </ul>
-</div>
-
 <div class="row">
-  <button ng-click="filterData()">Filter</button>
-  <button ng-click="clearFilters()">Clear</button>
-  <button ng-click="generateChart()">Chart</button>
-  <button ng-click="visualize()">Visualize</button>
-</div>
+  <div class="large-12 columns">
+    <h2 class="main-header">Browser</h2>
 
-<div class="forams-info" ng-hide="foramTableVisible">
-  <h1>Warning</h1>
-  <p>{{numberOfForams}} forams found.</p>
-  <p>Suggested table data limit was exceeded.</p>
-  <button ng-click="continueLoading()">Continue</button>
-  <button ng-click="skipLoading()">Skip</button>
-</div>
+    <div class="row clearfix">
+      <div class="small-6 columns">
+        <h3>Filters</h3>
+      </div>
 
-<div class="forams-table-container" ng-show="foramTableVisible">
-  <table class="foram-table">
-    <thead>
-      <th ng-repeat="(key, value) in forams[0].genotype" ng-if="key != '_id'">
-        {{key}}
-      </th>
-    </thead>
-    <tbody id="selectable">
-      <tr ng-repeat="foram in forams" data-index="{{$index}}">
-        <td ng-repeat="(key, value) in foram.genotype" ng-if="key != '_id'">
-          {{value.effective}}
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <div ng-show="pagination.pageCount() > 1 && foramsLoaded">
-    <ul class="pagination">
-      <li ng-class="pagination.prevPageDisabled()">
-        <a href ng-click="pagination.prevPage()">« Prev</a>
+      <div class="small-6 columns">
+        <button ng-click="open()" class="button small right">New filter</button>
+      </div>
+    </div>
+
+    <accordion close-others="false">
+      <accordion-group heading="Genotype">
+        <ul class="large-block-grid-1">
+          <li ng-repeat="filter in filters">
+            <div class="row">
+              <div class="small-12 large-6 columns">
+                <strong>{{filter.param}}</strong>
+
+                <span>from</span>
+                <strong>{{filter.min}}</strong>
+
+                <span>to</span>
+                <strong>{{filter.max}}</strong>
+              </div>
+
+              <div class="small-12 large-6 columns">
+                <a ng-click="deleteFilter($index)" class="right">Remove</a>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </accordion-group>
+
+      <accordion-group heading="Haploid">
+        <div class="row">
+          <div class="large-12 columns">
+            <input type="checkbox" id="haploid-value" name="gender" ng-model="constantFilters.is_haploid" checked/>
+            <label for="haploid-value">Haploid</label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="large-12 columns">
+            <input type="checkbox" id="diploid-value" name="gender" ng-model="constantFilters.is_diploid" checked/>
+            <label for="diploid-value">Diploid</label>
+          </div>
+        </div>
+      </accordion-group>
+
+      <accordion-group heading="Death step number">
+        <div class="row">
+          <div class="large-4 columns">
+            <label for="start-value">Start</label>
+            <input type="number" id="start-value" step="1" ng-model="constantFilters.death_step_no_min" max="{{constantFilters.death_step_no_max}}"/>
+          </div>
+
+          <div class="large-4 columns end">
+            <label for="end-value">End</label>
+            <input type="number" id="end-value" step="1" ng-model="constantFilters.death_step_no_max" min="{{constantFilters.death_step_no_min}}"/>
+          </div>
+        </div>
+      </accordion-group>
+    </accordion>
+
+    <ul class="button-row">
+      <li>
+        <button ng-click="filterData()" class="button">Filter</button>
       </li>
-      <li ng-repeat="n in pagination.range()" ng-class="{active: n == currentPage}" ng-click="pagination.setPage(n)">
-        <a>{{n}}</a>
+
+      <li>
+        <button ng-click="generateChart()" class="button">Chart</button>
       </li>
-      <li ng-class="pagination.nextPageDisabled()">
-        <a href ng-click="pagination.nextPage()">Next »</a>
+
+      <li>
+        <button ng-click="visualize()" class="button">Visualize</button>
+      </li>
+
+      <li>
+        <button ng-click="clearFilters()" class="button secondary">Reset filters</button>
       </li>
     </ul>
+
+    <div class="table-responsive">
+      <table class="selectable no-border">
+        <thead>
+          <th ng-repeat="(key, value) in forams[0].genotype" ng-if="key != '_id'">
+            {{key}}
+          </th>
+        </thead>
+
+        <tbody id="selectable">
+          <tr ng-repeat="foram in forams" data-index="{{$index}}">
+            <td ng-repeat="(key, value) in foram.genotype" ng-if="key != '_id'">
+              {{value.effective}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div ng-show="pagination.pageCount() > 1">
+      <ul class="pagination">
+        <li ng-class="pagination.prevPageDisabled()">
+          <a href ng-click="pagination.prevPage()">« Prev</a>
+        </li>
+
+        <li ng-repeat="n in pagination.range()" ng-class="{active: n == currentPage}" ng-click="pagination.setPage(n)">
+          <a>{{n}}</a>
+        </li>
+
+        <li ng-class="pagination.nextPageDisabled()">
+          <a href ng-click="pagination.nextPage()">Next »</a>
+        </li>
+      </ul>
+    </div>
+
   </div>
-</div>
+</dvi>

@@ -14,4 +14,3 @@ app.service('Utils',['$location',function($location){
       $location.path(location);
   };
 }]);
-

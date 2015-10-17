@@ -8,7 +8,7 @@
       "args": "/databases"
     },
     {
-      "name": "Browse",
+      "name": "Browser",
       "icon": "folder-open",
       "args": "/table"
     },

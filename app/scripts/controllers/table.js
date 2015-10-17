@@ -1,22 +1,37 @@
-app.controller('TableCtrl', ['$location', '$scope', 'ForamAPIService', 'ConfigService', 'DatasetService', function ($location, $scope, ForamAPIService, ConfigService, DatasetService) {
+app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService', 'ConfigService', 'DatasetService', function ($location, $scope, $modal, ForamAPIService, ConfigService, DatasetService) {
 
+  $scope.open = function () {
+    var modalInstance = $modal.open({
+      templateUrl: 'views/filter_creator.html',
+      controller:  'FilterCreatorCtrl',
+      windowClass: 'small',
+      resolve: {
+        availableFilterParams: function () {
+          return $scope.availableFilterParams;
+        }
+      }
+    });
+
+    modalInstance.result.then(function(newFilter) {
+      $scope.filters.push(newFilter);
+    });
+  };
 
   ////////////////////////    SELECTABLES    ///////////////////////////
 
   //currentSet represents our currently  records with start and stop index
   var currentSet = { start: null, stop: null };
 
-  // reference to our options dropdown
-  var optionsWindow = $("#options");
-
   // function which is responsible for selecting events
   $(function () {
     $("#selectable").selectable({
       filter: 'tr',
+
       start: function (event, ui) {
         currentSet.start = undefined;
         currentSet.stop = null;
       },
+
       selected: function (event, ui) {
         var index = parseInt(ui.selected.getAttribute('data-index'));
         if (currentSet.start === undefined) {
@@ -27,12 +42,9 @@ app.controller('TableCtrl', ['$location', '$scope', 'ForamAPIService', 'ConfigSe
           currentSet.stop = index;
         }
       },
+
       stop: function (event, ui) {
-        optionsWindow.css({
-          display: 'block',
-          left: (event.clientX) + 'px',
-          top: (event.clientY) + 'px'
-        })
+        console.log("ok");
       }
     });
   });
@@ -254,16 +266,9 @@ app.controller('TableCtrl', ['$location', '$scope', 'ForamAPIService', 'ConfigSe
       console.log('GetFilterConfig::Error - ',response.status);
     });
 
-  $scope.skipLoading = function () {
-    $scope.foramsLoaded = false;
-    $scope.foramTableVisible = false;
-  };
-
-  $scope.continueLoading = function () {
-    loadForams();
-    $scope.foramsLoaded = true;
-    $scope.foramTableVisible = true;
-  };
+  loadForams();
+  $scope.foramsLoaded = true;
+  $scope.foramTableVisible = true;
 
   ////////////////////////    INIT     ///////////////////////////
 

@@ -1,0 +1,22 @@
+$selecting-color: #ffdfaa;
+$selected-color: #ffdfaa;
+
+.no-border {
+  border: none;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.selectable {
+  tr {
+    &.ui-selecting {
+      background: $selecting-color;
+    }
+
+    &.ui-selected {
+      background: $selected-color;
+    }
+  }
+}
