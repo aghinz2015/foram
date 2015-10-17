@@ -22,18 +22,15 @@
   <body ng-app="trunkApp">
     <div class="off-canvas-wrap move-right" data-offcanvas>
       <div class="inner-wrap">
-
         <a class="left-off-canvas-toggle" href="#"><i class="fa fa-bars"></i></a>
 
         <div ng-controller="menuCtrl">
           <menu menu="menu"></menu>
         </div>
 
-        <header class="row">
-          <div class="small-12 columns">
-            <div ng-view=""></div>
-          </div>
-        </header>
+        <div class="container">
+          <div ng-view=""></div>
+        </div>
 
         <a class="exit-off-canvas"></a>
       </div>
