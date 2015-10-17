@@ -1,50 +1,8 @@
-$standard-menu-color: #434343;
-$standard-light-white-font: #fdffc3;
-$standard-light-menu: #717171;
-$standard-baige-light: #d0b149;
-$standard-baige-dark: #a1833b;
+@import "normalize";
+@import "partials/settings";
+@import "foundation";
 
-@import "sidebar";
-@import "foram_table";
-@import "visualization";
-@import "charts";
-
-.browsehappy {
-  margin: 0.2em 0;
-  background: #ccc;
-  color: #000;
-  padding: 0.2em 0;
-}
-
-body,html {
-  padding: 0;
-  height: auto !important;
-}
-
-.container {
-  margin-left: 190px;
-
-  .row {
-    max-width: 100%;
-  }
-
-  .main-section-header {
-    text-transform: uppercase;
-    color: $standard-menu-color;
-    border-bottom: 2px solid $standard-light-menu;
-    width: 250px;
-    padding-left: 30px;
-  }
-
-  section {
-    margin: 10px 20px;
-  }
-
-  @media screen and (max-width: 900px){
-    margin-left: 135px;
-  }
-
-  @media screen and (max-width: 670px){
-    margin-left: 40px;
-  }
-}
+@import "partials/sidebar";
+@import "partials/foram_table";
+@import "partials/visualization";
+@import "partials/charts";
