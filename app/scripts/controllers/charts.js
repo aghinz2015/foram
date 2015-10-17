@@ -8,11 +8,11 @@
  * Controller of the trunkApp
  */
 
-app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngDialog', function ($scope, ConfigService, ForamAPIService, ngDialog) {
+app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIService', 'ngDialog', function ($scope, $modal, ConfigService, ForamAPIService, ngDialog) {
 
   ////////////////////////    DIALOG    ///////////////////////////
 
-  var dialog;
+  var modalInstance;
   $scope.availableGenes = [];
 
   ConfigService.getChartConfig().then(
@@ -24,20 +24,12 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
       $scope.openErrorDialog();
     });
 
-  $scope.openDialog = function () {
-    dialog = ngDialog.open(
-      {
-        template: 'views/chart-dialog.html',
-        scope: $scope
-      });
-  };
-
-  $scope.openErrorDialog = function () {
-    dialog = ngDialog.open(
-      {
-        template: 'views/chart-error-dialog.html',
-        scope: $scope
-      });
+  $scope.open = function () {
+    modalInstance = $modal.open({
+      templateUrl: 'views/gene_selector.html',
+      scope: $scope,
+      windowClass: 'small'
+    });
   };
 
   ////////////////////////    CHART    ///////////////////////////
@@ -57,13 +49,10 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
   ConfigService.getHighchart().then(
     function (res) {
       $scope.chart = res.data.config;
-    },
-    function (error) {
-      $scope.openErrorDialog();
     });
 
   $scope.createChart = function () {
-    dialog.close();
+    modalInstance.close();
     generateChart();
   };
 
@@ -123,7 +112,7 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
       ForamAPIService.getGenerations(flatParams).then(function (response) {
         $scope.chartParams = {};
         generations = response.data.result;
-        
+
         $scope.chart.xAxis.categories = generations.grouping_parameter.values;
         $scope.chart.xAxis.title = {};
         $scope.chart.xAxis.title.text = generations.grouping_parameter.name;
@@ -132,25 +121,22 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
         pushSeries(generations.gene1);
         var title;
         title = "Change of attribute " + gene1;
-        
+
         if (generations.gene2) {
           pushSeries(generations.gene2);
           title = "Change of attributes " + gene1 + " and " + gene2;
         }
         
         setChartTitle(title);
-        
-      }, function (error) {
-        $scope.openErrorDialog();
       });
     }
   };
-  
+
   var setChartTitle = function(title) {
     var chart = getChartRef();
     chart.setTitle({text: title});
   };
-  
+
   ////////////////////////    EXPORT   ///////////////////////////
 
   $scope.export = {};
@@ -182,9 +168,6 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
   ConfigService.getExportOptions().then(
     function (response) {
       $scope.export = response.data.export;
-    },
-    function (error) {
-      $scope.openErrorDialog();
     });
 
   var setAllSeriesToGrayScale = function (series) {
@@ -240,14 +223,14 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
           shared: true,
           formatter: function() {
             var s = generations.grouping_parameter.name + ': ' + this.x + '<br/>';
-            s += 'size: ' + generations.grouping_parameter.sizes[this.points[0].point.x] + '<br/>';  
+            s += 'size: ' + generations.grouping_parameter.sizes[this.points[0].point.x] + '<br/>';
             $.each(this.points, function(i, point) {
               s += '<span style="color:' + point.series.color+'">' + point.series.name + '</span>: ';
               if(point.point.low === undefined) {
                  s += '<b>' + point.y + '</b><br/>';
               } else {
                 s += '<b>'+ point.point.low + ' \- ' + point.point.high + '</b><br/>';
-              }  
+              }
             });
             return s;
           }
@@ -318,7 +301,7 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
 
   ////////////////////////    INIT    ///////////////////////////
 
-  $scope.openDialog();
+  $scope.open();
 
   Highcharts.createElement('link', {
     href: '//fonts.googleapis.com/css?family=Unica+One',
