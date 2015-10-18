@@ -12,7 +12,7 @@ app.controller('LoginCtrl', ['$location', '$scope', 'AuthenticationService', fun
     AuthenticationService.login($scope.email, $scope.password)
       .then(function(response) {
         AuthenticationService.setCredentials(response.data.user.email, response.data.user.authentication_token);
-        $location.path('/');
+        $location.path('/table');
         $scope.dataLoading = false;
       }, function(response) {
         $scope.error = response.data.error;
