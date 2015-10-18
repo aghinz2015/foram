@@ -47,6 +47,7 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
   $scope.exportOptions = {};
 
   var generations;
+  var groupSize = {};
 
   ConfigService.getHighchart().then(
     function (res) {
@@ -117,7 +118,9 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
       ForamAPIService.getGenerations(flatParams).then(function (response) {
         $scope.chartParams = {};
         generations = response.data.result;
-
+        for(var i = 0; i < generations.grouping_parameter.values.length; i++) {
+          groupSize[generations.grouping_parameter.values[i]] = generations.grouping_parameter.sizes[i];
+        }
         $scope.chart.xAxis.categories = generations.grouping_parameter.values;
         $scope.chart.xAxis.title = {};
         $scope.chart.xAxis.title.text = generations.grouping_parameter.name;
@@ -221,6 +224,23 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
   };
 
   var options = {
+    tooltip : {
+          shared: true,
+          formatter: function() {
+            var s = this.x + '<br/>';
+            $.each(this.points, function(i, point) {
+              s += '<span style="color:'+point.series.color+'">'+point.series.name+'</span>: ';
+              console.log(point);
+              if(point.point.low === undefined) {
+                 s += '<b>'+point.y+'</b><br/>';
+              } else {
+                s += '<b>'+point.point.low + ' \- ' + point.point.high + '</b><br/>';
+              }  
+            });
+            s += 'Size: ' + groupSize[this.x]; 
+            return s;
+          }
+    },
     exporting: {
       enabled: true,
       buttons: {
