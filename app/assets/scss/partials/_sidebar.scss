@@ -25,6 +25,13 @@ $nav-color: #333;
   position: fixed;
   width: 0;
   height: 100%;
+
+  .icon-bar {
+    .item {
+      width: $sidebar-width;
+      overflow: hidden;
+    }
+  }
 }
 
 .move-right .left-off-canvas-menu {

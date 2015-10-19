@@ -1,5 +1,5 @@
 <nav class="left-off-canvas-menu">
-  <div class="icon-bar vertical five-up">
+  <div class="icon-bar">
     <a ng-repeat="position in menu.list" ng-click="$parent.goTo(position.args,'item')" ng-show="$root.globals.currentUser" id="{{position.args}}" class="item">
       <i class="fa fa-fw fa-{{position.icon}}"></i>
       <label>{{position.name}}</label>
