@@ -42,6 +42,12 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
 
   ////////////////////////    CHART    ///////////////////////////
 
+  var getChartRef = function() {
+    return Highcharts.charts.filter(function (item) {
+      return item !== undefined;
+    })[0];
+  }
+
   $scope.chartParams = {};
   $scope.chart = {};
   $scope.exportOptions = {};
@@ -117,23 +123,34 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
       ForamAPIService.getGenerations(flatParams).then(function (response) {
         $scope.chartParams = {};
         generations = response.data.result;
-
+        
         $scope.chart.xAxis.categories = generations.grouping_parameter.values;
         $scope.chart.xAxis.title = {};
         $scope.chart.xAxis.title.text = generations.grouping_parameter.name;
         $scope.chart.xAxis.crosshair = true;
 
-
         pushSeries(generations.gene1);
+        var title;
+        title = "Change of attribute " + gene1;
+        
         if (generations.gene2) {
           pushSeries(generations.gene2);
+          title = "Change of attributes " + gene1 + " and " + gene2;
         }
+        
+        setChartTitle(title);
+        
       }, function (error) {
         $scope.openErrorDialog();
       });
     }
   };
-
+  
+  var setChartTitle = function(title) {
+    var chart = getChartRef();
+    chart.setTitle({text: title});
+  };
+  
   ////////////////////////    EXPORT   ///////////////////////////
 
   $scope.export = {};
@@ -195,9 +212,7 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
   };
 
   var blackAndWhiteExport = function (exportType) {
-    var chart = Highcharts.charts.filter(function (item) {
-      return item !== undefined;
-    })[0];
+    var chart = getChartRef();
     var series = chart.series;
     var previousColors = setAllSeriesToGrayScale(series);
     chart.exportChart(exportType, $scope.export.blackAndWhite);
@@ -221,6 +236,22 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
   };
 
   var options = {
+    tooltip : {
+          shared: true,
+          formatter: function() {
+            var s = generations.grouping_parameter.name + ': ' + this.x + '<br/>';
+            s += 'size: ' + generations.grouping_parameter.sizes[this.points[0].point.x] + '<br/>';  
+            $.each(this.points, function(i, point) {
+              s += '<span style="color:' + point.series.color+'">' + point.series.name + '</span>: ';
+              if(point.point.low === undefined) {
+                 s += '<b>' + point.y + '</b><br/>';
+              } else {
+                s += '<b>'+ point.point.low + ' \- ' + point.point.high + '</b><br/>';
+              }  
+            });
+            return s;
+          }
+    },
     exporting: {
       enabled: true,
       buttons: {
