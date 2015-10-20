@@ -239,7 +239,8 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
     tooltip : {
           shared: true,
           formatter: function() {
-            var s = this.x + '<br/>';
+            var s = generations.grouping_parameter.name + ': ' + this.x + '<br/>';
+            s += 'size: ' + generations.grouping_parameter.sizes[this.points[0].point.x] + '<br/>';  
             $.each(this.points, function(i, point) {
               s += '<span style="color:' + point.series.color+'">' + point.series.name + '</span>: ';
               if(point.point.low === undefined) {
@@ -248,7 +249,6 @@ app.controller('ChartsCtrl', ['$scope', 'ConfigService', 'ForamAPIService', 'ngD
                 s += '<b>'+ point.point.low + ' \- ' + point.point.high + '</b><br/>';
               }  
             });
-            s += 'Size: ' + generations.grouping_parameter.sizes[this.points[0].point.x]; 
             return s;
           }
     },
