@@ -5,7 +5,7 @@
 
 app.service('ConfigService', ['$http', 'api_host', function($http, api_host){
   this.getConfig = function(name) {
-    return $http.get(api_host + "config/" + name + ".json");
+    return $http.get("config/" + name + ".json");
   };
 
   /**
@@ -13,7 +13,7 @@ app.service('ConfigService', ['$http', 'api_host', function($http, api_host){
    * @returns data
    */
   this.getHighchart = function() {
-    return $http.get(api_host + "config/highchart.json");
+    return $http.get("config/highchart.json");
   };
 
   /**
@@ -21,7 +21,7 @@ app.service('ConfigService', ['$http', 'api_host', function($http, api_host){
    * @returns {HttpPromise}
    */
   this.getFilterConfig= function() {
-    return $http.get(api_host + "config/filter.json");
+    return $http.get("config/filter.json");
   };
 
   /**
@@ -29,7 +29,7 @@ app.service('ConfigService', ['$http', 'api_host', function($http, api_host){
    * @returns {HttpPromise}
    */
   this.getChartConfig= function() {
-    return $http.get(api_host + "config/chart.json");
+    return $http.get("config/chart.json");
   };
 
   /**
@@ -37,10 +37,10 @@ app.service('ConfigService', ['$http', 'api_host', function($http, api_host){
    * @returns {*}
    */
   this.getMenu = function() {
-    return $http.get(api_host + "config/menu.json");
+    return $http.get("config/menu.json");
   }
 
   this.getExportOptions = function() {
-    return $http.get(api_host + "config/export_options.json")
+    return $http.get("config/export_options.json")
   }
 }]);
