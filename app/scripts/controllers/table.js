@@ -1,22 +1,5 @@
 app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService', 'ConfigService', 'DatasetService', function ($location, $scope, $modal, ForamAPIService, ConfigService, DatasetService) {
 
-  $scope.open = function () {
-    var modalInstance = $modal.open({
-      templateUrl: 'views/filter_creator.html',
-      controller:  'FilterCreatorCtrl',
-      windowClass: 'small',
-      resolve: {
-        availableFilterParams: function () {
-          return $scope.availableFilterParams;
-        }
-      }
-    });
-
-    modalInstance.result.then(function(newFilter) {
-      $scope.filters.push(newFilter);
-    });
-  };
-
   ////////////////////////    SELECTABLES    ///////////////////////////
 
   //currentSet represents our currently  records with start and stop index
@@ -41,10 +24,6 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
         if (index > currentSet.stop || !currentSet.stop) {
           currentSet.stop = index;
         }
-      },
-
-      stop: function (event, ui) {
-        console.log("ok");
       }
     });
   });
@@ -185,6 +164,24 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       },function(error){
         console.log("loadForams::Error - ", error);
       });
+  };
+
+  $scope.open = function () {
+    var modalInstance = $modal.open({
+      templateUrl: 'views/filter_creator.html',
+      controller:  'FilterCreatorCtrl',
+      windowClass: 'small',
+      resolve: {
+        availableFilterParams: function () {
+          return $scope.availableFilterParams;
+        }
+      }
+    });
+
+    modalInstance.result.then(function(newFilter) {
+      $scope.newFilter = newFilter;
+      $scope.addFilter();
+    });
   };
 
   ////////////////////////    PAGINATION    ///////////////////////////
