@@ -94,15 +94,15 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
   };
 
   var generateChart = function () {
-    if ($scope.chartParams.gene1) {
+    if ($scope.chartParams.gene) {
 
-      var gene1 = $scope.chartParams.gene1.replace(/\s+/g, '');
+      var gene = $scope.chartParams.gene.replace(/\s+/g, '');
 
       var flatParams = {
         start: $scope.chartParams.start,
         stop: $scope.chartParams.stop,
         "genes[]": [
-          gene1
+          gene
         ],
         "group_by": $scope.chartParams.groupingParameter
       };
@@ -116,7 +116,7 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
         $scope.chart.xAxis.crosshair = true;
 
         pushSeries(generations.gene1);
-        var title = "Change of attribute " + gene1;
+        var title = "Change of attribute " + gene;
         setChartTitle(title);
       });
     }
