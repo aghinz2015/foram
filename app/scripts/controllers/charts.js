@@ -93,7 +93,7 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
   };
 
   var generateChart = function () {
-    if ($scope.chartParams.gene1 || $scope.chartParams.gene2) {
+    if ($scope.chartParams.gene1) {
 
       var gene1 = $scope.chartParams.gene1.replace(/\s+/g, '');
 
@@ -104,11 +104,6 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
           gene1
         ]
       };
-
-      if ($scope.chartParams.gene2) {
-        var gene2 = $scope.chartParams.gene1.replace(/\s+/g, '');
-        flatParams["genes[]"].push(gene2);
-      }
       ForamAPIService.getGenerations(flatParams).then(function (response) {
         $scope.chartParams = {};
         generations = response.data.result;
@@ -119,14 +114,7 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
         $scope.chart.xAxis.crosshair = true;
 
         pushSeries(generations.gene1);
-        var title;
-        title = "Change of attribute " + gene1;
-
-        if (generations.gene2) {
-          pushSeries(generations.gene2);
-          title = "Change of attributes " + gene1 + " and " + gene2;
-        }
-        
+        var title = "Change of attribute " + gene1;
         setChartTitle(title);
       });
     }
