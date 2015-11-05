@@ -1,26 +1,26 @@
 <div class="row">
   <div class="large-12 columns">
     <accordion close-others="false">
-      <accordion-group heading="Genes">
+      <accordion-group heading="Gene">
         <div class="row">
           <div class="large-4 columns">
-            <label for="gene1-param">Gene 1</label>
-            <select id="gene1-param" ng-model="chartParams.gene1">
-              <option ng-repeat="gene in availableGenes">{{gene}}</option>
-            </select>
-          </div>
-
-          <div class="large-4 columns end">
-            <label for="gene2-param">Gene 2 (optional)</label>
-            <select id="gene2-param" ng-model="chartParams.gene2">
+            <label for="gene-param">Available genes</label>
+            <select id="gene-param" ng-model="chartParams.gene" ng-init="chartParam.gene = chartParam.gene">
               <option ng-repeat="gene in availableGenes">{{gene}}</option>
             </select>
           </div>
         </div>
       </accordion-group>
 
-      <accordion-group heading="Death step number">
+      <accordion-group heading="Grouping parameter">
         <div class="row">
+          <div class="large-4 columns">
+            <label for="grouping-param">Available grouping parameters</label>
+            <select id="grouping-param" ng-model="chartParams.groupingParameter" ng-init="chartParam.groupingParameter = chartParam.groupingParameter">
+              <option ng-repeat="param in availableGroupingParameters">{{param}}</option>
+            </select>
+          </div>
+          
           <div class="large-4 columns">
             <label for="start-value">Start</label>
             <input type="number" id="start-value" step="1" ng-model="chartParams.start" max="{{newChart.stop}}"/>
