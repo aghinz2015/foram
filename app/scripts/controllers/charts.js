@@ -107,7 +107,6 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
       group_by: $scope.chartParams.groupingParameter
     };
     ForamAPIService.getGenerations(flatParams).then(function (response) {
-      $scope.chartParams = {};
       generations = response.data.result;
 
       $scope.chart.xAxis.categories = generations.grouping_parameter.values;
@@ -299,5 +298,5 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
   }, null, document.getElementsByTagName('head')[0]);
 
   Highcharts.setOptions(options);
-
+  
 }]);
