@@ -35,7 +35,7 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
 
   ////////////////////////    CHART    ///////////////////////////
 
-  var getChartRef = function() {
+  var getChartRef = function () {
     return Highcharts.charts.filter(function (item) {
       return item !== undefined;
     })[0];
@@ -67,21 +67,21 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
             var serie = null;
             var name = [geneSeries.name, key, k].join("_");
             if (name.indexOf('standard_deviation') > -1) {
-                serie = {
-                  data: [],
-                  name: name,
-                  linkedTo: ':previous',
-                  type: 'arearange',
-                  fillOpacity: 0.1,
-                  lineWidth: 0
-                };
-                for (var i in geneSeries[key].average) {
-                  serie.data.push([geneSeries[key][k]['minus_standard_deviation'][i], geneSeries[key][k]['plus_standard_deviation'][i]]);
-                }
+              serie = {
+                data: [],
+                name: name,
+                linkedTo: ':previous',
+                type: 'arearange',
+                fillOpacity: 0.1,
+                lineWidth: 0
+              };
+              for (var i in geneSeries[key].average) {
+                serie.data.push([geneSeries[key][k]['minus_standard_deviation'][i], geneSeries[key][k]['plus_standard_deviation'][i]]);
+              }
             } else {
               serie = { data: geneSeries[key][k], name: name };
             }
-            if(serie) {
+            if (serie) {
               if (!(name.indexOf('effective') > -1)) {
                 serie.visible = false;
               }
@@ -94,37 +94,36 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
   };
 
   var generateChart = function () {
-    if ($scope.chartParams.gene) {
+    if (!$scope.chartParams.gene) return;
 
-      var gene = $scope.chartParams.gene.replace(/\s+/g, '');
+    var gene = $scope.chartParams.gene.replace(/\s+/g, '');
 
-      var flatParams = {
-        start: $scope.chartParams.start,
-        stop: $scope.chartParams.stop,
-        "genes[]": [
-          gene
-        ],
-        "group_by": $scope.chartParams.groupingParameter
-      };
-      ForamAPIService.getGenerations(flatParams).then(function (response) {
-        $scope.chartParams = {};
-        generations = response.data.result;
+    var flatParams = {
+      start: $scope.chartParams.start,
+      stop: $scope.chartParams.stop,
+      "genes[]": [
+        gene
+      ],
+      group_by: $scope.chartParams.groupingParameter
+    };
+    ForamAPIService.getGenerations(flatParams).then(function (response) {
+      $scope.chartParams = {};
+      generations = response.data.result;
 
-        $scope.chart.xAxis.categories = generations.grouping_parameter.values;
-        $scope.chart.xAxis.title = {};
-        $scope.chart.xAxis.title.text = generations.grouping_parameter.name;
-        $scope.chart.xAxis.crosshair = true;
+      $scope.chart.xAxis.categories = generations.grouping_parameter.values;
+      $scope.chart.xAxis.title = {};
+      $scope.chart.xAxis.title.text = generations.grouping_parameter.name;
+      $scope.chart.xAxis.crosshair = true;
 
-        pushSeries(generations.gene1);
-        var title = "Change of attribute " + gene;
-        setChartTitle(title);
-      });
-    }
+      pushSeries(generations.gene1);
+      var title = "Change of attribute " + gene;
+      setChartTitle(title);
+    });
   };
 
-  var setChartTitle = function(title) {
+  var setChartTitle = function (title) {
     var chart = getChartRef();
-    chart.setTitle({text: title});
+    chart.setTitle({ text: title });
   };
 
   ////////////////////////    EXPORT   ///////////////////////////
@@ -209,21 +208,21 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
   };
 
   var options = {
-    tooltip : {
-          shared: true,
-          formatter: function() {
-            var s = generations.grouping_parameter.name + ': ' + this.x + '<br/>';
-            s += 'size: ' + generations.grouping_parameter.sizes[this.points[0].point.x] + '<br/>';
-            $.each(this.points, function(i, point) {
-              s += '<span style="color:' + point.series.color+'">' + point.series.name + '</span>: ';
-              if(point.point.low === undefined) {
-                 s += '<b>' + point.y + '</b><br/>';
-              } else {
-                s += '<b>'+ point.point.low + ' \- ' + point.point.high + '</b><br/>';
-              }
-            });
-            return s;
+    tooltip: {
+      shared: true,
+      formatter: function () {
+        var s = generations.grouping_parameter.name + ': ' + this.x + '<br/>';
+        s += 'size: ' + generations.grouping_parameter.sizes[this.points[0].point.x] + '<br/>';
+        $.each(this.points, function (i, point) {
+          s += '<span style="color:' + point.series.color + '">' + point.series.name + '</span>: ';
+          if (point.point.low === undefined) {
+            s += '<b>' + point.y + '</b><br/>';
+          } else {
+            s += '<b>' + point.point.low + ' \- ' + point.point.high + '</b><br/>';
           }
+        });
+        return s;
+      }
     },
     exporting: {
       enabled: true,
