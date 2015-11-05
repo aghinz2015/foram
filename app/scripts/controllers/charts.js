@@ -14,12 +14,13 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
 
   var modalInstance;
   $scope.availableGenes = [];
+  $scope.availableGroupingParameters = [];
 
   ConfigService.getChartConfig().then(
     function (response) {
       var data = response.data;
       $scope.availableGenes = data.availableGenesParams;
-
+      $scope.availableGroupingParameters = data.availableGroupingParameters;
     }, function (response) {
       $scope.openErrorDialog();
     });
@@ -102,7 +103,8 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
         stop: $scope.chartParams.stop,
         "genes[]": [
           gene1
-        ]
+        ],
+        "group_by": $scope.chartParams.groupingParameter
       };
       ForamAPIService.getGenerations(flatParams).then(function (response) {
         $scope.chartParams = {};

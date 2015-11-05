@@ -1,11 +1,20 @@
 <div>
-  <h3>Select gene for chart</h3>
+  <h3>Select chart data</h3>
 
   <div class="row">
     <div class="small-12 columns">
-      <label for="gene1-param">Available genes</label>
+      <label for="gene1-param">Gene</label>
       <select id="gene1-param" ng-model="chartParams.gene1">
         <option ng-repeat="gene in availableGenes">{{gene}}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="small-12 columns">
+      <label for="grouping-param">Grouping parameter</label>
+      <select id="grouping-param" ng-model="chartParams.groupingParameter">
+        <option ng-repeat="param in availableGroupingParameters">{{param}}</option>
       </select>
     </div>
   </div>
