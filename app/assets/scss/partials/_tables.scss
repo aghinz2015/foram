@@ -20,3 +20,43 @@ $selected-color: #ffdfaa;
     }
   }
 }
+
+.tabs {
+
+  dd {
+
+    border: 2px solid #efefef;
+
+    &:hover {
+      border: 2px solid #e1e1e1;
+    }
+
+    &.active {
+      border: 2px solid #333;
+      border-bottom: none;
+    }
+
+    &:not(.active){
+      border-bottom: none;
+    }
+  }
+}
+
+div.tabs-content {
+
+  label {
+    color: #222;
+    font-size: 1rem;
+  }
+
+  border: 2px solid #333;
+
+  .display-settings {
+
+    width: 100%;
+
+    tr td input {
+      margin: 0;
+    }
+  }
+}

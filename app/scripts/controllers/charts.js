@@ -21,7 +21,7 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
       var data = response.data;
       $scope.availableGenes = data.availableGenesParams;
       $scope.availableGroupingParameters = data.availableGroupingParameters;
-    }, function (response) {
+    }, function (error) {
       $scope.openErrorDialog();
     });
 
@@ -39,7 +39,7 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
     return Highcharts.charts.filter(function (item) {
       return item !== undefined;
     })[0];
-  }
+  };
 
   $scope.chartParams = {};
   $scope.chart = {};
@@ -59,7 +59,6 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
 
   var pushSeries = function (geneSeries) {
     var toBePushed = [];
-    var dev_flag = true;
     for (var key in geneSeries) {
       if (key != "name" && geneSeries.hasOwnProperty(key)) {
         for (var k in geneSeries[key])
@@ -117,6 +116,8 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
       pushSeries(generations.gene1);
       var title = "Change of attribute " + gene;
       setChartTitle(title);
+    },function(error){
+      console.error(error);
     });
   };
 
@@ -298,5 +299,5 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
   }, null, document.getElementsByTagName('head')[0]);
 
   Highcharts.setOptions(options);
-  
+
 }]);

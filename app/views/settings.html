@@ -1,5 +1,120 @@
 <div class="row">
-  <div class="large-4 columns">
+  <div class="large-12 columns">
     <h2 class="main-header">Settings</h2>
+
+
+
+    <tabset>
+      <tab>
+        <tab-heading>
+          Profile
+        </tab-heading>
+        <div class="small-12 medium-8 medium-offset-2 columns">
+          <form name="userData">
+            <div class="row">
+              <div class="small-12 columns">
+                <button ng-class="{disabled: userData.$invalid}" ng-click="saveUserData(user)" class="button small center">Save</button>
+              </div>
+            </div>
+            <div class="row">
+              <label for="user-email" ng-class="{error: userData.user_mail.$error.email}">E-mail
+                <input id="user-email" type="email" name="user_mail" ng-model="user.email">
+              </label>
+              <div role="alert">
+                  <span class="error" ng-show="userData.user_mail.$error.email">
+                    Not valid email!
+                  </span>
+              </div>
+              <label for="user-name">Name
+                <input id="user-name" type="text" name="user_name" ng-model="user.username">
+              </label>
+              <label for="new-password" ng-class="{error: userData.new_password.$invalid}">New password
+                <input id="new-password" type="password" ng-minlength="6" name="new_password" ng-model="user.password">
+              </label>
+              <div role="alert">
+                  <span class="error" ng-show="userData.new_password.$error.minlength">
+                    Password is too short!
+                  </span>
+              </div>
+              <label for="new-password-confirm" ng-class="{error: user.password != user.password_confirmation}">New password confirmation
+                <input id="new-password-confirm" type="password" name="new_password_confirm" ng-model="user.password_confirmation">
+              </label>
+              <div role="alert">
+                  <span class="error" ng-show="user.password != user.password_confirmation">
+                    Passwords don't match!</span>
+              </div>
+            </div>
+          </form>
+        </div>
+      </tab>
+
+      <tab>
+        <tab-heading>
+          Display
+        </tab-heading>
+        <div class="small-12 medium-8 medium-offset-2 columns">
+          <form name="userSettings">
+            <div class="row">
+              <div class="small-12 columns">
+                <button ng-click="saveSettings(settings)" class="button small center" ng-class="{disabled: userSettings.$invalid}">Save</button>
+              </div>
+            </div>
+            <div class="row">
+              <label for="precision-param" ng-class="{error: userSettings.precision.$invalid}">Precision
+                <input id="precision-param" type="number" min="0" max="16" name="precision" ng-model="settings.number_precision">
+              </label>
+              <div role="alert">
+                  <span class="error" ng-show="userSettings.precision.$invalid">
+                    Precision should be an integer between 0 and 16!
+                  </span>
+              </div>
+            </div>
+            <div class="row">
+              <caption>Genes display</caption>
+              <table class="display-settings">
+                <tr>
+                  <th>Gene</th>
+                  <th>Display name</th>
+                </tr>
+                <tr ng-repeat="gene in settings.mappings">
+                  <td>{{gene.name}}</td>
+                  <td>
+                    <input type="text" ng-model="gene.display">
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </form>
+        </div>
+        <div class="columns clear-fix"></div>
+      </tab>
+
+      <tab>
+        <tab-heading>
+          Database
+        </tab-heading>
+        <div class="small-12 medium-8 medium-offset-2 columns">
+          <form name="database">
+            <div class="row">
+              <div class="small-12 columns">
+                <button ng-click="saveDatabase(user)" class="button small center">Save</button>
+              </div>
+            </div>
+            <div class="row">
+              <label for="database">Database
+                <select id="database" type="email" name="user_mail" ng-model="user.email">
+                  <option ng-repeat="database in databases">{{database.name}}</option>
+                </select>
+              </label>
+              <label for="simulation">Simulation
+                <select id="simulation" type="text" name="user_name" ng-model="user.username">
+                  <option ng-repeat="simulation in currentDatabase.simulations">{{database.name}}</option>
+                </select>
+              </label>
+            </div>
+          </form>
+        </div>
+      </tab>
+    </tabset>
   </div>
 </div>

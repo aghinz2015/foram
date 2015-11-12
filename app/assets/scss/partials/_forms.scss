@@ -1,0 +1,16 @@
+label.error {
+  input {
+    border-color: red !important;
+  }
+}
+
+button {
+  &.center {
+    margin: 0 auto 1rem;
+    display: block;
+  }
+
+  &.disabled {
+    pointer-events: none;
+  }
+}

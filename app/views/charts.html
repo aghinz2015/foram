@@ -1,5 +1,6 @@
 <div class="row">
   <div class="large-12 columns">
+    <h2 class="main-header">Gene Chart</h2>
     <accordion close-others="false">
       <accordion-group heading="Gene">
         <div class="row">
@@ -20,7 +21,7 @@
               <option ng-repeat="param in availableGroupingParameters">{{param}}</option>
             </select>
           </div>
-          
+
           <div class="large-4 columns">
             <label for="start-value">Start</label>
             <input type="number" id="start-value" step="1" ng-model="chartParams.start" max="{{newChart.stop}}"/>
