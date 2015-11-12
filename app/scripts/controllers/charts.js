@@ -115,14 +115,12 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
       pushSeries(generations.gene1);
       var title = "Change of attribute " + gene;
       setChartTitle(title);
-      console.log(getChartRef());
     });
   };
 
   var setChartTitle = function (title) {
     var chart = getChartRef();
     chart.setTitle({ text: title });
-    chart.spacing = [10,10, 100, 10];
   };
   
   
@@ -208,7 +206,6 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
   };
 
   var options = {
-    spacing: [10, 10, 30, 10],
     navigator:{
         enabled:false,
         height: 0,
