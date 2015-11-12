@@ -252,6 +252,14 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
     },
     exporting: {
       enabled: true,
+      chartOptions: {
+        navigator: {
+          enabled: false
+        },
+        scrollbar: {
+           enabled: false
+        }
+      },
       buttons: {
         contextButton: {
           menuItems: [
