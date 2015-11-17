@@ -27,7 +27,7 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
 
   $scope.open = function () {
     modalInstance = $modal.open({
-      templateUrl: 'views/gene_selector.html',
+      templateUrl: 'views/gene-selector.html',
       scope: $scope,
       windowClass: 'small'
     });

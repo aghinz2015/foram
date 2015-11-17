@@ -7,10 +7,42 @@
  * # SettingsCtrl
  * Controller of the trunkApp
  */
-app.controller('SettingsCtrl',['$scope', 'UserService',  function ($scope, UserService) {
+app.controller('SettingsCtrl',['$scope', '$modal', 'UserService',  function ($scope, $modal, UserService) {
   $scope.settings = {mappings: []};
   $scope.user = {};
   $scope.loader = false;
+  $scope.editableDatabase = {};
+
+  $scope.saveSettings = function(settings){
+    UserService.updateUserSettings(settings);
+  };
+
+  $scope.saveUserData = function(data){
+    $scope.loader = true;
+    UserService.updateUserData(data).then(
+      function(res){
+        $scope.loader = false;
+      },
+      function(err){
+        $scope.loader = false;
+        console.error(err)
+      }
+    );
+  };
+
+  $scope.newDatabase = function(database){
+    if(database){
+      $scope.editableDatabase = database;
+    }
+
+    $modal.open({
+      scope: $scope,
+      templateUrl: 'views/database-modal.html',
+      windowClass: 'small'
+    });
+  };
+
+
 
   UserService.getUserData().then(
     function(res){
@@ -24,17 +56,22 @@ app.controller('SettingsCtrl',['$scope', 'UserService',  function ($scope, UserS
 
       $scope.user.email = res.data.user.email;
       $scope.user.username =  res.data.user.username;
+      $scope.user.password = $scope.user.password_confirmation = "";
     },
     function(error){
       console.error(error);
     }
   );
 
-  $scope.saveSettings = function(settings){
-    UserService.updateUserSettings(settings);
-  };
+  UserService.getDatabases().then(
+    function (res) {
+      $scope.databases = res.data;
+      console.log(res);
+    },
+    function (err) {
+      console.error(err);
+    }
+  );
 
-  $scope.saveUserData = function(data){
-    UserService.updateUserData(data);
-  }
+
 }]);

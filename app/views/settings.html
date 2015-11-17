@@ -13,7 +13,10 @@
           <form name="userData">
             <div class="row">
               <div class="small-12 columns">
-                <button ng-class="{disabled: userData.$invalid}" ng-click="saveUserData(user)" class="button small center">Save</button>
+                <button ng-class="{disabled: userData.$invalid}" ng-click="saveUserData(user)" class="button small center">
+                  <i class="fa fa-spinner fa-spin" ng-show="loader"></i>
+                  <span ng-hide="loader">Save</span>
+                </button>
               </div>
             </div>
             <div class="row">
@@ -56,7 +59,8 @@
           <form name="userSettings">
             <div class="row">
               <div class="small-12 columns">
-                <button ng-click="saveSettings(settings)" class="button small center" ng-class="{disabled: userSettings.$invalid}">Save</button>
+                <button ng-click="saveSettings(settings)" class="button small center" ng-class="{disabled: userSettings.$invalid}"><i class="fa fa-spinner fa-spin" ng-show="loader"></i>
+                  <span ng-hide="loader">Save</span></button>
               </div>
             </div>
             <div class="row">
@@ -96,8 +100,14 @@
         <div class="small-12 medium-8 medium-offset-2 columns">
           <form name="database">
             <div class="row">
-              <div class="small-12 columns">
-                <button ng-click="saveDatabase(user)" class="button small center">Save</button>
+              <div class="small-6 columns">
+                <button ng-click="saveDatabase(user)" class="button small center"><i class="fa fa-spinner fa-spin" ng-show="loader"></i>
+                  <span ng-hide="loader">Save</span></button>
+              </div>
+              <div class="small-6 columns">
+                <button ng-click="newDatabase()" class="button small center">
+                  New
+                </button>
               </div>
             </div>
             <div class="row">
@@ -113,6 +123,7 @@
               </label>
             </div>
           </form>
+
         </div>
       </tab>
     </tabset>

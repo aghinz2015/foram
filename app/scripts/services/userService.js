@@ -27,5 +27,11 @@ app.service('UserService', ['$http', 'api_host', function($http, api_host) {
 
     return $http.patch(api_host+'user',{user: data});
 
-  }
+  };
+
+  this.getDatabases = function() {
+    return $http.get(api_host+'user/mongo_sessions');
+  };
+
+
 }]);

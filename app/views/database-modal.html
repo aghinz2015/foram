@@ -1,0 +1,25 @@
+<div>
+  <h3>Edit database info</h3>
+
+  <div class="row">
+    <div class="small-12 columns">
+      <label for="database-name">Name</label>
+      <input id="database-name" type="text" ng-model="editableDatabase.name">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="small-12 columns">
+      <label for="grouping-param">Grouping parameter</label>
+      <select id="grouping-param" ng-model="chartParams.groupingParameter">
+        <option ng-repeat="param in availableGroupingParameters">{{param}}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="clearfix">
+    <button ng-click="saveDatabase()" class="button small center">
+      Save
+    </button>
+  </div>
+</div>

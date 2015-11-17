@@ -168,7 +168,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
 
   $scope.open = function () {
     var modalInstance = $modal.open({
-      templateUrl: 'views/filter_creator.html',
+      templateUrl: 'views/filter-creator.html',
       controller:  'FilterCreatorCtrl',
       windowClass: 'small',
       resolve: {
