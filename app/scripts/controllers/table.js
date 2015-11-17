@@ -128,7 +128,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   var checkIntersectingFilters = function(){
     var result = false;
 
-    for (i in $scope.filters) {
+    for (var i in $scope.filters) {
       if($scope.filters[i].param == $scope.newFilter.param){
         $scope.filters[i] = $scope.newFilter;
         result = true;
