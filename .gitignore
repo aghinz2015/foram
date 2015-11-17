@@ -5,3 +5,4 @@ bower_components
 .idea
 dist/
 app/scripts/config.js
+.DS_Store
