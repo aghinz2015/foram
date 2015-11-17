@@ -3,7 +3,6 @@
  * */
 'use strict';
 
-// menu directive - menu must be a JSON object
 app.directive('menu', function(){
   return {
     restrict: 'E',
@@ -23,7 +22,18 @@ app.directive('menu', function(){
           $location.path('/sign');
         });
       };
+    },
 
+    link: function() {
+      $(window).resize(function() {
+        if ($(window).width() < 769) {
+          $('.off-canvas-wrap').removeClass('move-right');
+          $('.left-off-canvas-toggle').show();
+        } else {
+          $('.off-canvas-wrap').addClass('move-right');
+          $('.left-off-canvas-toggle').hide();
+        }
+      });
     }
   }
 });
