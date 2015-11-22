@@ -15,8 +15,10 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
    * @param params
    * @returns {HttpPromise}
    */
-  this.getForams = function (params) {
-    return $http.get(foramsUrl, { params: params });
+  this.getForams = function (params, format) {
+    if (format === undefined)
+      format = ''
+    return $http.get(foramsUrl + format, { params: params });
   };
 
 
@@ -36,5 +38,5 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
    */
   this.getForamsInfo = function (params) {
     return $http.head(foramsUrl, { params: params });
-  }
+  };
 }]);

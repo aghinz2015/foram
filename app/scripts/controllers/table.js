@@ -42,6 +42,34 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     $location.path("/visualization");
   }
 
+  $scope.downloadCSV = function() {
+    flatFilters = prepareFilters();
+    ForamAPIService.getForams(flatFilters, '.csv').then(function (response) {
+      var anchor = angular.element('<a/>');
+      anchor.attr({
+        href: 'data:attachment/csv;charset=utf-8,' + encodeURI(response.data),
+        target: '_blank',
+        download: 'forams.csv'
+      })[0].click();
+    },function(error){
+      console.log("getForamsInfo::Error - ", error)
+    });
+  }
+
+  $scope.downloadGEN = function() {
+    flatFilters = prepareFilters();
+    ForamAPIService.getForams(flatFilters, '.gen').then(function (response) {
+      var anchor = angular.element('<a/>');
+      anchor.attr({
+        href: 'data:attachment/gen;charset=utf-8,' + encodeURI(response.data),
+        target: '_blank',
+        download: 'forams.gen'
+      })[0].click();
+    },function(error){
+      console.log("getForamsInfo::Error - ", error)
+    });
+  }
+
   ////////////////////////    FILTERS    ///////////////////////////
 
   // variables
