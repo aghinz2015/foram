@@ -1,4 +1,4 @@
-app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService', 'ConfigService', 'DatasetService', function ($location, $scope, $modal, ForamAPIService, ConfigService, DatasetService) {
+app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService', 'ConfigService', 'DatasetService', 'SettingsService', function ($location, $scope, $modal, ForamAPIService, ConfigService, DatasetService, SettingsService) {
 
   ////////////////////////    SELECTABLES    ///////////////////////////
 
@@ -30,7 +30,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
 
   $scope.selectedForams = function() {
     return $scope.forams.slice(currentSet.start, currentSet.stop + 1);
-  }
+  };
 
   $scope.generateChart = function () {
     $location.search(prepareFilters());
@@ -40,7 +40,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   $scope.visualize = function() {
     DatasetService.putProducts($scope.selectedForams());
     $location.path("/visualization");
-  }
+  };
 
   ////////////////////////    FILTERS    ///////////////////////////
 
@@ -160,6 +160,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   var loadForams = function () {
     ForamAPIService.getForams(flatFilters)
       .then(function(response){
+        console.log(response);
         $scope.forams = response.data.forams;
       },function(error){
         console.log("loadForams::Error - ", error);
@@ -270,5 +271,8 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   ////////////////////////    INIT     ///////////////////////////
 
   filterForams();
+  var settings = SettingsService.getSettings();
+  console.log(settings);
+
 
 }]);

@@ -32,8 +32,8 @@ var app = angular.module('trunkApp', ['ngRoute', 'mm.foundation', 'highcharts-ng
         controller: 'TableCtrl'
       })
       .when('/databases', {
-        templateUrl: 'views/databases.html',
-        controller: 'DatabasesCtrl'
+        templateUrl: 'views/settings.html',
+        controller: 'SettingsCtrl'
       })
       .when('/settings', {
         templateUrl: 'views/settings.html',

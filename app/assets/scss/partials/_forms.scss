@@ -4,13 +4,23 @@ label.error {
   }
 }
 
+
+.display-hosts {
+  width: 100%;
+
+  input {
+    margin: 0;
+  }
+}
+
+
 button {
   &.center {
     margin: 0 auto 1rem;
     display: block;
   }
+}
 
-  &.disabled {
-    pointer-events: none;
-  }
+.disabled {
+  pointer-events: none;
 }

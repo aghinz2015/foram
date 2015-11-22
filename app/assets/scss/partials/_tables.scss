@@ -60,3 +60,22 @@ div.tabs-content {
     }
   }
 }
+
+#hosts-table tr td, #hosts-table tr th {
+  .fa.fa-remove, .fa.fa-plus {
+    cursor: pointer;
+  }
+}
+
+#database-table tr th, #database-table tr td {
+
+  text-align: center;
+
+  .fa.fa-remove {
+    cursor: pointer;
+  }
+
+  button {
+    margin: 0 auto;
+  }
+}
