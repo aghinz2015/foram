@@ -53,11 +53,14 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       flatFilters = prepareFilters();
       ForamAPIService.getForams(flatFilters, newDownload.format).then(function (response) {
         var anchor = angular.element('<a/>');
+        anchor.css({display: 'none'});
+        angular.element(document.body).append(anchor);
         anchor.attr({
           href: 'data:attachment/csv;charset=utf-8,' + encodeURI(response.data),
           target: '_blank',
           download: newDownload.file_name + newDownload.format
         })[0].click();
+        anchor.remove();
       },function(error){
         console.log("getForamsInfo::Error - ", error)
       });
