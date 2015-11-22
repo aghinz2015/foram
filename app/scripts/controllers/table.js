@@ -42,31 +42,25 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     $location.path("/visualization");
   }
 
-  $scope.downloadCSV = function() {
-    flatFilters = prepareFilters();
-    ForamAPIService.getForams(flatFilters, '.csv').then(function (response) {
-      var anchor = angular.element('<a/>');
-      anchor.attr({
-        href: 'data:attachment/csv;charset=utf-8,' + encodeURI(response.data),
-        target: '_blank',
-        download: 'forams.csv'
-      })[0].click();
-    },function(error){
-      console.log("getForamsInfo::Error - ", error)
+  $scope.download = function() {
+    var modalInstance = $modal.open({
+      templateUrl: 'views/foram_downloader.html',
+      controller:  'ForamDownloaderCtrl',
+      windowClass: 'small'
     });
-  }
 
-  $scope.downloadGEN = function() {
-    flatFilters = prepareFilters();
-    ForamAPIService.getForams(flatFilters, '.gen').then(function (response) {
-      var anchor = angular.element('<a/>');
-      anchor.attr({
-        href: 'data:attachment/gen;charset=utf-8,' + encodeURI(response.data),
-        target: '_blank',
-        download: 'forams.gen'
-      })[0].click();
-    },function(error){
-      console.log("getForamsInfo::Error - ", error)
+    modalInstance.result.then(function(newDownload) {
+      flatFilters = prepareFilters();
+      ForamAPIService.getForams(flatFilters, newDownload.format).then(function (response) {
+        var anchor = angular.element('<a/>');
+        anchor.attr({
+          href: 'data:attachment/csv;charset=utf-8,' + encodeURI(response.data),
+          target: '_blank',
+          download: newDownload.file_name + newDownload.format
+        })[0].click();
+      },function(error){
+        console.log("getForamsInfo::Error - ", error)
+      });
     });
   }
 

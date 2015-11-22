@@ -1,0 +1,27 @@
+<h3>Download forams</h3>
+
+<div class="row">
+  <div class="large-12 columns">
+    <label for="file_name">File name</label>
+    <input type="text" name="file_name" id="file_name" class="form-control" ng-model="newDownload.file_name"/>
+  </div>
+
+  <div class="large-12 columns">
+    <label for="format-param">Select data format</label>
+    <select id="format-param" ng-model="newDownload.format">
+      <option ng-repeat="format in availableFormats" value="{{format.value}}">{{format.display}}</option>
+    </select>
+  </div>
+</div>
+
+<div class="clearfix">
+  <ul class="button-row right">
+    <li>
+      <button ng-click="cancel()" class="button secondary">Cancel</button>
+    </li>
+
+    <li>
+      <button ng-click="download()" class="button">Download</button>
+    </li>
+  </ul>
+</div>
