@@ -294,6 +294,9 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   ////////////////////////    INIT     ///////////////////////////
 
   filterForams();
+  var settings = SettingsService.getSettings();
+  console.log(settings);
+
 
 
 
