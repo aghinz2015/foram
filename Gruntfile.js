@@ -427,10 +427,18 @@ module.exports = function (grunt) {
 
     // Deployment
     deploy: {
-      servers: [{
-        host: '46.101.145.100',
-        username: 'deploy'
-      }],
+      staging: {
+        servers: [{
+          host: '46.101.145.100',
+          username: 'deploy'
+        }]
+      },
+      production: {
+        servers: [{
+          host: 'mongo.icsr.agh.edu.pl',
+          username: 'viewer'
+        }]
+      },
       before: ["curl -X POST --data-urlencode \"payload={\\\"channel\\\": \\\"#hooks\\\", \\\"username\\\": \\\"Deployer\\\", \\\"icon_url\\\": \\\"http://gravatar.com/avatar/885e1c523b7975c4003de162d8ee8fee?r=g&s=40\\\", \\\"text\\\": \\\"`echo $USER` has started deploying branch `git symbolic-ref HEAD | sed -e \\\"s,.*/\\(.*\\),\\1,\\\"` of foram to production\\\"}\" https://hooks.slack.com/services/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"],
       after: ["curl -X POST --data-urlencode \"payload={\\\"channel\\\": \\\"#hooks\\\", \\\"username\\\": \\\"Deployer\\\", \\\"icon_url\\\": \\\"http://gravatar.com/avatar/885e1c523b7975c4003de162d8ee8fee?r=g&s=40\\\", \\\"text\\\": \\\"`echo $USER` has finished deploying branch `git symbolic-ref HEAD | sed -e \\\"s,.*/\\(.*\\),\\1,\\\"` of foram to production\\\"}\" https://hooks.slack.com/services/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"],
       deploy_path: '/apps/foram_production',
@@ -449,16 +457,32 @@ module.exports = function (grunt) {
           api_host: 'http://localhost:3000/'
         }
       },
+      staging: {
+        constants: {
+          env: 'staging',
+          api_host: 'http://46.101.145.100/'
+        }
+      },
       production: {
         constants: {
           env: 'production',
-          api_host: 'http://46.101.145.100/'
+          api_host: 'http://mongo.icsr.agh.edu.pl/'
         }
       }
     },
   });
 
-  grunt.registerTask('push_code', 'Deploy code to the production server', function (target) {
+  grunt.registerTask('push_code_production', 'Deploy code to the production server', function (target) {
+    var servers = grunt.config.get('deploy').production.servers;
+    push_code(servers);
+  });
+
+  grunt.registerTask('push_code_staging', 'Deploy code to the staging server', function (target) {
+    var servers = grunt.config.get('deploy').staging.servers;
+    push_code(servers);
+  });
+
+  var push_code = function(servers) {
     var config = grunt.config.get('deploy');
     var exec = require('child_process').exec;
     var timeStamp = require('moment')().format('YYYYMMDDHHmmss');
@@ -466,7 +490,7 @@ module.exports = function (grunt) {
     var deployPath = basePath + '/releases/' + timeStamp;
     var command;
 
-    config.servers.forEach(function (server) {
+    servers.forEach(function (server) {
       var ssh = function (command) {
         command = 'ssh -t ' + server.username + "@" + server.host + ' "' + command + '"';
         console.log(command);
@@ -482,7 +506,7 @@ module.exports = function (grunt) {
     config.after.forEach(function (hook) {
       exec(hook);
     });
-  });
+  }
 
   grunt.registerTask('deploy', 'Compile and deploy code', function (target) {
     var config = grunt.config.get('deploy');
@@ -492,7 +516,18 @@ module.exports = function (grunt) {
       exec(hook);
     });
 
-    grunt.task.run(['ngconstant:production', 'build', 'push_code', 'ngconstant:development']);
+    grunt.task.run(['ngconstant:staging', 'build', 'push_code_staging', 'ngconstant:development']);
+  });
+
+  grunt.registerTask('deploy_production', 'Compile and deploy code', function (target) {
+    var config = grunt.config.get('deploy');
+    var exec = require('child_process').exec;
+
+    config.before.forEach(function (hook) {
+      exec(hook);
+    });
+
+    grunt.task.run(['ngconstant:production', 'build', 'push_code_production', 'ngconstant:development']);
   });
 
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
