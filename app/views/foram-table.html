@@ -9,6 +9,7 @@
 
       <div class="small-6 columns">
         <button ng-click="open()" class="button small right">New filter</button>
+        <button ng-click="loadFilters()" class="button small right">Load filter</button>
       </div>
     </div>
 
@@ -84,7 +85,9 @@
       </li>
 
       <li>
-        <button ng-click="download()" class="button">Download...</button>
+        <button ng-click="download()" class="button">Download...</button>     
+      <li>
+        <button ng-click="saveFilters()" class="button secondary">Savefilters</button>
       </li>
     </ul>
 

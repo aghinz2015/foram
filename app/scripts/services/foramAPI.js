@@ -36,7 +36,16 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
    * @param params
    * @returns {HttpPromise}
    */
-  this.getForamsInfo = function (params) {
-    return $http.head(foramsUrl, { params: params });
-  };
+  this.getForamsInfo = function(params) {
+    return $http.head(api_host + 'forams', {params: params});
+  }
+  
+  this.getFilters = function(params) {
+    return $http.get(api_host + "foram_filters", {params: params});
+  }
+  
+  this.saveFilters = function(params) {
+    return $http.post(api_host + "foram_filters", {foram_filter: params});
+  }
+
 }]);

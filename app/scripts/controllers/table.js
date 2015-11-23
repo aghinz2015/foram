@@ -28,7 +28,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     });
   });
 
-  $scope.selectedForams = function() {
+  $scope.selectedForams = function () {
     return $scope.forams.slice(currentSet.start, currentSet.stop + 1);
   };
 
@@ -37,7 +37,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     $location.path("/charts");
   };
 
-  $scope.visualize = function() {
+  $scope.visualize = function () {
     DatasetService.putProducts($scope.selectedForams());
     $location.path("/visualization");
   };
@@ -65,8 +65,27 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
         console.log("getForamsInfo::Error - ", error)
       });
     });
-  }
+  };
+  
+  $scope.saveFilters = function () {
+    var filtersToSave = {};
+    filtersToSave = prepareFilters();
+    filtersToSave["is_diploid"] = $scope.constantFilters.is_diploid;
+    ForamAPIService.saveFilters(filtersToSave);
+  };
+ 
+  $scope.loadFilters = function () {
+    var modalInstance = $modal.open({
+      templateUrl: 'views/filter_loader.html',
+      controller: 'FilterLoaderCtrl',
+      windowClass: 'small',
+    });
 
+    modalInstance.result.then(function (loadedFilter) {
+      unflattenFilter(loadedFilter);
+    });
+  };
+  
   ////////////////////////    FILTERS    ///////////////////////////
 
   // variables
@@ -77,26 +96,26 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   var flatFilters = {};
 
   // prepare flat filters
-  var prepareFilters = function(){
+  var prepareFilters = function () {
     var filters = {};
     var i;
     var key;
     for (i in $scope.filters) {
       if ($scope.filters[i].param != undefined) {
         if ($scope.filters[i].min != undefined) {
-          key = $scope.filters[i].param+"_min";
+          key = $scope.filters[i].param + "_min";
           key = key.replace(/\s+/g, '');
           filters[key] = $scope.filters[i].min;
         }
         if ($scope.filters[i].max != undefined) {
-          key = $scope.filters[i].param+"_max";
+          key = $scope.filters[i].param + "_max";
           key = key.replace(/\s+/g, '');
           filters[key] = $scope.filters[i].max;
         }
       }
     }
 
-    if(($scope.constantFilters.is_diploid && $scope.constantFilters.is_haploid) || (!$scope.constantFilters.is_diploid && !$scope.constantFilters.is_haploid)){
+    if (($scope.constantFilters.is_diploid && $scope.constantFilters.is_haploid) || (!$scope.constantFilters.is_diploid && !$scope.constantFilters.is_haploid)) {
       filters.is_diploid = undefined;
     } else {
       filters.is_diploid = $scope.constantFilters.is_diploid;
@@ -116,7 +135,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
 
   // add new filter
   $scope.addFilter = function () {
-    if(!checkIntersectingFilters() && $scope.newFilter.param){
+    if (!checkIntersectingFilters() && $scope.newFilter.param) {
       $scope.filters.push($scope.newFilter);
       $scope.newFilter = {};
     }
@@ -138,11 +157,11 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     var filter = $scope.filters[index];
     var key;
     if (filter.max != undefined) {
-      key = filter.param+'_max';
+      key = filter.param + '_max';
       flatFilters[key] = undefined;
     }
     if (filter.min != undefined) {
-      key = filter.param+'_min';
+      key = filter.param + '_min';
       flatFilters[key] = undefined;
     }
     $scope.filters.splice(index, 1);
@@ -150,11 +169,10 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   };
 
   // check filters for intersecting
-  var checkIntersectingFilters = function(){
+  var checkIntersectingFilters = function () {
     var result = false;
-
     for (var i in $scope.filters) {
-      if($scope.filters[i].param == $scope.newFilter.param){
+      if ($scope.filters[i].param == $scope.newFilter.param) {
         $scope.filters[i] = $scope.newFilter;
         result = true;
         break;
@@ -176,7 +194,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
           loadForams();
           $scope.foramsLoaded = true;
         }
-    },function(error){
+      }, function (error) {
         console.log("getForamsInfo::Error - ", error)
       });
   };
@@ -184,10 +202,9 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   // load forams with current filters
   var loadForams = function () {
     ForamAPIService.getForams(flatFilters)
-      .then(function(response){
-        console.log(response);
+      .then(function (response) {
         $scope.forams = response.data.forams;
-      },function(error){
+      }, function (error) {
         console.log("loadForams::Error - ", error);
       });
   };
@@ -204,11 +221,22 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       }
     });
 
-    modalInstance.result.then(function(newFilter) {
+    modalInstance.result.then(function (newFilter) {
       $scope.newFilter = newFilter;
       $scope.addFilter();
     });
   };
+  
+  var unflattenFilter = function (filter) {
+    $scope.availableFilterParams.forEach(function(element) {
+      if(filter[element] != null) $scope.constantFilters[element] = filter[element];
+      var unflattedFilter = {param: element};
+      if(filter[element+'_min'] != null) unflattedFilter['min'] = filter[element+'_min'];
+      if(filter[element+'_max'] != null) unflattedFilter['max'] = filter[element+'_max'];
+      if(unflattedFilter.min != undefined || unflattedFilter.max != undefined) $scope.filters.push(unflattedFilter);
+    });
+  };
+  
 
   ////////////////////////    PAGINATION    ///////////////////////////
 
@@ -246,7 +274,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       }
     },
 
-    range : function () {
+    range: function () {
       var rangeSize = 5;
       var ret = [];
       var start;
@@ -281,13 +309,12 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   $scope.numberOfForams = 1;
 
   ConfigService.getFilterConfig().then(
-    function(response){
+    function (response) {
       var data = response.data;
-
-      $scope.availableFilterParams = data.availableFilterParams.map(function(s){return s.replace(/\s+/g, '')});
+      $scope.availableFilterParams = data.availableFilterParams.map(function (s) { return s.replace(/\s+/g, '') });
       maxForams = data.maxForams;
-    },function(err){
-      console.error('GetFilterConfig::Error - ',err);
+    }, function (response) {
+      console.log('GetFilterConfig::Error - ', response.status);
     });
 
   loadForams();
@@ -335,7 +362,5 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   ////////////////////////    INIT     ///////////////////////////
 
   filterForams();
-
-
-
+  
 }]);
