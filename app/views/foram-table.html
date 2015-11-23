@@ -84,18 +84,19 @@
       </li>
     </ul>
 
-    <div class="table-responsive">
+    <div class="table-responsive" id="forams-table">
       <table class="selectable no-border">
         <thead>
-          <th ng-repeat="(key, value) in forams[0].genotype" ng-if="key != '_id'">
-            {{key}}
+          <th ng-repeat="(key, value) in mappings">
+            <span ng-hide="value">{{key}}</span>
+            <span ng-show="value">{{value}}</span>
           </th>
         </thead>
 
         <tbody id="selectable">
           <tr ng-repeat="foram in forams" data-index="{{$index}}">
             <td ng-repeat="(key, value) in foram.genotype" ng-if="key != '_id'">
-              {{value.effective}}
+              {{value.effective | number:precision}}
             </td>
           </tr>
         </tbody>

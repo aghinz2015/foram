@@ -1,6 +1,6 @@
 <div>
   <h3>Edit database info</h3>
-  <form name="databaseForm">
+  <form name="databaseForm" autocomplete>
     <div class="row">
       <div class="small-12 columns">
         <label for="database-name">Name</label>
@@ -43,9 +43,9 @@
     <div class="row">
       <div class="small-12 columns">
         <label for="database-password">Password</label>
-        <input id="database-password" type="password" ng-model="editableDatabase.password">
+        <input id="database-password" type="password" ng-model="editableDatabase.password" autocomplete>
         <label for="database-password-confirm" ng-class="{error: editableDatabase.password != editableDatabase.password_confirmation}">New password confirmation
-          <input id="database-password-confirm" type="password" ng-model="editableDatabase.password_confirmation">
+          <input id="database-password-confirm" type="password" ng-model="editableDatabase.password_confirmation" autocomplete>
         </label>
         <div role="alert">
           <span class="error" ng-show="editableDatabase.password != editableDatabase.password_confirmation">

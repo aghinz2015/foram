@@ -131,3 +131,21 @@ var app = angular.module('trunkApp', ['ngRoute', 'mm.foundation', 'highcharts-ng
   var Viewer = {
     'Scene': null
   };
+
+
+app.directive('autocomplete', function() {
+
+  return {
+
+    restrict: 'A',
+    link: function( $scope, el, attr ) {
+
+      el.bind('change', function(e) {
+
+        e.preventDefault();
+
+      })
+    }
+  }
+
+});

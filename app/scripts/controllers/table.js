@@ -260,19 +260,41 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       var data = response.data;
       $scope.availableFilterParams = data.availableFilterParams.map(function(s){return s.replace(/\s+/g, '')});
       maxForams = data.maxForams;
-    },function(response){
-      console.log('GetFilterConfig::Error - ',response.status);
+    },function(err){
+      console.error('GetFilterConfig::Error - ',err);
     });
 
   loadForams();
   $scope.foramsLoaded = true;
   $scope.foramTableVisible = true;
 
+
+  //////////////////////// DISPLAY SETTINGS //////////////////////
+
+  $scope.precision = 16;
+  $scope.mappings = {};
+
+  SettingsService.getSettings().then(
+    function(res){
+
+      $scope.precision = res.data.settings_set.number_precision;
+      $scope.mappings = res.data.settings_set.mappings;
+
+    },
+    function(err){
+      console.error(err);
+    }
+  );
+
+  $scope.emptyOrNull = function(value){
+    return !(value === null || value.trim().length === 0)
+  };
+
+
   ////////////////////////    INIT     ///////////////////////////
 
   filterForams();
-  var settings = SettingsService.getSettings();
-  console.log(settings);
+
 
 
 }]);
