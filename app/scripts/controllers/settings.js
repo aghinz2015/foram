@@ -7,7 +7,7 @@
  * # SettingsCtrl
  * Controller of the trunkApp
  */
-app.controller('SettingsCtrl',['$scope', '$location', '$modal', 'UserService',  function ($scope, $location, $modal, UserService) {
+app.controller('SettingsCtrl',['$scope', '$location', '$modal', 'UserService', 'ConfigService',  function ($scope, $location, $modal, UserService, ConfigService) {
 
   if($location.path() == '/databases'){
     $scope.redirect = true;
@@ -127,10 +127,24 @@ app.controller('SettingsCtrl',['$scope', '$location', '$modal', 'UserService',  
     function(res){
       if(res.data) {
         $scope.settings.number_precision = res.data.user.settings_set.number_precision;
-        for (var gene in res.data.user.settings_set.mappings) {
-          if (res.data.user.settings_set.mappings.hasOwnProperty(gene)) {
-            $scope.settings.mappings.push({name: gene, display: res.data.user.settings_set.mappings[gene]});
+        if(res.data.user.settings_set.mappings.length === 0) {
+          for (var gene in res.data.user.settings_set.mappings) {
+            if (res.data.user.settings_set.mappings.hasOwnProperty(gene)) {
+              $scope.settings.mappings.push({name: gene, display: res.data.user.settings_set.mappings[gene]});
+            }
           }
+        } else {
+          ConfigService.getFilterConfig().then(
+            function(res){
+              console.log(res);
+              for (var gene in res.data.availableGenes) {
+                $scope.settings.mappings.push({name: res.data.availableFilterParams[gene], display: ""});
+              }
+            },
+            function(err){
+              console.error(err);
+            }
+          )
         }
 
         $scope.user.email = res.data.user.email;
