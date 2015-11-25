@@ -5,18 +5,23 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
   var simulation = simulationFactory(canvas);
 
   $scope.genotype = genotypeService.fetchGenotype();
+  $scope.genotype = $scope.genotype || window._foram_genotype;
   $scope.morphology = {};
 
   configService.getConfig('visualization').then(function(response) {
     var defaults = response.data.defaults;
 
     $scope.structureAnalyzer = defaults.structureAnalyzer;
+    if (window._foram_chambers) {
+      $scope.structureAnalyzer.numChambers = window._foram_chambers;
+    }
     $scope.material = defaults.material;
 
     simulation.simulate($scope.genotype, $scope.structureAnalyzer.numChambers);
 
     recalculateMorphology();
   });
+
 
   $scope.simulate = function() {
     simulation.simulate($scope.genotype, $scope.structureAnalyzer.numChambers);

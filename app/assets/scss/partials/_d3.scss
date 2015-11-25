@@ -1,0 +1,83 @@
+#chart {
+  margin-left: -40px;
+  height: 506px;
+}
+
+text {
+  font: 10px sans-serif;
+}
+
+.dot {
+  stroke: #000;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.label {
+  fill: #777;
+}
+
+.z.label {
+  font: 500 196px "Helvetica Neue";
+  fill: #ddd;
+}
+
+.z.label.active {
+  fill: #aaa;
+}
+
+.overlay {
+  fill: none;
+  pointer-events: all;
+  cursor: ew-resize;
+}
+
+#tooltip-visualization {
+  height: 200px;
+  width: 200px;
+  margin: 0 auto;
+  margin-bottom: 5px;
+}
+
+#tree-tooltip {
+  height: 345px;
+  width: 220px;
+  position: absolute;
+  text-align: center;
+  padding: 10px;
+  font: 12px sans-serif;
+  background: lightsteelblue;
+  border: 0px;
+  border-radius: 8px;
+  opacity: 0;
+}
+
+#tree-tooltip p {
+  font: 12px sans-serif;
+  padding: 1px;
+  margin: 1px;
+}
+
+.node {
+  cursor: pointer;
+}
+
+.node circle {
+  fill: #fff;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+.node text {
+  font: 10px sans-serif;
+}
+
+.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 1.5px;
+}
