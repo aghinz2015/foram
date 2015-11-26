@@ -65,20 +65,36 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
         console.log("getForamsInfo::Error - ", error)
       });
     });
+
   };
+
   
   $scope.saveFilters = function () {
     var filtersToSave = {};
     filtersToSave = prepareFilters();
     filtersToSave["is_diploid"] = $scope.constantFilters.is_diploid;
     ForamAPIService.saveFilters(filtersToSave);
+    filtersToSave["is_haploid"] = $scope.constantFilters.is_haploid;
+    var modalInstance = $modal.open({
+      templateUrl: 'views/filter_saver.html',
+      controller: 'FilterSaverCtrl',
+      windowClass: 'small',
+      resolve: {
+        filtersToSave: function () {
+          return filtersToSave;
+        },
+        ForamAPIService: function () {
+          return ForamAPIService;
+        }
+      }
+    });
   };
  
   $scope.loadFilters = function () {
     var modalInstance = $modal.open({
       templateUrl: 'views/filter_loader.html',
       controller: 'FilterLoaderCtrl',
-      windowClass: 'small',
+      windowClass: 'small'
     });
 
     modalInstance.result.then(function (loadedFilter) {

@@ -2,8 +2,8 @@
 
 <div class="row">
   <div class="large-12 columns">
-    <label for="filter-id">Filter ID</label>
-    <select ng-options="filter as filter._id.$oid for filter in loadedFilters" ng-model="selectedFilter.data"></select>
+    <label for="filter-id">Filter name</label>
+    <select ng-options="filter as filter.name for filter in loadedFilters" ng-model="selectedFilter.data"></select>
   </div>
 </div>
 
