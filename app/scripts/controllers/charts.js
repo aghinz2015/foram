@@ -108,12 +108,10 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
     };
     ForamAPIService.getGenerations(flatParams).then(function (response) {
       generations = response.data.result;
-
       $scope.chart.xAxis.categories = generations.grouping_parameter.values;
       $scope.chart.xAxis.title = {};
       $scope.chart.xAxis.title.text = generations.grouping_parameter.name;
       $scope.chart.xAxis.crosshair = true;
-
       pushSeries(generations.gene1);
       var title = "Change of attribute " + gene;
       setChartTitle(title);
@@ -124,7 +122,8 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
     var chart = getChartRef();
     chart.setTitle({ text: title });
   };
-
+  
+  
   ////////////////////////    EXPORT   ///////////////////////////
 
   $scope.export = {};
@@ -207,6 +206,31 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
   };
 
   var options = {
+    navigator:{
+        enabled:false,
+        height: 0,
+        baseSeries: undefined,
+        outlineWidth: 0,
+        margin: 0, 
+        handles: {
+            backgroundColor: 'transparent',
+            borderColor: 'transparent'
+        },
+        xAxis: {labels: {style: {color: 'transparent'}}}
+    },
+    scrollbar: {
+        enabled:true
+    },
+    rangeSelector: {
+        enabled: false,
+        inputEnabled: false,
+        buttonTheme: {
+          visibility: 'hidden'
+        },
+        labelStyle: {
+          visibility: 'hidden'
+        }
+    },
     tooltip: {
       shared: true,
       formatter: function () {
@@ -225,6 +249,14 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
     },
     exporting: {
       enabled: true,
+      chartOptions: {
+        navigator: {
+          enabled: false
+        },
+        scrollbar: {
+           enabled: false
+        }
+      },
       buttons: {
         contextButton: {
           menuItems: [
@@ -298,5 +330,5 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
   }, null, document.getElementsByTagName('head')[0]);
 
   Highcharts.setOptions(options);
-  
+
 }]);
