@@ -57,6 +57,8 @@ app.controller('SettingsCtrl',['$scope', '$location', '$modal', 'UserService', '
     );
   };
 
+
+  //#TODO
   $scope.saveDatabase = function(database){
     $scope.loader = true;
     UserService.updateDatabase(database).then(
@@ -126,8 +128,11 @@ app.controller('SettingsCtrl',['$scope', '$location', '$modal', 'UserService', '
   UserService.getUserData().then(
     function(res){
       if(res.data) {
+
+        //#TODO change configService to APIService and Get current database genes, make a diff with current mappings (if exists) and show to user
+
         $scope.settings.number_precision = res.data.user.settings_set.number_precision;
-        if(res.data.user.settings_set.mappings.length === 0) {
+        if(res.data.user.settings_set.mappings.length != 0) {
           for (var gene in res.data.user.settings_set.mappings) {
             if (res.data.user.settings_set.mappings.hasOwnProperty(gene)) {
               $scope.settings.mappings.push({name: gene, display: res.data.user.settings_set.mappings[gene]});
