@@ -20,3 +20,66 @@ $selected-color: #ffdfaa;
     }
   }
 }
+
+.tabs {
+
+  dd {
+
+    border: 2px solid #efefef;
+
+    &:hover {
+      border: 2px solid #e1e1e1;
+    }
+
+    &.active {
+      border: 2px solid #333;
+      border-bottom: none;
+    }
+
+    &:not(.active){
+      border-bottom: none;
+    }
+  }
+}
+
+div.tabs-content {
+
+  label {
+    color: #222;
+    font-size: 1rem;
+  }
+
+  border: 2px solid #333;
+
+  .display-settings {
+
+    width: 100%;
+
+    tr td input {
+      margin: 0;
+    }
+  }
+}
+
+#hosts-table tr td, #hosts-table tr th {
+  .fa.fa-remove, .fa.fa-plus {
+    cursor: pointer;
+  }
+}
+
+#database-table tr th, #database-table tr td {
+
+  text-align: center;
+
+  .fa.fa-remove {
+    cursor: pointer;
+  }
+
+  button {
+    margin: 0 auto;
+  }
+}
+
+#forams-table tr th, #forams-table tr td {
+  text-align: center;
+}

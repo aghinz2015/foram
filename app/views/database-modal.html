@@ -1,0 +1,65 @@
+<div>
+  <h3>Edit database info</h3>
+  <form name="databaseForm" autocomplete>
+    <div class="row">
+      <div class="small-12 columns">
+        <label for="database-name">Name</label>
+        <input id="database-name" type="text" ng-model="editableDatabase.name">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="small-12 columns">
+        <label for="hosts-table">Hosts</label>
+        <table id="hosts-table" class="display-hosts">
+          <tr>
+            <th><input type="text" ng-model="newHost"></th>
+            <th><i class="fa fa-plus" ng-click="editableDatabase.hosts.push(newHost)"></i></th>
+          </tr>
+          <tr ng-repeat="host in editableDatabase.hosts track by $index">
+            <td>{{host}}</td>
+            <td>
+              <i class="fa fa-remove" ng-click="editableDatabase.hosts.splice($index,1)"></i>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="small-12 columns">
+        <label for="database">Database</label>
+        <input id="database" type="text" ng-model="editableDatabase.database">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="small-12 columns">
+        <label for="database-username">Username</label>
+        <input id="database-username" type="text" ng-model="editableDatabase.username">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="small-12 columns">
+        <label for="database-password">Password</label>
+        <input id="database-password" type="password" ng-model="editableDatabase.password" autocomplete>
+        <label for="database-password-confirm" ng-class="{error: editableDatabase.password != editableDatabase.password_confirmation}">New password confirmation
+          <input id="database-password-confirm" type="password" ng-model="editableDatabase.password_confirmation" autocomplete>
+        </label>
+        <div role="alert">
+          <span class="error" ng-show="editableDatabase.password != editableDatabase.password_confirmation">
+            Passwords don't match!
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="clearfix">
+      <button ng-click="saveDatabase(editableDatabase)"  ng-class="{disabled: (databaseForm.$invalid || editableDatabase.password != editableDatabase.password_confirmation || loader)}" class="button small center">
+        <i class="fa fa-spinner fa-spin" ng-show="loader"></i>
+        <span ng-hide="loader">Save</span>
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,4 +1,4 @@
-app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService', 'ConfigService', 'DatasetService', function ($location, $scope, $modal, ForamAPIService, ConfigService, DatasetService) {
+app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService', 'ConfigService', 'DatasetService', 'SettingsService', function ($location, $scope, $modal, ForamAPIService, ConfigService, DatasetService, SettingsService) {
 
   ////////////////////////    SELECTABLES    ///////////////////////////
 
@@ -30,7 +30,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
 
   $scope.selectedForams = function() {
     return $scope.forams.slice(currentSet.start, currentSet.stop + 1);
-  }
+  };
 
   $scope.generateChart = function () {
     $location.search(prepareFilters());
@@ -40,7 +40,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   $scope.visualize = function() {
     DatasetService.putProducts($scope.selectedForams());
     $location.path("/visualization");
-  }
+  };
 
   $scope.download = function() {
     var modalInstance = $modal.open({
@@ -185,6 +185,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   var loadForams = function () {
     ForamAPIService.getForams(flatFilters)
       .then(function(response){
+        console.log(response);
         $scope.forams = response.data.forams;
       },function(error){
         console.log("loadForams::Error - ", error);
@@ -193,7 +194,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
 
   $scope.open = function () {
     var modalInstance = $modal.open({
-      templateUrl: 'views/filter_creator.html',
+      templateUrl: 'views/filter-creator.html',
       controller:  'FilterCreatorCtrl',
       windowClass: 'small',
       resolve: {
@@ -284,16 +285,41 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       var data = response.data;
       $scope.availableFilterParams = data.availableFilterParams.map(function(s){return s.replace(/\s+/g, '')});
       maxForams = data.maxForams;
-    },function(response){
-      console.log('GetFilterConfig::Error - ',response.status);
+    },function(err){
+      console.error('GetFilterConfig::Error - ',err);
     });
 
   loadForams();
   $scope.foramsLoaded = true;
   $scope.foramTableVisible = true;
 
+
+  //////////////////////// DISPLAY SETTINGS //////////////////////
+
+  $scope.precision = 16;
+  $scope.mappings = {};
+
+  SettingsService.getSettings().then(
+    function(res){
+
+      $scope.precision = res.data.settings_set.number_precision;
+      $scope.mappings = res.data.settings_set.mappings;
+
+    },
+    function(err){
+      console.error(err);
+    }
+  );
+
+  $scope.emptyOrNull = function(value){
+    return !(value === null || value.trim().length === 0)
+  };
+
+
   ////////////////////////    INIT     ///////////////////////////
 
   filterForams();
+
+
 
 }]);

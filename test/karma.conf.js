@@ -33,6 +33,7 @@ module.exports = function(config) {
       'bower_components/angular-sanitize/angular-sanitize.js',
       'bower_components/angular-touch/angular-touch.js',
       'bower_components/threejs/build/three.js',
+      'bower_components/threejs-obj-exporter/OBJExporter.js',
       'bower_components/threejs-trackball-controls/TrackballControls.js',
       'bower_components/dat.gui/dat.gui.js',
       'bower_components/foram-3d/dist/js/foram_3d.js',
