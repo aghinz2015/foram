@@ -16,7 +16,7 @@ app.controller('FilterLoaderCtrl', ['$scope', '$modalInstance', 'ForamAPIService
   ForamAPIService.getFilters().then(function (response) {
         $scope.loadedFilters = response.data.foram_filters;
       }, function (error) {
-        console.log("getForamsInfo::Error - ", error)
+        console.log("getFilters::Error - ", error)
     });
   
 }]);
