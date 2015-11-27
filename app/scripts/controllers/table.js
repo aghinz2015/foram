@@ -283,6 +283,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   ConfigService.getFilterConfig().then(
     function(response){
       var data = response.data;
+
       $scope.availableFilterParams = data.availableFilterParams.map(function(s){return s.replace(/\s+/g, '')});
       maxForams = data.maxForams;
     },function(err){
@@ -303,7 +304,22 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     function(res){
 
       $scope.precision = res.data.settings_set.number_precision;
-      $scope.mappings = res.data.settings_set.mappings;
+      if(!angular.equals({},res.data.settings_set.mappings)) {
+        $scope.mappings = res.data.settings_set.mappings;
+      } else {
+        ConfigService.getFilterConfig().then(
+          function(res){
+            console.log(res);
+            for (var gene in res.data.availableGenes) {
+              $scope.mappings = res.data.availableFilterParams;
+            }
+          },
+          function(err){
+            console.error(err);
+          }
+        )
+      }
+
 
     },
     function(err){

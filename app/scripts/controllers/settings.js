@@ -130,9 +130,9 @@ app.controller('SettingsCtrl',['$scope', '$location', '$modal', 'UserService', '
       if(res.data) {
 
         //#TODO change configService to APIService and Get current database genes, make a diff with current mappings (if exists) and show to user
-
+        console.log(res.data.user.settings_set.mappings);
         $scope.settings.number_precision = res.data.user.settings_set.number_precision;
-        if(res.data.user.settings_set.mappings.length != 0) {
+        if(!angular.equals({},res.data.user.settings_set.mappings)) {
           for (var gene in res.data.user.settings_set.mappings) {
             if (res.data.user.settings_set.mappings.hasOwnProperty(gene)) {
               $scope.settings.mappings.push({name: gene, display: res.data.user.settings_set.mappings[gene]});
