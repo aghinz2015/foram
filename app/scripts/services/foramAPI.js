@@ -3,16 +3,22 @@
  */
 'use strict';
 
-app.service('ForamAPIService', ['$http', 'api_host', function($http, api_host){
+app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) {
 
+  var foramsUrl = api_host + 'forams';
+  var generationsUrl = api_host + 'generations';
+  var databasesUrl = api_host + 'user/mongo_sessions';
+  var databaseUrl = function (id) { return [databasesUrl, id].join('/'); }
 
   /**
    *
    * @param params
    * @returns {HttpPromise}
    */
-  this.getForams = function(params) {
-    return $http.get(api_host + 'forams',{params: params});
+  this.getForams = function (params, format) {
+    if (format === undefined)
+      format = ''
+    return $http.get(foramsUrl + format, { params: params });
   };
 
 
@@ -21,8 +27,8 @@ app.service('ForamAPIService', ['$http', 'api_host', function($http, api_host){
    * @param params
    * @returns {HttpPromise}
    */
-  this.getGenerations = function(params) {
-    return $http.get(api_host + 'generations',{params: params});
+  this.getGenerations = function (params) {
+    return $http.get(generationsUrl, { params: params });
   };
 
   /**
@@ -30,8 +36,7 @@ app.service('ForamAPIService', ['$http', 'api_host', function($http, api_host){
    * @param params
    * @returns {HttpPromise}
    */
-  this.getForamsInfo = function(params) {
-    return $http.head(api_host + 'forams', {params: params});
-  }
-
+  this.getForamsInfo = function (params) {
+    return $http.head(foramsUrl, { params: params });
+  };
 }]);

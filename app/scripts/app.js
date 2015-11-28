@@ -8,7 +8,6 @@
  *
  * Main module of the application.
  */
-$(document).foundation();
 
 var app = angular.module('trunkApp', ['ngRoute', 'mm.foundation', 'highcharts-ng', 'colorpicker.module', 'ngCookies' ,'config']);
 
@@ -120,12 +119,6 @@ var app = angular.module('trunkApp', ['ngRoute', 'mm.foundation', 'highcharts-ng
     this.getFirstProduct = function() {
       return productList[0];
     };
-  });
-
-  app.constant('appConfig',{
-    apiForamsUrl:'http://localhost:3000/forams',
-    apiGenerationsUrl:'http://localhost:3000/generations',
-    apiUserUrl: 'http://localhost:3000/user'
   });
 
   var Viewer = {

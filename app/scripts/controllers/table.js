@@ -42,6 +42,31 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     $location.path("/visualization");
   };
 
+  $scope.download = function() {
+    var modalInstance = $modal.open({
+      templateUrl: 'views/foram_downloader.html',
+      controller:  'ForamDownloaderCtrl',
+      windowClass: 'small'
+    });
+
+    modalInstance.result.then(function(newDownload) {
+      flatFilters = prepareFilters();
+      ForamAPIService.getForams(flatFilters, newDownload.format).then(function (response) {
+        var anchor = angular.element('<a/>');
+        anchor.css({display: 'none'});
+        angular.element(document.body).append(anchor);
+        anchor.attr({
+          href: 'data:attachment/csv;charset=utf-8,' + encodeURI(response.data),
+          target: '_blank',
+          download: newDownload.file_name + newDownload.format
+        })[0].click();
+        anchor.remove();
+      },function(error){
+        console.log("getForamsInfo::Error - ", error)
+      });
+    });
+  }
+
   ////////////////////////    FILTERS    ///////////////////////////
 
   // variables
@@ -128,7 +153,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   var checkIntersectingFilters = function(){
     var result = false;
 
-    for (i in $scope.filters) {
+    for (var i in $scope.filters) {
       if($scope.filters[i].param == $scope.newFilter.param){
         $scope.filters[i] = $scope.newFilter;
         result = true;
@@ -258,6 +283,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   ConfigService.getFilterConfig().then(
     function(response){
       var data = response.data;
+
       $scope.availableFilterParams = data.availableFilterParams.map(function(s){return s.replace(/\s+/g, '')});
       maxForams = data.maxForams;
     },function(err){
@@ -278,7 +304,22 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     function(res){
 
       $scope.precision = res.data.settings_set.number_precision;
-      $scope.mappings = res.data.settings_set.mappings;
+      if(!angular.equals({},res.data.settings_set.mappings)) {
+        $scope.mappings = res.data.settings_set.mappings;
+      } else {
+        ConfigService.getFilterConfig().then(
+          function(res){
+            console.log(res);
+            for (var gene in res.data.availableGenes) {
+              $scope.mappings = res.data.availableFilterParams;
+            }
+          },
+          function(err){
+            console.error(err);
+          }
+        )
+      }
+
 
     },
     function(err){
