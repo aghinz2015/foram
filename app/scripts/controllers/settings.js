@@ -7,7 +7,7 @@
  * # SettingsCtrl
  * Controller of the trunkApp
  */
-app.controller('SettingsCtrl',['$scope', '$location', '$modal', 'UserService', 'ConfigService',  function ($scope, $location, $modal, UserService, ConfigService) {
+app.controller('SettingsCtrl',['$scope', '$location', '$modal', 'UserService', 'ConfigService', 'ToastService', function ($scope, $location, $modal, UserService, ConfigService, ToastService) {
 
   if($location.path() == '/databases'){
     $scope.redirect = true;
@@ -63,9 +63,14 @@ app.controller('SettingsCtrl',['$scope', '$location', '$modal', 'UserService', '
     $scope.loader = true;
     UserService.updateDatabase(database).then(
       function(res){
-        databaseModal.close();
-        $scope.loader = false;
-        refresh();
+        if(res.status == '200') {
+          databaseModal.close();
+          $scope.loader = false;
+          refresh();
+        } else {
+          $scope.loader = false;
+          ToastService.showServerToast(res.data,'error',3000);
+        }
       },
       function(err){
         $scope.loader = false;
@@ -163,6 +168,7 @@ app.controller('SettingsCtrl',['$scope', '$location', '$modal', 'UserService', '
   );
 
   refresh();
+  ToastService.showToast("Ala ma kofkjfalknfa nfjan najfa jeij aieji omfioe nfae iofnta","error",2000);
 
 
 }]);

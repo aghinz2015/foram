@@ -1,0 +1,31 @@
+.toast {
+  left: 116px;
+  right: 0;
+  position: fixed;
+  top: 30px;
+  border: solid 3px;
+  border-radius: 10px;
+  max-width: 450px;
+  margin: 0 auto;
+  z-index: 256000;
+
+
+  p {
+    margin: 5px 10px;
+  }
+
+  &.error {
+    background: rgba(255, 28, 28, 0.9);
+    color: white;
+    text-align: center;
+    border-color: #aa1111;
+  }
+
+  &.success {
+    background: rgba(0, 156, 0, 0.9);
+    color: black;
+    text-align: center;
+    border-color: #00690a;
+
+  }
+}

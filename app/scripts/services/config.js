@@ -38,7 +38,7 @@ app.service('ConfigService', ['$http', 'api_host', function($http, api_host){
    */
   this.getMenu = function() {
     return $http.get("config/menu.json");
-  }
+  };
 
   this.getExportOptions = function() {
     return $http.get("config/export_options.json")
