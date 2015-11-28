@@ -65,9 +65,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
         console.log("getForamsInfo::Error - ", error)
       });
     });
-
   };
-
   
   $scope.saveFilters = function () {
     var filtersToSave = {};
@@ -89,7 +87,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       }
     });
   };
- 
+
   $scope.loadFilters = function () {
     var modalInstance = $modal.open({
       templateUrl: 'views/filter_loader.html',
@@ -101,7 +99,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       unflattenFilter(loadedFilter);
     });
   };
-  
+
   ////////////////////////    FILTERS    ///////////////////////////
 
   // variables
@@ -134,7 +132,8 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     if (($scope.constantFilters.is_diploid && $scope.constantFilters.is_haploid) || (!$scope.constantFilters.is_diploid && !$scope.constantFilters.is_haploid)) {
       filters.is_diploid = undefined;
     } else {
-      filters.is_diploid = $scope.constantFilters.is_diploid;
+      filters.is_diploid = !$scope.constantFilters.is_haploid;
+
     }
 
     filters.death_step_no_min = $scope.constantFilters.death_step_no_min;
@@ -242,7 +241,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       $scope.addFilter();
     });
   };
-  
+
   var unflattenFilter = function (filter) {
     $scope.availableFilterParams.forEach(function(element) {
       if(filter[element] != null) $scope.constantFilters[element] = filter[element];
@@ -252,7 +251,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       if(unflattedFilter.min != undefined || unflattedFilter.max != undefined) $scope.filters.push(unflattedFilter);
     });
   };
-  
+
 
   ////////////////////////    PAGINATION    ///////////////////////////
 
@@ -378,5 +377,4 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   ////////////////////////    INIT     ///////////////////////////
 
   filterForams();
-  
 }]);

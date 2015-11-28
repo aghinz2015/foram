@@ -17,7 +17,7 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
    */
   this.getForams = function (params, format) {
     if (format === undefined)
-      format = ''
+      format = '';
     return $http.get(foramsUrl + format, { params: params });
   };
 
@@ -38,12 +38,12 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
    */
   this.getForamsInfo = function(params) {
     return $http.head(foramsUrl, {params: params});
-  }
-  
+  };
+
   this.getFilters = function(params) {
     return $http.get(api_host + "foram_filters", {params: params});
-  }
-  
+  };
+
   this.saveFilters = function(params) {
     return $http.post(api_host + "foram_filters", {foram_filter: params});
   }
