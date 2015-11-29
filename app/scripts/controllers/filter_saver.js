@@ -6,8 +6,12 @@ app.controller('FilterSaverCtrl', function ($scope, $modalInstance, filtersToSav
   $scope.filtersSaved = false;
   
   $scope.saveFilters = function () {
-    ForamAPIService.saveFilters(filtersToSave);
-    $scope.filtersSaved = true;
+    ForamAPIService.saveFilters(filtersToSave).then(function(response) {
+      $scope.filtersSaved = true;
+    }, function(error) {
+      console.log('saveFilters::Error -', error);
+    });
+    
   };
   
   $scope.cancel = function () {
