@@ -36,7 +36,7 @@ module.exports = function(config) {
       'bower_components/threejs-obj-exporter/OBJExporter.js',
       'bower_components/threejs-trackball-controls/TrackballControls.js',
       'bower_components/dat.gui/dat.gui.js',
-      'bower_components/foram-3d/dist/js/foram_3d.js',
+      'bower_components/foram-3d/build/js/foram3d.js',
       'bower_components/fastclick/lib/fastclick.js',
       'bower_components/jquery.cookie/jquery.cookie.js',
       'bower_components/jquery-placeholder/jquery.placeholder.js',

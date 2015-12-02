@@ -1,7 +1,7 @@
 'use strict';
 
 app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFactory', 'GenotypeService', function ($scope, configService, simulationFactory, genotypeService) {
-  var simulation = simulationFactory($('#visualization'));
+  var simulation = simulationFactory(document.getElementById('visualization'));
 
   configService.getConfig('visualization').then(function(response) {
     $scope.genotype = genotypeService.fetchGenotype();
@@ -12,7 +12,7 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
   });
 
   $scope.simulate = function() {
-    simulation.simulate($scope.genotype, $scope.options);
+    simulation.simulate($scope.genotype, $scope.options.numChambers);
   };
 
   $scope.evolve = function() {
