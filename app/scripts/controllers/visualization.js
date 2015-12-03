@@ -3,24 +3,29 @@
 app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFactory', 'GenotypeService', function ($scope, configService, simulationFactory, genotypeService) {
   var simulation = simulationFactory(document.getElementById('visualization'));
 
+  $scope.genotype = genotypeService.fetchGenotype();
+  $scope.morphology = {};
+
   configService.getConfig('visualization').then(function(response) {
-    $scope.genotype = genotypeService.fetchGenotype();
     $scope.options  = response.data.defaults;
 
-    simulation.simulate($scope.genotype, $scope.options);
-    simulation.animate();
+    simulation.simulate($scope.genotype, $scope.options.numChambers);
+    recalculateMorphology();
   });
 
   $scope.simulate = function() {
     simulation.simulate($scope.genotype, $scope.options.numChambers);
+    recalculateMorphology();
   };
 
   $scope.evolve = function() {
     simulation.evolve();
+    rerecalculateMorphology();
   };
 
   $scope.regress = function() {
     simulation.regress();
+    recalculateMorphology();
   };
 
   $scope.toggleChambers = function() {
@@ -42,4 +47,12 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
   $scope.applyOpacity = function() {
     simulation.applyOpacity($scope.options.opacity);
   };
+
+  var recalculateMorphology = function() {
+    $scope.morphology = {
+      volume:      simulation.calculateVolume(),
+      surface:     simulation.calculateSurfaceArea(),
+      shapeFactor: simulation.calculateShapeFactor()
+    }
+  }
 }]);
