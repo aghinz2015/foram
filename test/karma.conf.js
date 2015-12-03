@@ -32,6 +32,7 @@ module.exports = function(config) {
       'bower_components/angular-route/angular-route.js',
       'bower_components/angular-sanitize/angular-sanitize.js',
       'bower_components/angular-touch/angular-touch.js',
+      'bower_components/clipboard/dist/clipboard.js',
       'bower_components/threejs/build/three.js',
       'bower_components/threejs-obj-exporter/OBJExporter.js',
       'bower_components/threejs-trackball-controls/TrackballControls.js',
