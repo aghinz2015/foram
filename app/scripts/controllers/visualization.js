@@ -35,6 +35,10 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
     simulation.toggleAperturesPath();
   };
 
+  $scope.toggleThicknessVectors = function() {
+    simulation.toggleThicknessVectors();
+  };
+
   $scope.applyOpacity = function() {
     simulation.applyOpacity($scope.options.opacity);
   };
