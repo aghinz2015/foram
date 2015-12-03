@@ -27,8 +27,12 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
     simulation.toggleChambers();
   };
 
-  $scope.toggleCentroidsLine = function() {
-    simulation.toggleCentroidsLine();
+  $scope.toggleCentroidsPath = function() {
+    simulation.toggleCentroidsPath();
+  };
+
+  $scope.toggleAperturesPath = function() {
+    simulation.toggleAperturesPath();
   };
 
   $scope.applyOpacity = function() {
