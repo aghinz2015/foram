@@ -22,10 +22,12 @@ app.service('ToastService', function() {
   }
 
   this.showToast = function(message,type,duration) {
+
     generateToast(message,type,duration);
   };
 
   this.showServerToast = function(json,type,duration) {
+
     var message = "";
     for(var parameter in json){
       if(json.hasOwnProperty(parameter)) {
@@ -35,6 +37,9 @@ app.service('ToastService', function() {
         }
         message += parameter + " : "+temp+"</br>";
       }
+    }
+    if(!json){
+      message = "Error!";
     }
 
     generateToast(message,type,duration);

@@ -1,14 +1,33 @@
 'use strict';
 
 app.service('UserService', ['$http', 'api_host', 'SettingsService', function($http, api_host, SettingsService) {
+  var databasesUrl = api_host + 'user/mongo_sessions';
+  var databaseUrl = function (id) { return [databasesUrl, id].join('/'); };
+  var userUrl = api_host + 'user';
+  var settingsUrl = api_host + 'user/settings_set';
+
+  /**
+   *
+   * @param user
+   * @returns {HttpPromise}
+     */
   this.create = function(user) {
-    return $http.post(api_host + 'user', { user: user });
+    return $http.post(userUrl, { user: user });
   };
 
+  /**
+   *
+   * @returns {HttpPromise}
+     */
   this.getUserData = function() {
-    return $http.get(api_host+'user');
+    return $http.get(userUrl);
   };
 
+  /**
+   *
+   * @param settings
+   * @returns {HttpPromise}
+     */
   this.updateUserSettings = function(settings) {
     var settings_data = {
       mappings: {}
@@ -22,17 +41,31 @@ app.service('UserService', ['$http', 'api_host', 'SettingsService', function($ht
 
     SettingsService.saveSettings(settings_data);
 
-    return $http.patch(api_host+'user/settings_set',{settings_set: settings_data});
+    return $http.patch(settingsUrl,{settings_set: settings_data});
   };
 
+  /**
+   *
+   * @param data
+   * @returns {HttpPromise}
+     */
   this.updateUserData = function(data) {
-    return $http.patch(api_host+'user',{user: data});
+    return $http.patch(userUrl,{user: data});
   };
 
+  /**
+   *
+   * @returns {HttpPromise}
+     */
   this.getDatabases = function() {
-    return $http.get(api_host+'user/mongo_sessions');
+    return $http.get(databasesUrl);
   };
 
+  /**
+   *
+   * @param database
+   * @returns {HttpPromise}
+     */
   this.updateDatabase = function(database) {
     var data = {
       mongo_session: {
@@ -40,6 +73,7 @@ app.service('UserService', ['$http', 'api_host', 'SettingsService', function($ht
         database: database.database,
         hosts: database.hosts,
         username: database.username,
+        foram_collection: database.foram_collection,
         active: database.active ? true : false
       }
     };
@@ -47,19 +81,30 @@ app.service('UserService', ['$http', 'api_host', 'SettingsService', function($ht
     if (database.password) data.mongo_session.password = database.password;
 
     if (database.id) {
-      return $http.patch(api_host + 'user/mongo_sessions/' + database.id, data);
+      return $http.patch(databaseUrl(database.id), data);
     } else {
-      return $http.post(api_host + 'user/mongo_sessions', data);
+      return $http.post(databasesUrl, data);
     }
   };
 
+  /**
+   *
+   * @param database
+   * @returns {HttpPromise}
+     */
   this.deleteDatabase = function (database) {
-    return $http.delete(api_host + 'user/mongo_sessions/' + database.id);
+    return $http.delete(databaseUrl(database.id));
   };
 
+  /**
+   *
+   * @param database
+   * @param enable
+   * @returns {HttpPromise}
+     */
   this.changeDatabaseStatus = function (database, enable) {
     var data = { mongo_session: { active: enable } };
-    return $http.patch(api_host + 'user/mongo_sessions/' + database.id, data);
+    return $http.patch(databaseUrl(database.id), data);
   }
 
 

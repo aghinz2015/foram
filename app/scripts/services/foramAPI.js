@@ -6,9 +6,10 @@
 app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) {
 
   var foramsUrl = api_host + 'forams';
+  var attributesUrl = api_host + 'forams/attribute_names';
   var generationsUrl = api_host + 'generations';
   var databasesUrl = api_host + 'user/mongo_sessions';
-  var databaseUrl = function (id) { return [databasesUrl, id].join('/'); }
+  var databaseUrl = function (id) { return [databasesUrl, id].join('/'); };
 
   /**
    *
@@ -17,8 +18,16 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
    */
   this.getForams = function (params, format) {
     if (format === undefined)
-      format = ''
+      format = '';
     return $http.get(foramsUrl + format, { params: params });
+  };
+
+  /**
+   *
+   * @returns {HttpPromise}
+   */
+  this.getForamsAttributes = function () {
+    return $http.get(attributesUrl);
   };
 
 

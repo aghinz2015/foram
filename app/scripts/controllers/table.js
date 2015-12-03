@@ -300,22 +300,27 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   $scope.precision = 16;
   $scope.mappings = {};
 
+  // #TODO take mappings and create a loop to show attributes in correct order - need valid endpoint
+
   SettingsService.getSettings().then(
     function(res){
-
       $scope.precision = res.data.settings_set.number_precision;
       if(!angular.equals({},res.data.settings_set.mappings)) {
         $scope.mappings = res.data.settings_set.mappings;
       } else {
-        ConfigService.getFilterConfig().then(
+        ForamAPIService.getForamsAttributes().then(
           function(res){
-            console.log(res);
-            for (var gene in res.data.availableGenes) {
-              $scope.mappings = res.data.availableFilterParams;
+            if(res.data && res.status == '200') {
+              for (var i = 0; i < res.data.forams.length; i++) {
+                if(res.data.forams[i] != 'foramId')
+                  $scope.mappings[res.data.forams[i]] = "";
+              }
+            } else {
+              ToastService.showServerToast(res.data,'error',3000);
             }
           },
           function(err){
-            console.error(err);
+            ToastService.showToast('Cannot connect to server','error',3000);
           }
         )
       }
@@ -327,6 +332,10 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     }
   );
 
+  $scope.isObject = function(obj) {
+    return (typeof obj === "object");
+  };
+
   $scope.emptyOrNull = function(value){
     return !(value === null || value.trim().length === 0)
   };
@@ -335,9 +344,5 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   ////////////////////////    INIT     ///////////////////////////
 
   filterForams();
-
-
-
-
 
 }]);

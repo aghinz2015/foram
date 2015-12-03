@@ -7,7 +7,10 @@
  * # SettingsCtrl
  * Controller of the trunkApp
  */
-app.controller('SettingsCtrl',['$scope', '$location', '$modal', 'UserService', 'ConfigService', 'ToastService', function ($scope, $location, $modal, UserService, ConfigService, ToastService) {
+app.controller('SettingsCtrl',['$scope', '$location', '$modal', 'UserService', 'ConfigService', 'ToastService', 'ForamAPIService', function ($scope, $location, $modal, UserService, ConfigService, ToastService, ForamAPIService) {
+
+
+  // Redirect to database tab if coming from 'databases' path
 
   if($location.path() == '/databases'){
     $scope.redirect = true;
@@ -17,56 +20,40 @@ app.controller('SettingsCtrl',['$scope', '$location', '$modal', 'UserService', '
     $scope.redirect = false;
   }
 
-  $scope.settings = {mappings: []};
-  $scope.user = {};
-  $scope.loader = false;
-  $scope.editableDatabase = {
-    hosts: []
-  };
-  $scope.databases = [];
+  ////////////////////////    GENERAL     ///////////////////////////
 
   var databaseModal;
+  $scope.loader = false;
 
   var refresh = function() {
     UserService.getDatabases().then(
       function (res) {
         if(res.data) {
-          $scope.databases = res.data.mongo_sessions;
+
+          if(res.status < 400) {
+            $scope.databases = res.data.mongo_sessions;
+          } else {
+            ToastService.showServerToast(res.data,'error',3000);
+          }
         }
       },
       function (err) {
-        console.error(err);
+        ToastService.showToast('Cannot connect to server','error',3000);
       }
     )
   };
 
-  $scope.saveSettings = function(settings){
-    UserService.updateUserSettings(settings);
-  };
+  ////////////////////////    USER SETTINGS     ///////////////////////////
+
+  $scope.user = {};
 
   $scope.saveUserData = function(data){
     $scope.loader = true;
     UserService.updateUserData(data).then(
       function(res){
-        $scope.loader = false;
-      },
-      function(err){
-        $scope.loader = false;
-        console.error(err)
-      }
-    );
-  };
-
-
-  //#TODO
-  $scope.saveDatabase = function(database){
-    $scope.loader = true;
-    UserService.updateDatabase(database).then(
-      function(res){
-        if(res.status == '200') {
-          databaseModal.close();
+        if(res.status < 400) {
           $scope.loader = false;
-          refresh();
+          ToastService.showToast("Profile updated!",'success',3000);
         } else {
           $scope.loader = false;
           ToastService.showServerToast(res.data,'error',3000);
@@ -74,7 +61,103 @@ app.controller('SettingsCtrl',['$scope', '$location', '$modal', 'UserService', '
       },
       function(err){
         $scope.loader = false;
-        console.error(err);
+        ToastService.showToast('Cannot connect to server','error',3000);
+      }
+    );
+  };
+
+  UserService.getUserData().then(
+    function(res){
+      if(res.data && res.status < 400) {
+
+        console.log(res.data.user.settings_set.mappings);
+
+        $scope.settings.number_precision = res.data.user.settings_set.number_precision;
+
+        if(!angular.equals({},res.data.user.settings_set.mappings)) {
+          for (var gene in res.data.user.settings_set.mappings) {
+            if (res.data.user.settings_set.mappings.hasOwnProperty(gene)) {
+              $scope.settings.mappings.push({name: gene, display: res.data.user.settings_set.mappings[gene]});
+            }
+          }
+        } else {
+          ForamAPIService.getForamsAttributes().then(
+            function(res){
+              if(res.data && res.status < 400) {
+                for (var i = 0; i < res.data.forams.length; i++) {
+                  if(res.data.forams[i] != 'foram_id')
+                    $scope.settings.mappings.push({name: res.data.forams[i], display: ""});
+                }
+              } else {
+                ToastService.showServerToast(res.data,'error',3000);
+              }
+            },
+            function(err){
+              ToastService.showToast('Cannot connect to server','error',3000);
+            }
+          )
+        }
+
+        $scope.user.email = res.data.user.email;
+        $scope.user.username = res.data.user.username;
+        $scope.user.password = $scope.user.password_confirmation = "";
+      } else {
+        ToastService.showServerToast(res.data,'error',3000);
+      }
+    },
+    function(error){
+      ToastService.showToast('Cannot connect to server','error',3000);
+    }
+  );
+
+  ////////////////////////    DISPLAY SETTINGS     ///////////////////////////
+
+  $scope.settings = {mappings: []};
+
+  $scope.saveSettings = function(settings){
+    UserService.updateUserSettings(settings).then(
+      function(res){
+        if(res.status < 400) {
+          $scope.loader = false;
+          ToastService.showToast("Display settings updated!",'success',3000);
+        } else {
+          $scope.loader = false;
+          ToastService.showServerToast(res.data,'error',3000);
+        }
+      },
+      function(err){
+        $scope.loader = false;
+        ToastService.showToast('Cannot connect to server','error',3000);
+      }
+    );
+  };
+
+  ////////////////////////    DATABASES SETTINGS     ///////////////////////////
+
+
+  $scope.editableDatabase = {
+    hosts: []
+  };
+
+  $scope.databases = [];
+
+  $scope.saveDatabase = function(database){
+    $scope.loader = true;
+    UserService.updateDatabase(database).then(
+      function(res){
+        if(res.status < 400) {
+          databaseModal.close();
+          $scope.loader = false;
+          refresh();
+          ToastService.showToast("Database saved!",'success',3000);
+        } else {
+          $scope.loader = false;
+          ToastService.showServerToast(res.data,'error',3000);
+        }
+      },
+      function(err){
+        $scope.loader = false;
+        ToastService.showToast('Cannot connect to server','error',3000);
       }
     )
   };
@@ -99,10 +182,16 @@ app.controller('SettingsCtrl',['$scope', '$location', '$modal', 'UserService', '
   $scope.enableDatabase = function(database) {
     UserService.changeDatabaseStatus(database,true).then(
       function(res) {
-        refresh();
+        if(res.status < 400) {
+          refresh();
+          ToastService.showToast("Databse enabled!",'success',3000);
+        } else {
+          ToastService.showServerToast(res.data,'error',3000);
+        }
+
       },
       function(err) {
-        console.error(err);
+        ToastService.showToast('Cannot connect to server','error',3000);
       }
     );
   };
@@ -110,10 +199,15 @@ app.controller('SettingsCtrl',['$scope', '$location', '$modal', 'UserService', '
   $scope.disableDatabase = function(database) {
     UserService.changeDatabaseStatus(database,false).then(
       function(res) {
-        refresh();
+        if(res.status < 400) {
+          refresh();
+          ToastService.showToast("Database disabled!",'success',3000);
+        } else {
+          ToastService.showServerToast(res.data,'error',3000);
+        }
       },
       function(err) {
-        console.error(err);
+        ToastService.showToast('Cannot connect to server','error',3000);
       }
     );
   };
@@ -121,54 +215,21 @@ app.controller('SettingsCtrl',['$scope', '$location', '$modal', 'UserService', '
   $scope.deleteDatabase = function(database) {
     UserService.deleteDatabase(database).then(
       function(res){
-        refresh();
+        if(res.status < 400) {
+          refresh();
+          ToastService.showToast("Database deleted!",'success',3000);
+        } else {
+          ToastService.showServerToast(res.data,'error',3000);
+        }
       },
       function(err){
-        console.error(err);
+        ToastService.showToast('Cannot connect to server','error',3000);
       }
     );
   };
 
-
-  UserService.getUserData().then(
-    function(res){
-      if(res.data) {
-
-        //#TODO change configService to APIService and Get current database genes, make a diff with current mappings (if exists) and show to user
-        console.log(res.data.user.settings_set.mappings);
-        $scope.settings.number_precision = res.data.user.settings_set.number_precision;
-        if(!angular.equals({},res.data.user.settings_set.mappings)) {
-          for (var gene in res.data.user.settings_set.mappings) {
-            if (res.data.user.settings_set.mappings.hasOwnProperty(gene)) {
-              $scope.settings.mappings.push({name: gene, display: res.data.user.settings_set.mappings[gene]});
-            }
-          }
-        } else {
-          ConfigService.getFilterConfig().then(
-            function(res){
-              console.log(res);
-              for (var gene in res.data.availableGenes) {
-                $scope.settings.mappings.push({name: res.data.availableFilterParams[gene], display: ""});
-              }
-            },
-            function(err){
-              console.error(err);
-            }
-          )
-        }
-
-        $scope.user.email = res.data.user.email;
-        $scope.user.username = res.data.user.username;
-        $scope.user.password = $scope.user.password_confirmation = "";
-      }
-    },
-    function(error){
-      console.error(error);
-    }
-  );
+  ////////////////////////    INIT    ///////////////////////////
 
   refresh();
-  ToastService.showToast("Ala ma kofkjfalknfa nfjan najfa jeij aieji omfioe nfae iofnta","error",2000);
-
 
 }]);
