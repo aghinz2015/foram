@@ -70,9 +70,6 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   $scope.saveFilters = function () {
     var filtersToSave = {};
     filtersToSave = prepareFilters();
-    filtersToSave["is_diploid"] = $scope.constantFilters.is_diploid;
-    ForamAPIService.saveFilters(filtersToSave);
-    filtersToSave["is_haploid"] = $scope.constantFilters.is_haploid;
     var modalInstance = $modal.open({
       templateUrl: 'views/filter_saver.html',
       controller: 'FilterSaverCtrl',
@@ -89,6 +86,9 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   };
 
   $scope.loadFilters = function () {
+    $scope.filters = [];
+    flatFilters = {};
+    $scope.constantFilters = {};
     var modalInstance = $modal.open({
       templateUrl: 'views/filter_loader.html',
       controller: 'FilterLoaderCtrl',
@@ -243,8 +243,12 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   };
 
   var unflattenFilter = function (filter) {
-    $scope.availableFilterParams.forEach(function(element) {
-      if(filter[element] != null) $scope.constantFilters[element] = filter[element];
+    $scope.availableFilterParamsToLoad.forEach(function(element) {
+      if(element == 'is_diploid' && filter[element] != null) 
+      {
+        $scope.constantFilters[element] = filter[element];
+        $scope.constantFilters['is_haploid'] = !filter[element];
+      }
       var unflattedFilter = {param: element};
       if(filter[element+'_min'] != null) unflattedFilter['min'] = filter[element+'_min'];
       if(filter[element+'_max'] != null) unflattedFilter['max'] = filter[element+'_max'];
@@ -327,6 +331,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     function (response) {
       var data = response.data;
       $scope.availableFilterParams = data.availableFilterParams.map(function (s) { return s.replace(/\s+/g, '') });
+      $scope.availableFilterParamsToLoad = data.availableFilterParamsToLoad.map(function (s) { return s.replace(/\s+/g, '') });
       maxForams = data.maxForams;
     }, function (response) {
       console.log('GetFilterConfig::Error - ', response.status);
