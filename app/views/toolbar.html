@@ -1,33 +1,58 @@
-<div class="visualization-panel">
-  <ul>
-    <li>
-      <label for="numChambers">Number of chambers</label>
-      <input type="number" id="numChambers" ng-model="options.numChambers" min=1 max=100/>
-    </li>
+<accordion class="toolbar" close-others="false">
+  <accordion-group heading="Genotype" class="folder">
+  </accordion-group>
 
-    <li>
-      <button ng-click="simulate()">Simulate</button>
-    </li>
+  <accordion-group heading="Structure analyzer" class="folder">
+    <ul class="folder-items">
+      <li class="field">
+        <div class="property-name">
+          <span>Number of chambers:</span>
+        </div>
 
-    <li>
-      <button ng-click="evolve()">Evolve</button>
-    </li>
+        <input ng-model="options.numChambvers" type="number" min="0" max="100" class="field"/>
+      </li>
 
-    <li>
-      <button ng-click="regress()">Regress</button>
-    </li>
+      <li class="action">
+        <a ng-click="simulate()" class="property-name">
+          Simulate
+        </a>
+      </li>
 
-    <li>
-      <button ng-click="toggleChambers()">Toggle chambers</button>
-    </li>
+      <li class="action">
+        <a ng-click="evolve()" class="property-name">
+          Evolve
+        </a>
+      </li>
 
-    <li>
-      <button ng-click="toggleCentroidsLine()">Toggle centroids line</button>
-    </li>
+      <li class="action">
+        <a ng-click="regress()" class="property-name">
+          Regress
+        </a>
+      </li>
 
-    <li>
-      <label for="opacity">Opacity</label>
-      <input type="range" id="opacity" ng-change="applyOpacity()" ng-model="options.opacity" min="0" max="1" step="0.01">
-    </li>
-  </ul>
-</div>
+      <li class="action">
+        <a ng-click="toggleCentroidsLine()" class="property-name">
+          Centroids Line
+        </a>
+      </li>
+
+      <li class="action">
+        <a ng-click="toggleChambers()" class="property-name">
+          Toggle chambers
+        </a>
+      </li>
+    </ul>
+  </accordion-group>
+
+  <accordion-group heading="Material" class="folder">
+    <ul class="folder-items">
+      <li class="field">
+        <div class="property-name">
+          <span>Opacity: {{options.opacity}}</span>
+        </div>
+
+        <input ng-change="applyOpacity()" ng-model="options.opacity" type="range" min="0" max="1" step="0.01">
+      </li>
+    </ul>
+  </accordion-group>
+</accordion>
