@@ -1,5 +1,46 @@
 <accordion class="toolbar" close-others="false">
   <accordion-group heading="Genotype" class="folder">
+    <ul class="folder-items">
+      <li class="field">
+        <div class="property-name">
+          <span>Phi:</span>
+        </div>
+
+        <input ng-model="genotype.phi" type="number" min="0" step="0.01"/>
+      </li>
+
+      <li class="field">
+        <div class="property-name">
+          <span>Beta:</span>
+        </div>
+
+        <input ng-model="genotype.beta" type="number" min="0" step="0.01"/>
+      </li>
+
+      <li class="field">
+        <div class="property-name">
+          <span>Growth factor:</span>
+        </div>
+
+        <input ng-model="genotype.growthFactor" type="number" min="0" max="2" step="0.01"/>
+      </li>
+
+      <li class="field">
+        <div class="property-name">
+          <span>Translation factor:</span>
+        </div>
+
+        <input ng-model="genotype.translationFactor" type="number" min="0" max="2" step="0.01"/>
+      </li>
+
+      <li class="field">
+        <div class="property-name">
+          <span>Wall thickness factor:</span>
+        </div>
+
+        <input ng-model="genotype.wallThicknessFactor" type="number" min="0" max="2" step="0.01"/>
+      </li>
+    </ul>
   </accordion-group>
 
   <accordion-group heading="Structure analyzer" class="folder">
@@ -9,7 +50,7 @@
           <span>Number of chambers:</span>
         </div>
 
-        <input ng-model="options.numChambvers" type="number" min="0" max="100" class="field"/>
+        <input ng-model="options.numChambvers" type="number" min="0" max="100"/>
       </li>
 
       <li class="action">
