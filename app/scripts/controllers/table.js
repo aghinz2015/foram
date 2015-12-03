@@ -42,18 +42,18 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     $location.path("/visualization");
   };
 
-  $scope.download = function() {
+  $scope.download = function () {
     var modalInstance = $modal.open({
       templateUrl: 'views/foram_downloader.html',
-      controller:  'ForamDownloaderCtrl',
+      controller: 'ForamDownloaderCtrl',
       windowClass: 'small'
     });
 
-    modalInstance.result.then(function(newDownload) {
+    modalInstance.result.then(function (newDownload) {
       flatFilters = prepareFilters();
       ForamAPIService.getForams(flatFilters, newDownload.format).then(function (response) {
         var anchor = angular.element('<a/>');
-        anchor.css({display: 'none'});
+        anchor.css({ display: 'none' });
         angular.element(document.body).append(anchor);
         anchor.attr({
           href: 'data:attachment/csv;charset=utf-8,' + encodeURI(response.data),
@@ -61,12 +61,25 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
           download: newDownload.file_name + newDownload.format
         })[0].click();
         anchor.remove();
-      },function(error){
+      }, function (error) {
         console.log("getForamsInfo::Error - ", error)
       });
     });
   };
-  
+
+  $scope.deleteFilters = function () {
+    $modal.open({
+      templateUrl: 'views/filter_deleter.html',
+      controller: 'FilterDeleterCtrl',
+      windowClass: 'small',
+      resolve: {
+        ForamAPIService: function () {
+          return ForamAPIService;
+        }
+      }
+    });
+  };
+
   $scope.saveFilters = function () {
     var filtersToSave = {};
     filtersToSave = prepareFilters();
@@ -227,7 +240,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   $scope.open = function () {
     var modalInstance = $modal.open({
       templateUrl: 'views/filter-creator.html',
-      controller:  'FilterCreatorCtrl',
+      controller: 'FilterCreatorCtrl',
       windowClass: 'small',
       resolve: {
         availableFilterParams: function () {
@@ -243,16 +256,15 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   };
 
   var unflattenFilter = function (filter) {
-    $scope.availableFilterParamsToLoad.forEach(function(element) {
-      if(element == 'is_diploid' && filter[element] != null) 
-      {
+    $scope.availableFilterParamsToLoad.forEach(function (element) {
+      if (element == 'is_diploid' && filter[element] != null) {
         $scope.constantFilters[element] = filter[element];
         $scope.constantFilters['is_haploid'] = !filter[element];
       }
-      var unflattedFilter = {param: element};
-      if(filter[element+'_min'] != null) unflattedFilter['min'] = filter[element+'_min'];
-      if(filter[element+'_max'] != null) unflattedFilter['max'] = filter[element+'_max'];
-      if(unflattedFilter.min != undefined || unflattedFilter.max != undefined) $scope.filters.push(unflattedFilter);
+      var unflattedFilter = { param: element };
+      if (filter[element + '_min'] != null) unflattedFilter['min'] = filter[element + '_min'];
+      if (filter[element + '_max'] != null) unflattedFilter['max'] = filter[element + '_max'];
+      if (unflattedFilter.min != undefined || unflattedFilter.max != undefined) $scope.filters.push(unflattedFilter);
     });
   };
 
@@ -348,33 +360,33 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   $scope.mappings = {};
 
   SettingsService.getSettings().then(
-    function(res){
+    function (res) {
 
       $scope.precision = res.data.settings_set.number_precision;
-      if(!angular.equals({},res.data.settings_set.mappings)) {
+      if (!angular.equals({}, res.data.settings_set.mappings)) {
         $scope.mappings = res.data.settings_set.mappings;
       } else {
         ConfigService.getFilterConfig().then(
-          function(res){
+          function (res) {
             console.log(res);
             for (var gene in res.data.availableGenes) {
               $scope.mappings = res.data.availableFilterParams;
             }
           },
-          function(err){
+          function (err) {
             console.error(err);
           }
-        )
+          )
       }
 
 
     },
-    function(err){
+    function (err) {
       console.error(err);
     }
-  );
+    );
 
-  $scope.emptyOrNull = function(value){
+  $scope.emptyOrNull = function (value) {
     return !(value === null || value.trim().length === 0)
   };
 
