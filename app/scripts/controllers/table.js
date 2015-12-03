@@ -79,6 +79,22 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       }
     });
   };
+  
+  $scope.editFilters = function () {
+    $modal.open({
+      templateUrl: 'views/filter_editor.html',
+      controller: 'FilterEditorCtrl',
+      windowClass: 'small',
+      resolve: {
+        ForamAPIService: function () {
+          return ForamAPIService;
+        },
+        availableFilterParams: function () {
+          return $scope.availableFilterParams;
+        }
+      }
+    });
+  };
 
   $scope.saveFilters = function () {
     var filtersToSave = {};

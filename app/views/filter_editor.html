@@ -1,0 +1,79 @@
+<h3 ng-hide="filtersDeleted">Select filter to edit</h3>
+
+<div class="row" ng-hide="filtersSaved">
+  <div class="large-12 columns">
+    <label for="filter-id">Filter name</label>
+    <select ng-options="filter as filter.name for filter in loadedFilters" ng-model="selectedFilter.data"></select>
+  </div>
+</div>
+
+<div class="row" ng-hide="filtersSaved">
+  <div class="large-12 columns">
+    <label for="filter-id">Parameter</label>
+    <select ng-options="param for param in availableFilterParams" ng-model="selectedFilter.param"></select>
+  </div>
+</div>
+
+<div class="row" ng-hide="filtersSaved">
+  <div class="large-12 columns">
+    <label for="min-value">Min value</label>
+    <input type="number" id="min-value" step="any" ng-model="selectedFilter.data[selectedFilter.param+'_min']" max="{{selectedFilter.data[selectedFilter.param+'_max']}}"
+    />
+  </div>
+</div>
+
+<div class="row" ng-hide="filtersSaved">
+  <div class="large-12 columns">
+    <label for="max-value">Max value</label>
+    <input type="number" id="max-value" step="any" ng-model="selectedFilter.data[selectedFilter.param+'_max']" min="{{selectedFilter.data[selectedFilter.param+'_min']}}"
+    />
+  </div>
+</div>
+
+<div class="row" ng-hide="filtersSaved">
+  <div class="large-12 columns">
+    <input type="checkbox" id="haploid-value" name="gender" ng-model="selectedFilter.data.is_haploid" checked/>
+    <label for="haploid-value">Haploid</label>
+  </div>
+</div>
+
+<div class="row" ng-hide="filtersSaved">
+  <div class="large-12 columns">
+    <input type="checkbox" id="diploid-value" name="gender" ng-model="selectedFilter.data.is_diploid" checked/>
+    <label for="diploid-value">Diploid</label>
+  </div>
+</div>
+
+<div class="row" ng-hide="filtersSaved">
+  <div class="large-12 columns">
+    <input ng-model="selectedFilter.data.name" ng-required="true"/>
+  </div>
+</div>
+
+<div class="clearfix" ng-hide="filtersSaved">
+  <ul class="button-row right">
+    <li>
+      <button ng-click="cancel()" class="button secondary">Cancel</button>
+    </li>
+
+    <li>
+      <button ng-click="saveFilters()" class="button">Save filter</button>
+    </li>
+  </ul>
+</div>
+
+<div class="row" ng-hide="!filtersSaved">
+  <div class="large-12 columns">
+    <div data-alert class="alert-box success radius">
+      Filters named {{selectedFilter.data.name}} saved!
+    </div>
+  </div>
+</div>
+
+<div class="clearfix" ng-hide="!filtersSaved">
+  <ul class="button-row right">
+    <li>
+      <button ng-click="cancel()" class="button">OK</button>
+    </li>
+  </ul>
+</div>
