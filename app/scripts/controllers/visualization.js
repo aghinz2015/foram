@@ -21,11 +21,17 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
 
   $scope.evolve = function() {
     simulation.evolve();
-    rerecalculateMorphology();
+    $scope.options.numChambers++;
+    recalculateMorphology();
   };
 
   $scope.regress = function() {
     simulation.regress();
+
+    if ($scope.options.numChambers > 1 ){
+      $scope.options.numChambers--;
+    }
+
     recalculateMorphology();
   };
 
