@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFactory', 'GenotypeService', function ($scope, configService, simulationFactory, genotypeService) {
+app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFactory', 'GenotypeService', 'FileSaver', 'Blob', function ($scope, configService, simulationFactory, genotypeService, FileSaver, Blob) {
   var simulation = simulationFactory(document.getElementById('visualization'));
 
   $scope.genotype = genotypeService.fetchGenotype();
@@ -10,6 +10,7 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
     $scope.options  = response.data.defaults;
 
     simulation.simulate($scope.genotype, $scope.options.numChambers);
+
     recalculateMorphology();
   });
 
@@ -47,6 +48,13 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
   $scope.applyOpacity = function() {
     simulation.applyOpacity($scope.options.opacity);
   };
+
+  $scope.exportToOBJ = function() {
+    var obj  = simulation.exportToOBJ();
+    var data = new Blob([obj], { type: 'text/plain;charset=utf-8' });
+
+    FileSaver.saveAs(data, 'foram.obj');
+  }
 
   var recalculateMorphology = function() {
     $scope.morphology = {

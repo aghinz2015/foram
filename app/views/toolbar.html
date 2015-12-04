@@ -54,43 +54,43 @@
       </li>
 
       <li class="action">
-        <a ng-click="simulate()" class="property-name">
+        <a ng-click="simulate()">
           Simulate
         </a>
       </li>
 
       <li class="action">
-        <a ng-click="evolve()" class="property-name">
+        <a ng-click="evolve()">
           Evolve
         </a>
       </li>
 
       <li class="action">
-        <a ng-click="regress()" class="property-name">
+        <a ng-click="regress()">
           Regress
         </a>
       </li>
 
       <li class="action">
-        <a ng-click="toggleCentroidsPath()" class="property-name">
+        <a ng-click="toggleCentroidsPath()">
           Centroids path
         </a>
       </li>
 
       <li class="action">
-        <a ng-click="toggleAperturesPath()" class="property-name">
+        <a ng-click="toggleAperturesPath()">
           Apertures path
         </a>
       </li>
 
       <li class="action">
-        <a ng-click="toggleThicknessVectors()" class="property-name">
+        <a ng-click="toggleThicknessVectors()">
           Thickness vectors
         </a>
       </li>
 
       <li class="action">
-        <a ng-click="toggleChambers()" class="property-name">
+        <a ng-click="toggleChambers()">
           Toggle chambers
         </a>
       </li>
@@ -127,6 +127,16 @@
         </div>
 
         <input ng-change="applyOpacity()" ng-model="options.opacity" type="range" min="0" max="1" step="0.01">
+      </li>
+    </ul>
+  </accordion-group>
+
+  <accordion-group heading="Export" class="folder">
+    <ul class="folder-items">
+      <li class="action">
+        <a ng-click="exportToOBJ()">
+          Export to OBJ
+        </a>
       </li>
     </ul>
   </accordion-group>
