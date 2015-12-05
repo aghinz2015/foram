@@ -114,7 +114,7 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
       pushSeries(generations.gene1);
       var title = "Change of attribute " + gene;
       setChartTitle(title);
-    },function(error){
+    }, function (error) {
       console.error(error);
     });
   };
@@ -128,109 +128,37 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
   ////////////////////////    EXPORT   ///////////////////////////
 
   $scope.export = {};
-
-  var getRgbFromHex = function (hexColor) {
-    return {
-      r: parseInt(hexColor.substring(1, 3), 16),
-      g: parseInt(hexColor.substring(3, 5), 16),
-      b: parseInt(hexColor.substring(5, 7), 16)
-    }
-  };
-
-  var componentToHex = function (component) {
-    var hex = component.toString(16);
-    return hex.length == 1 ? "0" + hex : hex;
-  };
-
-  var rgbToHex = function (rgbColor) {
-    return "#" + componentToHex(rgbColor.r) + componentToHex(rgbColor.g) + componentToHex(rgbColor.b);
-  };
-
-  var getGrayScaleColor = function (hexColor) {
-    var rgbColor = getRgbFromHex(hexColor);
-    var grayScale = Math.round(rgbColor.r * 0.21 + rgbColor.g * 0.72 + rgbColor.b * 0.07);
-    var grayScaleRgbColor = { r: grayScale, g: grayScale, b: grayScale };
-    return rgbToHex(grayScaleRgbColor);
-  };
-
+  
   ConfigService.getExportOptions().then(
     function (response) {
       $scope.export = response.data.export;
     });
 
-  var setAllSeriesToGrayScale = function (series) {
-    var previousColors = [];
-    for (var i = 0; i < series.length; i++) {
-      previousColors.push(series[i].color);
-      var grayScaleColor = getGrayScaleColor(series[i].color);
-      series[i].update({ color: grayScaleColor, fillOpacity: 0.2 });
-    }
-    return previousColors;
-  };
-
-
-
-  var updateSeriesColors = function (series, colorList) {
-    for (var i = 0; i < series.length; i++) {
-      var index = Math.min(i, colorList.length - 1);
-      var opacity = getSerieTypeOpacity(series[i]);
-      series[i].update({ color: colorList[index], fillOpacity: opacity });
-    }
-  };
-
-  var getSerieTypeOpacity = function (serie) {
-    return serie.type === 'line' ? 1 : 0.2;
-  };
-
-  var blackAndWhiteExport = function (exportType) {
-    var chart = getChartRef();
-    var series = chart.series;
-    var previousColors = setAllSeriesToGrayScale(series);
-    chart.exportChart(exportType, $scope.export.blackAndWhite);
-    updateSeriesColors(series, previousColors);
-  };
-
-  var blackAndWhitePngExport = function () {
-    blackAndWhiteExport($scope.export.pngExport);
-  };
-
-  var blackAndWhiteJpegExport = function () {
-    blackAndWhiteExport($scope.export.jpegExport)
-  };
-
-  var blackAndWhitePdfExport = function () {
-    blackAndWhiteExport($scope.export.pdfExport);
-  };
-
-  var blackAndWhiteSvgExport = function () {
-    blackAndWhiteExport($scope.export.svgExport);
-  };
-
   var options = {
-    navigator:{
-        enabled:false,
-        height: 0,
-        baseSeries: undefined,
-        outlineWidth: 0,
-        margin: 0, 
-        handles: {
-            backgroundColor: 'transparent',
-            borderColor: 'transparent'
-        },
-        xAxis: {labels: {style: {color: 'transparent'}}}
+    navigator: {
+      enabled: false,
+      height: 0,
+      baseSeries: undefined,
+      outlineWidth: 0,
+      margin: 0,
+      handles: {
+        backgroundColor: 'transparent',
+        borderColor: 'transparent'
+      },
+      xAxis: { labels: { style: { color: 'transparent' } } }
     },
     scrollbar: {
-        enabled:true
+      enabled: true
     },
     rangeSelector: {
-        enabled: false,
-        inputEnabled: false,
-        buttonTheme: {
-          visibility: 'hidden'
-        },
-        labelStyle: {
-          visibility: 'hidden'
-        }
+      enabled: false,
+      inputEnabled: false,
+      buttonTheme: {
+        visibility: 'hidden'
+      },
+      labelStyle: {
+        visibility: 'hidden'
+      }
     },
     tooltip: {
       shared: true,
@@ -255,57 +183,27 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
           enabled: false
         },
         scrollbar: {
-           enabled: false
+          enabled: false
         }
       },
       buttons: {
         contextButton: {
           menuItems: [
             {
-              text: 'Export to PNG (Grayscale)',
-              onclick: blackAndWhitePngExport
-            },
-            {
-              text: 'Export to PNG (Color)',
+              text: 'Save as image',
               onclick: function () {
-                this.exportChart($scope.export.pngExport, $scope.export.color);
-              },
-              separator: false
-            },
-            {
-              text: 'Export to JPEG (Grayscale)',
-              onclick: blackAndWhiteJpegExport
-            },
-            {
-              text: 'Export to JPEG (Color)',
-              onclick: function () {
-                this.exportChart($scope.export.jpegExport, $scope.export.color);
-              },
-              separator: false
-            },
-            {
-              text: 'Export to PDF (Grayscale)',
-              onclick: blackAndWhitePdfExport,
-              separator: false
-            },
-            {
-              text: 'Export to PDF (Color)',
-              onclick: function () {
-                this.exportChart($scope.export.pdfExport, $scope.export.color);
-              },
-              separator: false
-            },
-            {
-              text: 'Export to SVG (Grayscale)',
-              onclick: blackAndWhiteSvgExport,
-              separator: false
-            },
-            {
-              text: 'Export to SVG (Color)',
-              onclick: function () {
-                this.exportChart($scope.export.svgExport, $scope.export.color);
-              },
-              separator: false
+                modalInstance = $modal.open({
+                  templateUrl: 'views/chart_exporter.html',
+                  controller: 'ChartExporterCtrl',
+                  scope: $scope,
+                  windowClass: 'small',
+                  resolve: {
+                    chartOptions: function () {
+                      return $scope.export;
+                    }
+                  }
+                });
+              }
             },
             {
               text: 'Print chart',
