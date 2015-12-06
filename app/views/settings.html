@@ -1,15 +1,13 @@
 <div class="row">
-  <div class="large-12 columns">
+  <div class="large-12 columns" ng-cloak>
     <h2 class="main-header">Settings</h2>
 
-
-
-    <tabset>
-      <tab active="direct">
+    <tabset ng-cloak>
+      <tab active="direct" ng-cloak>
         <tab-heading>
           Profile
         </tab-heading>
-        <div class="small-12 medium-8 medium-offset-2 columns">
+        <div class="small-12 medium-8 medium-offset-2 columns" ng-cloak>
           <form name="userData">
             <div class="row">
               <div class="small-12 columns">
@@ -52,7 +50,7 @@
         </div>
       </tab>
 
-      <tab>
+      <tab ng-cloak>
         <tab-heading>
           Display
         </tab-heading>
@@ -95,7 +93,7 @@
         <div class="columns clear-fix"></div>
       </tab>
 
-      <tab active="redirect">
+      <tab active="redirect" ng-cloak>
         <tab-heading>
           Database
         </tab-heading>

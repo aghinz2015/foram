@@ -99,7 +99,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     if(($scope.constantFilters.is_diploid && $scope.constantFilters.is_haploid) || (!$scope.constantFilters.is_diploid && !$scope.constantFilters.is_haploid)){
       filters.is_diploid = undefined;
     } else {
-      filters.is_diploid = $scope.constantFilters.is_diploid;
+      filters.is_diploid = !$scope.constantFilters.is_haploid;
     }
 
     filters.death_step_no_min = $scope.constantFilters.death_step_no_min;

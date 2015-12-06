@@ -26,6 +26,11 @@
       "name": "Settings",
       "icon": "gear",
       "args": "/settings"
+    },
+    {
+      "name": "About",
+      "icon": "info-circle",
+      "args": "/about"
     }
   ]
 }
