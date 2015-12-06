@@ -62,6 +62,10 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
     FileSaver.saveAs(data, 'foram.obj');
   }
 
+  $scope.exportToCSV = function() {
+    return simulation.exportToCSV();
+  }
+
   var recalculateMorphology = function() {
     $scope.morphology = {
       volume:      simulation.calculateVolume(),
