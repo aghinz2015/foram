@@ -1,24 +1,31 @@
-app.controller('LoginCtrl', ['$location', '$scope', 'AuthenticationService', function($location, $scope, AuthenticationService) {
-  $scope.init = function() {
+app.controller('LoginCtrl', ['$location', '$scope', 'AuthenticationService', 'ToastService', function($location, $scope, AuthenticationService, ToastService) {
+  $scope.loader = false;
+
+  var init = function() {
     if($scope.globals && $scope.globals.currentUser) {
       $location.path('/');
     }
-    // reset login status
-    //AuthenticationService.clearCredentials();
   };
 
   $scope.login = function() {
-    $scope.dataLoading = true;
+    $scope.loader = true;
     AuthenticationService.login($scope.email, $scope.password)
-      .then(function(response) {
-        AuthenticationService.setCredentials(response.data.user.email, response.data.user.authentication_token);
-        $location.path('/table');
-        $scope.dataLoading = false;
-      }, function(response) {
-        $scope.error = response.data.error;
-        $scope.dataLoading = false;
+      .then(function(res) {
+        if(res.data) {
+          if (res.status < 400) {
+            AuthenticationService.setCredentials(res.data.user.email, res.data.user.authentication_token);
+            $location.path('/table');
+            $scope.loader = false;
+          } else {
+            $scope.loader = false;
+            ToastService.showServerToast(res.data,'error',3000);
+          }
+        }
+      }, function(err) {
+        $scope.loader = false;
+        ToastService.showToast('Cannot connect to server','error',3000);
       });
   };
 
-  $scope.init();
+  init();
 }]);

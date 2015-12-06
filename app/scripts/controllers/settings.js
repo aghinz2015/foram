@@ -29,7 +29,6 @@ app.controller('SettingsCtrl',['$scope', '$location', '$modal', 'UserService', '
     UserService.getDatabases().then(
       function (res) {
         if(res.data) {
-
           if(res.status < 400) {
             $scope.databases = res.data.mongo_sessions;
           } else {

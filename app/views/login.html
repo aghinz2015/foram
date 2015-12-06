@@ -2,30 +2,42 @@
   <div class="large-12 columns">
     <h2 class="main-header">Login</h2>
 
-    <div ng-show="error" class="alert alert-danger">{{error}}</div>
-
     <form name="form" ng-submit="login()">
-      <div class="row" ng-class="{ 'has-error': form.email.$dirty && form.email.$error.required }">
+      <div class="row" ng-cloak>
         <div class="large-4 columns">
-          <label for="email">Email</label>
-          <input type="text" name="email" id="email" class="form-control" ng-model="email" required />
-          <span ng-show="form.email.$dirty && form.email.$error.required" class="help-block">Email is required</span>
+          <label for="email" ng-class="{ error: (form.email.$dirty && form.email.$error.required) || (form.email.$error.email && form.email.$touched)}">
+            Email
+            <input type="email" name="email" id="email" class="form-control" ng-model="email" required />
+          </label>
+          <div role="alert">
+            <span class="error" ng-show="form.email.$touched && form.email.$error.email">
+              Not valid email!
+            </span>
+            <span class="error" ng-show="form.email.$dirty && form.email.$error.required">
+              Email is required!
+            </span>
+          </div>
         </div>
       </div>
 
-      <div class="row" ng-class="{ 'has-error': form.password.$dirty && form.password.$error.required }">
+      <div class="row" ng-cloak>
         <div class="large-4 columns">
-          <label for="password">Password</label>
-          <input type="password" name="password" id="password" class="form-control" ng-model="password" required />
-          <span ng-show="form.password.$dirty && form.password.$error.required" class="help-block">Password is required</span>
+          <label for="password" ng-class="{ error: form.password.$dirty && form.password.$error.required }">Password
+            <input type="password" name="password" id="password" class="form-control" ng-model="password" required />
+          </label>
+          <div role="alert">
+            <span class="error" ng-show="form.password.$dirty && form.password.$error.required">
+              Password is required!
+            </span>
+          </div>
         </div>
       </div>
 
-      <ul class="button-row">
+      <ul class="button-row" ng-cloak>
         <li>
-          <button type="submit" ng-disable="form.$invalid || dataLoading" class="button">
-            <i class="fa fa-spinner fa-spin" ng-show="dataLoading"></i>
-            <span>Sign in</span>
+          <button type="submit" ng-class="{disabled: (form.$invalid || loader)}"  class="button">
+            <i class="fa fa-spinner fa-spin" ng-show="loader"></i>
+            <span ng-hide="loader">Sign in</span>
           </button>
         </li>
 

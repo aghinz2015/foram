@@ -31,11 +31,15 @@ app.service('ToastService', function() {
     var message = "";
     for(var parameter in json){
       if(json.hasOwnProperty(parameter)) {
-        var temp = "";
-        for (var i = 0; i < json[parameter].length; i++) {
-          temp += json[parameter][i]+" ";
+        if(parameter != 'error') {
+          var temp = "";
+          for (var i = 0; i < json[parameter].length; i++) {
+            temp += json[parameter][i] + " ";
+          }
+          message += parameter + " " + temp + "</br>";
+        } else {
+          message = json[parameter];
         }
-        message += parameter + " : "+temp+"</br>";
       }
     }
     if(!json){

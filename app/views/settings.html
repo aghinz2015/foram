@@ -44,7 +44,8 @@
               </label>
               <div role="alert">
                   <span class="error" ng-show="user.password != user.password_confirmation">
-                    Passwords don't match!</span>
+                    Passwords don't match!
+                  </span>
               </div>
             </div>
           </form>
@@ -59,7 +60,8 @@
           <form name="userSettings">
             <div class="row">
               <div class="small-12 columns">
-                <button ng-click="saveSettings(settings)" class="button small center" ng-class="{disabled: userSettings.$invalid}"><i class="fa fa-spinner fa-spin" ng-show="loader"></i>
+                <button ng-click="saveSettings(settings)" class="button small center" ng-class="{disabled: userSettings.$invalid}">
+                  <i class="fa fa-spinner fa-spin" ng-show="loader"></i>
                   <span ng-hide="loader">Save</span></button>
               </div>
             </div>

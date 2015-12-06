@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" ng-cloak>
   <div class="large-12 columns">
     <h2 class="main-header">Browser</h2>
 
@@ -13,7 +13,7 @@
     </div>
 
     <accordion close-others="false">
-      <accordion-group heading="Genotype">
+      <accordion-group heading="Genotype" ng-cloak>
         <ul class="large-block-grid-1">
           <li ng-repeat="filter in filters">
             <div class="row">
@@ -51,7 +51,7 @@
         </div>
       </accordion-group>
 
-      <accordion-group heading="Death step number">
+      <accordion-group heading="Death step number" ng-cloak>
         <div class="row">
           <div class="large-4 columns">
             <label for="start-value">Start</label>
@@ -88,7 +88,7 @@
       </li>
     </ul>
 
-    <div class="table-responsive" id="forams-table">
+    <div class="table-responsive" id="forams-table" ng-cloak>
       <table class="selectable no-border">
         <thead>
           <th ng-repeat="(key,value) in forams[0]" ng-if="key != 'genotype' && key != 'id'">
@@ -113,7 +113,7 @@
       </table>
     </div>
 
-    <div ng-show="pagination.pageCount() > 1">
+    <div ng-show="pagination.pageCount() > 1" ng-cloak>
       <ul class="pagination">
         <li ng-class="pagination.prevPageDisabled()">
           <a href ng-click="pagination.prevPage()">« Prev</a>
