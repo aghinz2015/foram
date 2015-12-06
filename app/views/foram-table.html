@@ -6,10 +6,6 @@
       <div class="small-6 columns">
         <h3>Filters</h3>
       </div>
-
-      <div class="small-6 columns">
-        <button ng-click="open()" class="button small right">New filter</button>
-      </div>
     </div>
 
     <accordion close-others="false">
@@ -80,11 +76,19 @@
       </li>
 
       <li>
-        <button ng-click="clearFilters()" class="button secondary">Reset filters</button>
+        <button href="#" data-dropdown="drop1" aria-controls="drop1" aria-expanded="false" class="button dropdown">Manage filters</button>
+        <ul id="drop1" data-dropdown-content class="f-dropdown" aria-hidden="true">
+          <li><a ng-click="open()">New</a></li>
+          <li><a ng-click="deleteFilters()">Delete</a></li>
+          <li><a ng-click="editFilters()">Edit</a></li>
+          <li><a ng-click="loadFilters()">Load</a></li>
+          <li><a ng-click="clearFilters()">Reset</a></li>
+          <li><a ng-click="saveFilters()">Save</a></li>
+        </ul>
       </li>
-
+      
       <li>
-        <button ng-click="download()" class="button">Download...</button>
+        <button ng-click="download()" class="button">Download...</button>     
       </li>
     </ul>
 
@@ -125,3 +129,6 @@
 
   </div>
 </div>
+ <script>
+        $(document).foundation();
+ </script>
