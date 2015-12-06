@@ -28,7 +28,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     });
   });
 
-  $scope.selectedForams = function() {
+  $scope.selectedForams = function () {
     return $scope.forams.slice(currentSet.start, currentSet.stop + 1);
   };
 
@@ -37,23 +37,23 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     $location.path("/charts");
   };
 
-  $scope.visualize = function() {
+  $scope.visualize = function () {
     DatasetService.putProducts($scope.selectedForams());
     $location.path("/visualization");
   };
 
-  $scope.download = function() {
+  $scope.download = function () {
     var modalInstance = $modal.open({
       templateUrl: 'views/foram_downloader.html',
-      controller:  'ForamDownloaderCtrl',
+      controller: 'ForamDownloaderCtrl',
       windowClass: 'small'
     });
 
-    modalInstance.result.then(function(newDownload) {
+    modalInstance.result.then(function (newDownload) {
       flatFilters = prepareFilters();
       ForamAPIService.getForams(flatFilters, newDownload.format).then(function (response) {
         var anchor = angular.element('<a/>');
-        anchor.css({display: 'none'});
+        anchor.css({ display: 'none' });
         angular.element(document.body).append(anchor);
         anchor.attr({
           href: 'data:attachment/csv;charset=utf-8,' + encodeURI(response.data),
@@ -61,11 +61,73 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
           download: newDownload.file_name + newDownload.format
         })[0].click();
         anchor.remove();
-      },function(error){
+      }, function (error) {
         console.log("getForamsInfo::Error - ", error)
       });
     });
-  }
+  };
+
+  $scope.deleteFilters = function () {
+    $modal.open({
+      templateUrl: 'views/filter_deleter.html',
+      controller: 'FilterDeleterCtrl',
+      windowClass: 'small',
+      resolve: {
+        ForamAPIService: function () {
+          return ForamAPIService;
+        }
+      }
+    });
+  };
+
+  $scope.editFilters = function () {
+    $modal.open({
+      templateUrl: 'views/filter_editor.html',
+      controller: 'FilterEditorCtrl',
+      windowClass: 'small',
+      resolve: {
+        ForamAPIService: function () {
+          return ForamAPIService;
+        },
+        availableFilterParams: function () {
+          return $scope.availableFilterParams;
+        }
+      }
+    });
+  };
+
+  $scope.saveFilters = function () {
+    var filtersToSave = {};
+    filtersToSave = prepareFilters();
+    var modalInstance = $modal.open({
+      templateUrl: 'views/filter_saver.html',
+      controller: 'FilterSaverCtrl',
+      windowClass: 'small',
+      resolve: {
+        filtersToSave: function () {
+          return filtersToSave;
+        },
+        ForamAPIService: function () {
+          return ForamAPIService;
+        }
+      }
+    });
+  };
+
+  $scope.loadFilters = function () {
+    $scope.filters = [];
+    flatFilters = {};
+    $scope.constantFilters = {};
+    var modalInstance = $modal.open({
+      templateUrl: 'views/filter_loader.html',
+      controller: 'FilterLoaderCtrl',
+      windowClass: 'small'
+    });
+
+    modalInstance.result.then(function (loadedFilter) {
+      unflattenFilter(loadedFilter);
+    });
+  };
 
   ////////////////////////    FILTERS    ///////////////////////////
 
@@ -77,29 +139,30 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   var flatFilters = {};
 
   // prepare flat filters
-  var prepareFilters = function(){
+  var prepareFilters = function () {
     var filters = {};
     var i;
     var key;
     for (i in $scope.filters) {
       if ($scope.filters[i].param != undefined) {
         if ($scope.filters[i].min != undefined) {
-          key = $scope.filters[i].param+"_min";
+          key = $scope.filters[i].param + "_min";
           key = key.replace(/\s+/g, '');
           filters[key] = $scope.filters[i].min;
         }
         if ($scope.filters[i].max != undefined) {
-          key = $scope.filters[i].param+"_max";
+          key = $scope.filters[i].param + "_max";
           key = key.replace(/\s+/g, '');
           filters[key] = $scope.filters[i].max;
         }
       }
     }
 
-    if(($scope.constantFilters.is_diploid && $scope.constantFilters.is_haploid) || (!$scope.constantFilters.is_diploid && !$scope.constantFilters.is_haploid)){
+    if (($scope.constantFilters.is_diploid && $scope.constantFilters.is_haploid) || (!$scope.constantFilters.is_diploid && !$scope.constantFilters.is_haploid)) {
       filters.is_diploid = undefined;
     } else {
       filters.is_diploid = !$scope.constantFilters.is_haploid;
+
     }
 
     filters.death_step_no_min = $scope.constantFilters.death_step_no_min;
@@ -116,7 +179,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
 
   // add new filter
   $scope.addFilter = function () {
-    if(!checkIntersectingFilters() && $scope.newFilter.param){
+    if (!checkIntersectingFilters() && $scope.newFilter.param) {
       $scope.filters.push($scope.newFilter);
       $scope.newFilter = {};
     }
@@ -138,11 +201,11 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     var filter = $scope.filters[index];
     var key;
     if (filter.max != undefined) {
-      key = filter.param+'_max';
+      key = filter.param + '_max';
       flatFilters[key] = undefined;
     }
     if (filter.min != undefined) {
-      key = filter.param+'_min';
+      key = filter.param + '_min';
       flatFilters[key] = undefined;
     }
     $scope.filters.splice(index, 1);
@@ -150,11 +213,11 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   };
 
   // check filters for intersecting
-  var checkIntersectingFilters = function(){
+  var checkIntersectingFilters = function () {
     var result = false;
 
     for (var i in $scope.filters) {
-      if($scope.filters[i].param == $scope.newFilter.param){
+      if ($scope.filters[i].param == $scope.newFilter.param) {
         $scope.filters[i] = $scope.newFilter;
         result = true;
         break;
@@ -176,7 +239,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
           loadForams();
           $scope.foramsLoaded = true;
         }
-    },function(error){
+      }, function (error) {
         console.log("getForamsInfo::Error - ", error)
       });
   };
@@ -184,10 +247,9 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   // load forams with current filters
   var loadForams = function () {
     ForamAPIService.getForams(flatFilters)
-      .then(function(response){
-        console.log(response);
+      .then(function (response) {
         $scope.forams = response.data.forams;
-      },function(error){
+      }, function (error) {
         console.log("loadForams::Error - ", error);
       });
   };
@@ -195,7 +257,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   $scope.open = function () {
     var modalInstance = $modal.open({
       templateUrl: 'views/filter-creator.html',
-      controller:  'FilterCreatorCtrl',
+      controller: 'FilterCreatorCtrl',
       windowClass: 'small',
       resolve: {
         availableFilterParams: function () {
@@ -204,11 +266,25 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       }
     });
 
-    modalInstance.result.then(function(newFilter) {
+    modalInstance.result.then(function (newFilter) {
       $scope.newFilter = newFilter;
       $scope.addFilter();
     });
   };
+
+  var unflattenFilter = function (filter) {
+    $scope.availableFilterParamsToLoad.forEach(function (element) {
+      if (element == 'is_diploid' && filter[element] != null) {
+        $scope.constantFilters[element] = filter[element];
+        $scope.constantFilters['is_haploid'] = !filter[element];
+      }
+      var unflattedFilter = { param: element };
+      if (filter[element + '_min'] != null) unflattedFilter['min'] = filter[element + '_min'];
+      if (filter[element + '_max'] != null) unflattedFilter['max'] = filter[element + '_max'];
+      if (unflattedFilter.min != undefined || unflattedFilter.max != undefined) $scope.filters.push(unflattedFilter);
+    });
+  };
+
 
   ////////////////////////    PAGINATION    ///////////////////////////
 
@@ -246,7 +322,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       }
     },
 
-    range : function () {
+    range: function () {
       var rangeSize = 5;
       var ret = [];
       var start;
@@ -281,13 +357,13 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   $scope.numberOfForams = 1;
 
   ConfigService.getFilterConfig().then(
-    function(response){
+    function (response) {
       var data = response.data;
-
-      $scope.availableFilterParams = data.availableFilterParams.map(function(s){return s.replace(/\s+/g, '')});
+      $scope.availableFilterParams = data.availableFilterParams.map(function (s) { return s.replace(/\s+/g, '') });
+      $scope.availableFilterParamsToLoad = data.availableFilterParamsToLoad.map(function (s) { return s.replace(/\s+/g, '') });
       maxForams = data.maxForams;
-    },function(err){
-      console.error('GetFilterConfig::Error - ',err);
+    }, function (response) {
+      console.log('GetFilterConfig::Error - ', response.status);
     });
 
   loadForams();
@@ -300,12 +376,10 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   $scope.precision = 16;
   $scope.mappings = {};
 
-  // #TODO take mappings and create a loop to show attributes in correct order - need valid endpoint
-
   SettingsService.getSettings().then(
     function(res){
       $scope.precision = res.data.settings_set.number_precision;
-      if(!angular.equals({},res.data.settings_set.mappings)) {
+      if (!angular.equals({}, res.data.settings_set.mappings)) {
         $scope.mappings = res.data.settings_set.mappings;
       } else {
         ForamAPIService.getForamsAttributes().then(
@@ -322,12 +396,12 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
           function(err){
             ToastService.showToast('Cannot connect to server','error',3000);
           }
-        )
+          )
       }
 
 
     },
-    function(err){
+    function (err) {
       console.error(err);
     }
   );
