@@ -1,6 +1,11 @@
 {
   "defaults": {
-    "numChambers": 20,
-    "opacity": 1.0
+    "structureAnalyzer": {
+      "numChambers": 20
+    },
+
+    "material": {
+      "opacity": 0.5
+    }
   }
 }

@@ -1,37 +1,37 @@
 'use strict';
 
 app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFactory', 'GenotypeService', 'FileSaver', 'Blob', function ($scope, configService, simulationFactory, genotypeService, FileSaver, Blob) {
-  var simulation = simulationFactory(document.getElementById('visualization'));
+  var canvas = document.getElementById('visualization');
+  var simulation = simulationFactory(canvas);
 
   $scope.genotype = genotypeService.fetchGenotype();
   $scope.morphology = {};
 
   configService.getConfig('visualization').then(function(response) {
-    $scope.options  = response.data.defaults;
+    var defaults = response.data.defaults;
 
-    simulation.simulate($scope.genotype, $scope.options.numChambers);
+    $scope.structureAnalyzer = defaults.structureAnalyzer;
+    $scope.material = defaults.material;
+
+    simulation.simulate($scope.genotype, $scope.structureAnalyzer.numChambers);
 
     recalculateMorphology();
   });
 
   $scope.simulate = function() {
-    simulation.simulate($scope.genotype, $scope.options.numChambers);
+    simulation.simulate($scope.genotype, $scope.structureAnalyzer.numChambers);
     recalculateMorphology();
   };
 
   $scope.evolve = function() {
     simulation.evolve();
-    $scope.options.numChambers++;
+    increaseChambersCount();
     recalculateMorphology();
   };
 
   $scope.regress = function() {
     simulation.regress();
-
-    if ($scope.options.numChambers > 1 ){
-      $scope.options.numChambers--;
-    }
-
+    decreaseChambersCount();
     recalculateMorphology();
   };
 
@@ -52,7 +52,7 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
   };
 
   $scope.applyOpacity = function() {
-    simulation.applyOpacity($scope.options.opacity);
+    simulation.applyOpacity($scope.material.opacity);
   };
 
   $scope.exportToOBJ = function() {
@@ -66,11 +66,21 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
     return simulation.exportToCSV();
   }
 
+  var increaseChambersCount = function() {
+    $scope.structureAnalyzer.numChambers++;
+  };
+
+  var decreaseChambersCount = function() {
+    if ($scope.structureAnalyzer.numChambers > 1) {
+      $scope.structureAnalyzer.numChambers--
+    }
+  };
+
   var recalculateMorphology = function() {
     $scope.morphology = {
       volume:      simulation.calculateVolume(),
       surface:     simulation.calculateSurfaceArea(),
       shapeFactor: simulation.calculateShapeFactor()
     }
-  }
+  };
 }]);

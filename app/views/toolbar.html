@@ -50,7 +50,7 @@
           <span>Number of chambers:</span>
         </div>
 
-        <input ng-model="options.numChambers" type="number" min="0" max="100"/>
+        <input ng-model="structureAnalyzer.numChambers" type="number" min="0" max="100"/>
       </li>
 
       <li class="action">
@@ -123,10 +123,10 @@
     <ul class="folder-items">
       <li class="field">
         <div class="property-name">
-          <span>Opacity: {{options.opacity}}</span>
+          <span>Opacity: {{material.opacity}}</span>
         </div>
 
-        <input ng-change="applyOpacity()" ng-model="options.opacity" type="range" min="0" max="1" step="0.01">
+        <input ng-change="applyOpacity()" ng-model="material.opacity" type="range" min="0" max="1" step="0.01">
       </li>
     </ul>
   </accordion-group>
