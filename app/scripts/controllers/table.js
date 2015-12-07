@@ -1,4 +1,5 @@
-app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService', 'ConfigService', 'DatasetService', 'SettingsService', function ($location, $scope, $modal, ForamAPIService, ConfigService, DatasetService, SettingsService) {
+app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService', 'ConfigService', 'DatasetService', 'SettingsService', 'ToastService',
+  function ($location, $scope, $modal, ForamAPIService, ConfigService, DatasetService, SettingsService, ToastService) {
 
   ////////////////////////    SELECTABLES    ///////////////////////////
 
@@ -9,7 +10,6 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   $(function () {
     $("#selectable").selectable({
       filter: 'tr',
-
       start: function (event, ui) {
         currentSet.start = undefined;
         currentSet.stop = null;
@@ -51,83 +51,31 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
 
     modalInstance.result.then(function (newDownload) {
       flatFilters = prepareFilters();
-      ForamAPIService.getForams(flatFilters, newDownload.format).then(function (response) {
-        var anchor = angular.element('<a/>');
-        anchor.css({ display: 'none' });
-        angular.element(document.body).append(anchor);
-        anchor.attr({
-          href: 'data:attachment/csv;charset=utf-8,' + encodeURI(response.data),
-          target: '_blank',
-          download: newDownload.file_name + newDownload.format
-        })[0].click();
-        anchor.remove();
-      }, function (error) {
-        console.log("getForamsInfo::Error - ", error)
-      });
+      ForamAPIService.getForams(flatFilters, newDownload.format)
+        .then(
+          function (res) {
+            if(res.data) {
+              if (res.status < 400) {
+                var anchor = angular.element('<a/>');
+                anchor.css({display: 'none'});
+                angular.element(document.body).append(anchor);
+                anchor.attr({
+                  href: 'data:attachment/csv;charset=utf-8,' + encodeURI(res.data),
+                  target: '_blank',
+                  download: newDownload.file_name + newDownload.format
+                })[0].click();
+                anchor.remove();
+              } else {
+                ToastService.showServerToast(res.data,'error',3000);
+              }
+            }
+          },
+          function (err) {
+            ToastService.showToast('Cannot connect to server','error',3000);
+          });
     });
   };
 
-  $scope.deleteFilters = function () {
-    $modal.open({
-      templateUrl: 'views/filter_deleter.html',
-      controller: 'FilterDeleterCtrl',
-      windowClass: 'small',
-      resolve: {
-        ForamAPIService: function () {
-          return ForamAPIService;
-        }
-      }
-    });
-  };
-
-  $scope.editFilters = function () {
-    $modal.open({
-      templateUrl: 'views/filter_editor.html',
-      controller: 'FilterEditorCtrl',
-      windowClass: 'small',
-      resolve: {
-        ForamAPIService: function () {
-          return ForamAPIService;
-        },
-        availableFilterParams: function () {
-          return $scope.availableFilterParams;
-        }
-      }
-    });
-  };
-
-  $scope.saveFilters = function () {
-    var filtersToSave = {};
-    filtersToSave = prepareFilters();
-    var modalInstance = $modal.open({
-      templateUrl: 'views/filter_saver.html',
-      controller: 'FilterSaverCtrl',
-      windowClass: 'small',
-      resolve: {
-        filtersToSave: function () {
-          return filtersToSave;
-        },
-        ForamAPIService: function () {
-          return ForamAPIService;
-        }
-      }
-    });
-  };
-
-  $scope.loadFilters = function () {
-    $scope.filters = [];
-    flatFilters = {};
-    $scope.constantFilters = {};
-    var modalInstance = $modal.open({
-      templateUrl: 'views/filter_loader.html',
-      controller: 'FilterLoaderCtrl',
-      windowClass: 'small'
-    });
-
-    modalInstance.result.then(function (loadedFilter) {
-      unflattenFilter(loadedFilter);
-    });
-  };
 
   ////////////////////////    FILTERS    ///////////////////////////
 
@@ -229,18 +177,24 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   // filter forams - get total number and then load forams
   var filterForams = function () {
     ForamAPIService.getForamsInfo(flatFilters)
-      .then(function (response) {
-        var headers = response.headers();
-        $scope.numberOfForams = headers.total;
-        foramsPerPage = headers["per-page"];
-        if ($scope.numberOfForams > maxForams) {
-          $scope.foramTableVisible = false;
-        } else {
-          loadForams();
-          $scope.foramsLoaded = true;
+      .then(function (res) {
+        if(res.data) {
+          if (res.status < 400) {
+            var headers = res.headers();
+            $scope.numberOfForams = headers.total;
+            foramsPerPage = headers["per-page"];
+            if ($scope.numberOfForams > maxForams) {
+              $scope.foramTableVisible = false;
+            } else {
+              loadForams();
+              $scope.foramsLoaded = true;
+            }
+          } else {
+            ToastService.showServerToast(res.data,'error',3000);
+          }
         }
-      }, function (error) {
-        console.log("getForamsInfo::Error - ", error)
+      }, function (err) {
+        ToastService.showToast('Cannot connect to server','error',3000);
       });
   };
 
@@ -282,6 +236,69 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       if (filter[element + '_min'] != null) unflattedFilter['min'] = filter[element + '_min'];
       if (filter[element + '_max'] != null) unflattedFilter['max'] = filter[element + '_max'];
       if (unflattedFilter.min != undefined || unflattedFilter.max != undefined) $scope.filters.push(unflattedFilter);
+    });
+  };
+
+
+  $scope.deleteFilters = function () {
+    $modal.open({
+      templateUrl: 'views/filter_deleter.html',
+      controller: 'FilterDeleterCtrl',
+      windowClass: 'small',
+      resolve: {
+        ForamAPIService: function () {
+          return ForamAPIService;
+        }
+      }
+    });
+  };
+
+  $scope.editFilters = function () {
+    $modal.open({
+      templateUrl: 'views/filter_editor.html',
+      controller: 'FilterEditorCtrl',
+      windowClass: 'small',
+      resolve: {
+        ForamAPIService: function () {
+          return ForamAPIService;
+        },
+        availableFilterParams: function () {
+          return $scope.availableFilterParams;
+        }
+      }
+    });
+  };
+
+  $scope.saveFilters = function () {
+    var filtersToSave = {};
+    filtersToSave = prepareFilters();
+    var modalInstance = $modal.open({
+      templateUrl: 'views/filter_saver.html',
+      controller: 'FilterSaverCtrl',
+      windowClass: 'small',
+      resolve: {
+        filtersToSave: function () {
+          return filtersToSave;
+        },
+        ForamAPIService: function () {
+          return ForamAPIService;
+        }
+      }
+    });
+  };
+
+  $scope.loadFilters = function () {
+    $scope.filters = [];
+    flatFilters = {};
+    $scope.constantFilters = {};
+    var modalInstance = $modal.open({
+      templateUrl: 'views/filter_loader.html',
+      controller: 'FilterLoaderCtrl',
+      windowClass: 'small'
+    });
+
+    modalInstance.result.then(function (loadedFilter) {
+      unflattenFilter(loadedFilter);
     });
   };
 
@@ -357,8 +374,8 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   $scope.numberOfForams = 1;
 
   ConfigService.getFilterConfig().then(
-    function (response) {
-      var data = response.data;
+    function (res) {
+      var data = res.data;
       $scope.availableFilterParams = data.availableFilterParams.map(function (s) { return s.replace(/\s+/g, '') });
       $scope.availableFilterParamsToLoad = data.availableFilterParamsToLoad.map(function (s) { return s.replace(/\s+/g, '') });
       maxForams = data.maxForams;
@@ -384,13 +401,15 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       } else {
         ForamAPIService.getForamsAttributes().then(
           function(res){
-            if(res.data && res.status == '200') {
-              for (var i = 0; i < res.data.forams.length; i++) {
-                if(res.data.forams[i] != 'foramId')
-                  $scope.mappings[res.data.forams[i]] = "";
+            if(res.data) {
+              if(res.status < 400) {
+                for (var i = 0; i < res.data.forams.length; i++) {
+                  if (res.data.forams[i] != 'foramId')
+                    $scope.mappings[res.data.forams[i]] = "";
+                }
+              } else {
+                ToastService.showServerToast(res.data,'error',3000);
               }
-            } else {
-              ToastService.showServerToast(res.data,'error',3000);
             }
           },
           function(err){
