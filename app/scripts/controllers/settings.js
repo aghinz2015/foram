@@ -69,8 +69,6 @@ app.controller('SettingsCtrl',['$scope', '$location', '$modal', 'UserService', '
     function(res){
       if(res.data && res.status < 400) {
 
-        console.log(res.data.user.settings_set.mappings);
-
         $scope.settings.number_precision = res.data.user.settings_set.number_precision;
 
         if(!angular.equals({},res.data.user.settings_set.mappings)) {
