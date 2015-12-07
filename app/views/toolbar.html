@@ -101,19 +101,19 @@
     <ul class="folder-items">
       <li class="field">
         <div class="property-name">
-          <span>Volume: {{morphology.volume}}</span>
+          <span>Volume: {{morphology.volume | number: 3}} &micro;m&sup3;</span>
         </div>
       </li>
 
       <li class="field">
         <div class="property-name">
-          <span>Surface: {{morphology.surface}}</span>
+          <span>Surface: {{morphology.surface | number: 3}} &micro;m&sup2;</span>
         </div>
       </li>
 
       <li class="field">
         <div class="property-name">
-          <span>Shape factor: {{morphology.shapeFactor}}</span>
+          <span>Shape factor: {{morphology.shapeFactor | number: 3}} &micro;m</span>
         </div>
       </li>
     </ul>
