@@ -12,18 +12,6 @@
 				"width": 1280,
 				"backgroundColor": "#FFFFFF"
 			}
-		},
-		"jpegExport": {
-			"type": "image/jpeg"
-		},
-		"pngExport": {
-			"type": "image/png"
-		},
-		"svgExport": {
-			"type": "image/svg+xml"
-		},
-		"pdfExport": {
-			"type": "application/pdf"
 		}
 	}
 }
