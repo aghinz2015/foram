@@ -1,15 +1,13 @@
 <div class="row">
-  <div class="large-12 columns">
+  <div class="large-12 columns" ng-cloak>
     <h2 class="main-header">Settings</h2>
 
-
-
-    <tabset>
-      <tab active="direct">
+    <tabset ng-cloak>
+      <tab active="direct" ng-cloak>
         <tab-heading>
           Profile
         </tab-heading>
-        <div class="small-12 medium-8 medium-offset-2 columns">
+        <div class="small-12 medium-8 medium-offset-2 columns" ng-cloak>
           <form name="userData">
             <div class="row">
               <div class="small-12 columns">
@@ -44,14 +42,15 @@
               </label>
               <div role="alert">
                   <span class="error" ng-show="user.password != user.password_confirmation">
-                    Passwords don't match!</span>
+                    Passwords don't match!
+                  </span>
               </div>
             </div>
           </form>
         </div>
       </tab>
 
-      <tab>
+      <tab ng-cloak>
         <tab-heading>
           Display
         </tab-heading>
@@ -59,7 +58,8 @@
           <form name="userSettings">
             <div class="row">
               <div class="small-12 columns">
-                <button ng-click="saveSettings(settings)" class="button small center" ng-class="{disabled: userSettings.$invalid}"><i class="fa fa-spinner fa-spin" ng-show="loader"></i>
+                <button ng-click="saveSettings(settings)" class="button small center" ng-class="{disabled: userSettings.$invalid}">
+                  <i class="fa fa-spinner fa-spin" ng-show="loader"></i>
                   <span ng-hide="loader">Save</span></button>
               </div>
             </div>
@@ -93,7 +93,7 @@
         <div class="columns clear-fix"></div>
       </tab>
 
-      <tab active="redirect">
+      <tab active="redirect" ng-cloak>
         <tab-heading>
           Database
         </tab-heading>

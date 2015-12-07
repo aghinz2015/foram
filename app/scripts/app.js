@@ -69,7 +69,12 @@ var app = angular.module('trunkApp', ['ngRoute', 'mm.foundation', 'highcharts-ng
     return function(input){
       return parseFloat(input);
     }
-  });
+  })
+    .filter('checkName',function(){
+      return function(input,mappings){
+        return mappings[input] ? mappings[input] : input;
+      }
+    });
 
   app.run(function($rootScope, $location, $cookies, $http) {
     // keep user logged in after page refresh

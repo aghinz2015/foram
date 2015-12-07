@@ -79,7 +79,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       }
     });
   };
-  
+
   $scope.editFilters = function () {
     $modal.open({
       templateUrl: 'views/filter_editor.html',
@@ -215,6 +215,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   // check filters for intersecting
   var checkIntersectingFilters = function () {
     var result = false;
+
     for (var i in $scope.filters) {
       if ($scope.filters[i].param == $scope.newFilter.param) {
         $scope.filters[i] = $scope.newFilter;
@@ -376,21 +377,24 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   $scope.mappings = {};
 
   SettingsService.getSettings().then(
-    function (res) {
-
+    function(res){
       $scope.precision = res.data.settings_set.number_precision;
       if (!angular.equals({}, res.data.settings_set.mappings)) {
         $scope.mappings = res.data.settings_set.mappings;
       } else {
-        ConfigService.getFilterConfig().then(
-          function (res) {
-            console.log(res);
-            for (var gene in res.data.availableGenes) {
-              $scope.mappings = res.data.availableFilterParams;
+        ForamAPIService.getForamsAttributes().then(
+          function(res){
+            if(res.data && res.status == '200') {
+              for (var i = 0; i < res.data.forams.length; i++) {
+                if(res.data.forams[i] != 'foramId')
+                  $scope.mappings[res.data.forams[i]] = "";
+              }
+            } else {
+              ToastService.showServerToast(res.data,'error',3000);
             }
           },
-          function (err) {
-            console.error(err);
+          function(err){
+            ToastService.showToast('Cannot connect to server','error',3000);
           }
           )
       }
@@ -400,9 +404,13 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     function (err) {
       console.error(err);
     }
-    );
+  );
 
-  $scope.emptyOrNull = function (value) {
+  $scope.isObject = function(obj) {
+    return (typeof obj === "object");
+  };
+
+  $scope.emptyOrNull = function(value){
     return !(value === null || value.trim().length === 0)
   };
 
@@ -410,4 +418,5 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   ////////////////////////    INIT     ///////////////////////////
 
   filterForams();
+
 }]);

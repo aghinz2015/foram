@@ -44,7 +44,7 @@
     "deviation_angle",
     "min_metabolic_effectiveness",
     "max_energy_per_chamber"
-  ], 
+  ],
   "availableFilterParamsToLoad": [
     "haploid_juvenile_volume_factor",
     "haploid_first_chamber_radius",
