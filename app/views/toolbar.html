@@ -1,33 +1,149 @@
-<div class="visualization-panel">
-  <ul>
-    <li>
-      <label for="numChambers">Number of chambers</label>
-      <input type="number" id="numChambers" ng-model="options.numChambers" min=1 max=100/>
-    </li>
+<accordion class="toolbar" close-others="false">
+  <accordion-group heading="Genotype" class="folder">
+    <ul class="folder-items">
+      <li class="field">
+        <div class="property-name">
+          <span>Phi:</span>
+        </div>
 
-    <li>
-      <button ng-click="simulate()">Simulate</button>
-    </li>
+        <input ng-model="genotype.phi" type="number" min="0" step="0.01"/>
+      </li>
 
-    <li>
-      <button ng-click="evolve()">Evolve</button>
-    </li>
+      <li class="field">
+        <div class="property-name">
+          <span>Beta:</span>
+        </div>
 
-    <li>
-      <button ng-click="regress()">Regress</button>
-    </li>
+        <input ng-model="genotype.beta" type="number" min="0" step="0.01"/>
+      </li>
 
-    <li>
-      <button ng-click="toggleChambers()">Toggle chambers</button>
-    </li>
+      <li class="field">
+        <div class="property-name">
+          <span>Growth factor:</span>
+        </div>
 
-    <li>
-      <button ng-click="toggleCentroidsLine()">Toggle centroids line</button>
-    </li>
+        <input ng-model="genotype.growthFactor" type="number" min="0" max="2" step="0.01"/>
+      </li>
 
-    <li>
-      <label for="opacity">Opacity</label>
-      <input type="range" id="opacity" ng-change="applyOpacity()" ng-model="options.opacity" min="0" max="1" step="0.01">
-    </li>
-  </ul>
-</div>
+      <li class="field">
+        <div class="property-name">
+          <span>Translation factor:</span>
+        </div>
+
+        <input ng-model="genotype.translationFactor" type="number" min="0" max="2" step="0.01"/>
+      </li>
+
+      <li class="field">
+        <div class="property-name">
+          <span>Wall thickness factor:</span>
+        </div>
+
+        <input ng-model="genotype.wallThicknessFactor" type="number" min="0" max="2" step="0.01"/>
+      </li>
+    </ul>
+  </accordion-group>
+
+  <accordion-group heading="Structure analyzer" class="folder">
+    <ul class="folder-items">
+      <li class="field">
+        <div class="property-name">
+          <span>Number of chambers:</span>
+        </div>
+
+        <input ng-model="structureAnalyzer.numChambers" type="number" min="0" max="100"/>
+      </li>
+
+      <li class="action">
+        <a ng-click="simulate()">
+          Simulate
+        </a>
+      </li>
+
+      <li class="action">
+        <a ng-click="evolve()">
+          Evolve
+        </a>
+      </li>
+
+      <li class="action">
+        <a ng-click="regress()">
+          Regress
+        </a>
+      </li>
+
+      <li class="action">
+        <a ng-click="toggleCentroidsPath()">
+          Centroids path
+        </a>
+      </li>
+
+      <li class="action">
+        <a ng-click="toggleAperturesPath()">
+          Apertures path
+        </a>
+      </li>
+
+      <li class="action">
+        <a ng-click="toggleThicknessVectors()">
+          Thickness vectors
+        </a>
+      </li>
+
+      <li class="action">
+        <a ng-click="toggleChambers()">
+          Toggle chambers
+        </a>
+      </li>
+    </ul>
+  </accordion-group>
+
+  <accordion-group heading="Morphology" class="folder">
+    <ul class="folder-items">
+      <li class="field">
+        <div class="property-name">
+          <span>Volume: {{morphology.volume | number: 3}} &micro;m&sup3;</span>
+        </div>
+      </li>
+
+      <li class="field">
+        <div class="property-name">
+          <span>Surface: {{morphology.surface | number: 3}} &micro;m&sup2;</span>
+        </div>
+      </li>
+
+      <li class="field">
+        <div class="property-name">
+          <span>Shape factor: {{morphology.shapeFactor | number: 3}} &micro;m</span>
+        </div>
+      </li>
+    </ul>
+  </accordion-group>
+
+  <accordion-group heading="Material" class="folder">
+    <ul class="folder-items">
+      <li class="field">
+        <div class="property-name">
+          <span>Opacity: {{material.opacity}}</span>
+        </div>
+
+        <input ng-change="applyOpacity()" ng-model="material.opacity" type="range" min="0" max="1" step="0.01">
+      </li>
+    </ul>
+  </accordion-group>
+
+  <accordion-group heading="Export" class="folder">
+    <ul class="folder-items">
+      <li class="action">
+        <a ng-click="exportToOBJ()">
+          Export to OBJ
+        </a>
+      </li>
+
+      <li class="action">
+        <a clipboard clipboard-copy="exportToCSV()">
+          Copy CSV to clipboard
+        </a>
+      </li>
+    </ul>
+  </accordion-group>
+</accordion>

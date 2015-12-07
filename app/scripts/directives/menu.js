@@ -5,6 +5,7 @@
 
 app.directive('menu', function(){
   return {
+    replace: true,
     restrict: 'E',
     scope: {
       menu: "="

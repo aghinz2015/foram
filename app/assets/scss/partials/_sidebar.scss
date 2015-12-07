@@ -1,8 +1,14 @@
 $sidebar-width: 116px;
 $nav-color: #333;
 
+.off-canvas-wrap {
+  height: 100%;
+  overflow-y: auto;
+}
+
 .inner-wrap {
   width: auto;
+  height: 100%;
 }
 
 .move-right .inner-wrap {

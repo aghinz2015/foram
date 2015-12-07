@@ -3,10 +3,11 @@
 app.service('GenotypeService', ['DatasetService', function(datasetService) {
   var normalizeGenotype = function(genotype) {
     return {
-      translationFactor: genotype.translation_factor.effective,
-      growthFactor:      genotype.growth_factor.effective,
-      beta:              genotype.deviation_angle.effective,
-      phi:               genotype.rotation_angle.effective,
+      beta:                genotype.deviation_angle.effective,
+      phi:                 genotype.rotation_angle.effective,
+      growthFactor:        genotype.growth_factor.effective,
+      translationFactor:   genotype.translation_factor.effective,
+      wallThicknessFactor: genotype.wall_thickness_factor.effective
     };
   };
 
