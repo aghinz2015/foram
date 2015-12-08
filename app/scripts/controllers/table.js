@@ -132,19 +132,21 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   };
 
   $scope.switchSort = function(attribute,$event) {
-    if($scope.constantFilters.order_by === attribute){
-      $scope.constantFilters.direction = ($scope.constantFilters.direction+1)%3
-    } else {
-      var previous = document.getElementsByClassName(directions[$scope.constantFilters.direction-1]);
-      if(previous[0])
-        previous[0].className = '';
+    if(typeof $scope.forams[0][attribute] == 'number' || ($scope.forams[0].genotype[attribute] && typeof $scope.forams[0].genotype[attribute].effective == 'number')) {
+      if ($scope.constantFilters.order_by === attribute) {
+        $scope.constantFilters.direction = ($scope.constantFilters.direction + 1) % 3
+      } else {
+        var previous = document.getElementsByClassName(directions[$scope.constantFilters.direction - 1]);
+        if (previous[0])
+          previous[0].className = '';
 
-      $scope.constantFilters.order_by = attribute;
-      $scope.constantFilters.direction = 1;
+        $scope.constantFilters.order_by = attribute;
+        $scope.constantFilters.direction = 1;
+      }
+
+      $event.currentTarget.className = directions[$scope.constantFilters.direction - 1];
+      $scope.filterData();
     }
-
-    $event.currentTarget.className = directions[$scope.constantFilters.direction-1];
-    $scope.filterData();
 
   };
 
