@@ -83,8 +83,8 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   $scope.filters = [];
   $scope.newFilter = {};
   $scope.constantFilters = {};
-
-  var flatFilters = {};
+  var flatFilters = {},
+    directions = ['asc','desc'];
 
   // prepare flat filters
   var prepareFilters = function () {
@@ -110,8 +110,14 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       filters.is_diploid = undefined;
     } else {
       filters.is_diploid = !$scope.constantFilters.is_haploid;
-
     }
+
+    if($scope.constantFilters.order_by && $scope.constantFilters.direction){
+      filters.order_by = $scope.constantFilters.order_by;
+      filters.direction = directions[$scope.constantFilters.direction-1];
+    }
+
+
 
     filters.death_step_no_min = $scope.constantFilters.death_step_no_min;
     filters.death_step_no_max = $scope.constantFilters.death_step_no_max;
@@ -123,6 +129,23 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   $scope.filterData = function () {
     flatFilters = prepareFilters();
     filterForams();
+  };
+
+  $scope.switchSort = function(attribute,$event) {
+    if($scope.constantFilters.order_by === attribute){
+      $scope.constantFilters.direction = ($scope.constantFilters.direction+1)%3
+    } else {
+      var previous = document.getElementsByClassName(directions[$scope.constantFilters.direction-1]);
+      if(previous[0])
+        previous[0].className = '';
+
+      $scope.constantFilters.order_by = attribute;
+      $scope.constantFilters.direction = 1;
+    }
+
+    $event.currentTarget.className = directions[$scope.constantFilters.direction-1];
+    $scope.filterData();
+
   };
 
   // add new filter
@@ -178,20 +201,14 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   var filterForams = function () {
     ForamAPIService.getForamsInfo(flatFilters)
       .then(function (res) {
-        if(res.data) {
-          if (res.status < 400) {
-            var headers = res.headers();
-            $scope.numberOfForams = headers.total;
-            foramsPerPage = headers["per-page"];
-            if ($scope.numberOfForams > maxForams) {
-              $scope.foramTableVisible = false;
-            } else {
-              loadForams();
-              $scope.foramsLoaded = true;
-            }
-          } else {
-            ToastService.showServerToast(res.data,'error',3000);
-          }
+        if (res.status < 400) {
+          var headers = res.headers();
+          $scope.numberOfForams = headers.total;
+          foramsPerPage = headers["per-page"];
+          loadForams();
+          $scope.foramsLoaded = true;
+        } else {
+          ToastService.showServerToast(res.data,'error',3000);
         }
       }, function (err) {
         ToastService.showToast('Cannot connect to server','error',3000);

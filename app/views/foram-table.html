@@ -86,20 +86,24 @@
           <li><a ng-click="saveFilters()">Save</a></li>
         </ul>
       </li>
-      
+
       <li>
-        <button ng-click="download()" class="button">Download...</button>     
+        <button ng-click="download()" class="button">Download...</button>
       </li>
     </ul>
 
     <div class="table-responsive" id="forams-table" ng-cloak>
       <table class="selectable no-border">
         <thead>
-          <th ng-repeat="(key,value) in forams[0]" ng-if="key != 'genotype' && key != 'id'">
+          <th ng-repeat="(key,value) in forams[0]" ng-if="key != 'genotype' && key != 'id'" ng-click="switchSort(key,$event)">
             <span>{{key | checkName:mappings}}</span>
+            <span class="fa fa-chevron-circle-down"></span>
+            <span class="fa fa-chevron-circle-up"></span>
           </th>
-          <th ng-repeat="(key,value) in forams[0].genotype">
+          <th ng-repeat="(key,value) in forams[0].genotype" ng-click="switchSort(key,$event)">
             <span>{{key | checkName:mappings}}</span>
+            <span class="fa fa-chevron-circle-down"></span>
+            <span class="fa fa-chevron-circle-up"></span>
           </th>
         </thead>
 
