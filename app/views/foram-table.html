@@ -95,12 +95,12 @@
     <div class="table-responsive" id="forams-table" ng-cloak>
       <table class="selectable no-border">
         <thead>
-          <th ng-repeat="(key,value) in forams[0]" ng-if="key != 'genotype' && key != 'id'" ng-click="switchSort(key,$event)">
+          <th ng-repeat="(key,value) in forams[0]" ng-if="key != 'genotype' && key != '_id' && key != 'foram_id'" ng-click="switchSort(key,$event)">
             <span>{{key | checkName:mappings}}</span>
             <span class="fa fa-chevron-circle-down"></span>
             <span class="fa fa-chevron-circle-up"></span>
           </th>
-          <th ng-repeat="(key,value) in forams[0].genotype" ng-click="switchSort(key,$event)">
+          <th ng-repeat="(key,value) in forams[0].genotype" ng-click="switchSort(key,$event)" ng-if="key != '_id'">
             <span>{{key | checkName:mappings}}</span>
             <span class="fa fa-chevron-circle-down"></span>
             <span class="fa fa-chevron-circle-up"></span>
@@ -109,10 +109,10 @@
 
         <tbody id="selectable">
           <tr ng-repeat="foram in forams" data-index="{{$index}}">
-            <td ng-repeat="(key, value) in foram" ng-if="key != 'genotype' && key != 'id'">
+            <td ng-repeat="(key, value) in foram" ng-if="key != 'genotype' && key != '_id' && key != 'foram_id' && key != 'second_parent_id' && key != 'first_parent_id'">
               {{value}}
             </td>
-            <td ng-repeat="(key, value) in foram.genotype">
+            <td ng-repeat="(key, value) in foram.genotype" ng-if="key != '_id'">
               {{value.effective | number:precision}}
             </td>
 

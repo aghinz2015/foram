@@ -96,11 +96,13 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
         if ($scope.filters[i].min != undefined) {
           key = $scope.filters[i].param + "_min";
           key = key.replace(/\s+/g, '');
+          key = 'foram_filter.'+key;
           filters[key] = $scope.filters[i].min;
         }
         if ($scope.filters[i].max != undefined) {
           key = $scope.filters[i].param + "_max";
           key = key.replace(/\s+/g, '');
+          key = 'foram_filter.'+key;
           filters[key] = $scope.filters[i].max;
         }
       }
