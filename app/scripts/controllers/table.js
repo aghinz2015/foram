@@ -96,13 +96,13 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
         if ($scope.filters[i].min != undefined) {
           key = $scope.filters[i].param + "_min";
           key = key.replace(/\s+/g, '');
-          key = 'foram_filter.'+key;
+          key = 'foram_filter['+key+"]";
           filters[key] = $scope.filters[i].min;
         }
         if ($scope.filters[i].max != undefined) {
           key = $scope.filters[i].param + "_max";
           key = key.replace(/\s+/g, '');
-          key = 'foram_filter.'+key;
+          key = 'foram_filter['+key+"]";
           filters[key] = $scope.filters[i].max;
         }
       }
@@ -399,7 +399,6 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       var data = res.data;
       $scope.availableFilterParams = data.availableFilterParams.map(function (s) { return s.replace(/\s+/g, '') });
       $scope.availableFilterParamsToLoad = data.availableFilterParamsToLoad.map(function (s) { return s.replace(/\s+/g, '') });
-      maxForams = data.maxForams;
     }, function (response) {
       console.log('GetFilterConfig::Error - ', response.status);
     });
