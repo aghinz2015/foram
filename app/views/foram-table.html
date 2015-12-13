@@ -41,18 +41,22 @@
 
     <ul class="button-row">
       <li>
-        <button ng-click="filterData()" class="button">Filter</button>
+        <button ng-click="filterData()" class="button"><span class="fa fa-filter"></span> Filter </button>
       </li>
 
       <li>
-        <button ng-click="generateChart()" class="button">Chart</button>
+        <button class="button success" ng-click="open()"><span class="fa fa-plus-square"></span> New filter </button>
       </li>
 
       <li>
-        <button ng-click="visualize()" class="button">Visualize</button>
+        <button ng-click="generateChart()" class="button"><span class="fa fa-line-chart"></span> Chart </button>
       </li>
 
-      <li><button class="button success" ng-click="open()">New filter</button></li>
+      <li>
+        <button ng-click="visualize()" class="button"><span class="fa fa-cube"></span> Visualize </button>
+      </li>
+
+
 
       <li>
         <button href="#" data-dropdown="drop1" aria-controls="drop1" aria-expanded="false" class="button dropdown">Manage filters</button>
@@ -66,7 +70,7 @@
       </li>
 
       <li>
-        <button ng-click="download()" class="button">Download...</button>
+        <button ng-click="download()" class="button"><span class="fa fa-download"></span> Download </button>
       </li>
     </ul>
 
