@@ -82,4 +82,24 @@ div.tabs-content {
 
 #forams-table tr th, #forams-table tr td {
   text-align: center;
+  white-space: nowrap;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+#forams-table tr td {
+  border-color: #d2d2d2;
+
+}
+
+#forams-table th .fa-chevron-circle-down, #forams-table th .fa-chevron-circle-up {
+  display: none;
+}
+
+#forams-table th.asc .fa-chevron-circle-down, #forams-table th.desc .fa-chevron-circle-up {
+  display: initial;
+}
+
+#forams-table th.asc .fa-chevron-circle-up, #forams-table th.desc .fa-chevron-circle-down {
+  display: none;
 }

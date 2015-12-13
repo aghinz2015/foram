@@ -1,8 +1,3 @@
-/**
- * Created by ezimonczyk on 18/08/15.
- */
-'use strict';
-
 app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) {
 
   var foramsUrl = api_host + 'forams';
@@ -27,6 +22,14 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
    * @returns {HttpPromise}
    */
   this.getForamsAttributes = function () {
+    return $http.get(attributesUrl);
+  };
+
+  /**
+   *
+   * @returns {HttpPromise}
+   */
+  this.getForamsDisplayAttributes = function () {
     return $http.get(attributesUrl);
   };
 
@@ -56,14 +59,19 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
   this.saveFilters = function(params) {
     return $http.post(api_host + "foram_filters", {foram_filter: params});
   };
-  
+
   this.deleteFilters = function(id) {
     return $http.delete(api_host + "foram_filters/" + id);
   };
-  
+
   this.editFilters = function(id, params) {
     return $http.put(api_host + "foram_filters/" + id, {foram_filter: params});
   };
-  
+
 }]);
+
+/**
+ * Created by ezimonczyk on 18/08/15.
+ */
+'use strict';
 

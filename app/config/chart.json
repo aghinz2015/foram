@@ -19,10 +19,10 @@
     "deviation_angle",
     "min_metabolic_effectiveness",
     "max_energy_per_chamber"
-  ], 
+  ],
   "availableGroupingParameters": [
     "age",
-    "death_step_no",
+    "death_hour",
     "generation"
   ]
 }

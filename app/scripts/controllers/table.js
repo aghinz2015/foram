@@ -83,8 +83,8 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   $scope.filters = [];
   $scope.newFilter = {};
   $scope.constantFilters = {};
-
-  var flatFilters = {};
+  var flatFilters = {},
+    directions = ['asc','desc'];
 
   // prepare flat filters
   var prepareFilters = function () {
@@ -110,11 +110,14 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       filters.is_diploid = undefined;
     } else {
       filters.is_diploid = !$scope.constantFilters.is_haploid;
-
     }
 
-    filters.death_step_no_min = $scope.constantFilters.death_step_no_min;
-    filters.death_step_no_max = $scope.constantFilters.death_step_no_max;
+    if($scope.constantFilters.order_by && $scope.constantFilters.direction){
+      filters.order_by = $scope.constantFilters.order_by;
+      filters.direction = directions[$scope.constantFilters.direction-1];
+    }
+
+
 
     return filters;
   };
@@ -123,6 +126,25 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   $scope.filterData = function () {
     flatFilters = prepareFilters();
     filterForams();
+  };
+
+  $scope.switchSort = function(attribute,$event) {
+    if(typeof $scope.forams[0][attribute] == 'number' || ($scope.forams[0].genotype[attribute] && typeof $scope.forams[0].genotype[attribute].effective == 'number')) {
+      if ($scope.constantFilters.order_by === attribute) {
+        $scope.constantFilters.direction = ($scope.constantFilters.direction + 1) % 3
+      } else {
+        var previous = document.getElementsByClassName(directions[$scope.constantFilters.direction - 1]);
+        if (previous[0])
+          previous[0].className = '';
+
+        $scope.constantFilters.order_by = attribute;
+        $scope.constantFilters.direction = 1;
+      }
+
+      $event.currentTarget.className = directions[$scope.constantFilters.direction - 1];
+      $scope.filterData();
+    }
+
   };
 
   // add new filter
@@ -178,20 +200,14 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   var filterForams = function () {
     ForamAPIService.getForamsInfo(flatFilters)
       .then(function (res) {
-        if(res.data) {
-          if (res.status < 400) {
-            var headers = res.headers();
-            $scope.numberOfForams = headers.total;
-            foramsPerPage = headers["per-page"];
-            if ($scope.numberOfForams > maxForams) {
-              $scope.foramTableVisible = false;
-            } else {
-              loadForams();
-              $scope.foramsLoaded = true;
-            }
-          } else {
-            ToastService.showServerToast(res.data,'error',3000);
-          }
+        if (res.status < 400) {
+          var headers = res.headers();
+          $scope.numberOfForams = headers.total;
+          foramsPerPage = headers["per-page"];
+          loadForams();
+          $scope.foramsLoaded = true;
+        } else {
+          ToastService.showServerToast(res.data,'error',3000);
         }
       }, function (err) {
         ToastService.showToast('Cannot connect to server','error',3000);
@@ -373,12 +389,16 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   $scope.forams = [];
   $scope.numberOfForams = 1;
 
-  ConfigService.getFilterConfig().then(
+  ForamAPIService.getForamsAttributes().then(
     function (res) {
       var data = res.data;
-      $scope.availableFilterParams = data.availableFilterParams.map(function (s) { return s.replace(/\s+/g, '') });
-      $scope.availableFilterParamsToLoad = data.availableFilterParamsToLoad.map(function (s) { return s.replace(/\s+/g, '') });
-      maxForams = data.maxForams;
+      data.forams.splice(data.forams.indexOf('class_name'),1);
+      data.forams.splice(data.forams.indexOf('foram_id'),1);
+      data.forams.splice(data.forams.indexOf('simulation_start'),1);
+      $scope.availableFilterParamsToLoad = data.forams;
+      data.forams.splice(data.forams.indexOf('is_diploid'),1);
+      $scope.availableFilterParams = data.forams;
+
     }, function (response) {
       console.log('GetFilterConfig::Error - ', response.status);
     });
@@ -417,11 +437,24 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
           }
           )
       }
-
-
     },
     function (err) {
       console.error(err);
+    }
+  );
+
+  ForamAPIService.getForamsDisplayAttributes().then(
+    function(res){
+      if(res.data) {
+        if (res.status < 400) {
+          $scope.displayAttributes = res.data.forams;
+        } else {
+          ToastService.showServerToast(res.data,'error',3000);
+        }
+      }
+    },
+    function(err){
+      ToastService.showToast('Cannot connect to server','error',3000);
     }
   );
 
