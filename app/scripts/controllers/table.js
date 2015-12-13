@@ -96,13 +96,11 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
         if ($scope.filters[i].min != undefined) {
           key = $scope.filters[i].param + "_min";
           key = key.replace(/\s+/g, '');
-          key = 'foram_filter['+key+"]";
           filters[key] = $scope.filters[i].min;
         }
         if ($scope.filters[i].max != undefined) {
           key = $scope.filters[i].param + "_max";
           key = key.replace(/\s+/g, '');
-          key = 'foram_filter['+key+"]";
           filters[key] = $scope.filters[i].max;
         }
       }
@@ -120,9 +118,6 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     }
 
 
-
-    filters.death_step_no_min = $scope.constantFilters.death_step_no_min;
-    filters.death_step_no_max = $scope.constantFilters.death_step_no_max;
 
     return filters;
   };
@@ -394,11 +389,16 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   $scope.forams = [];
   $scope.numberOfForams = 1;
 
-  ConfigService.getFilterConfig().then(
+  ForamAPIService.getForamsAttributes().then(
     function (res) {
       var data = res.data;
-      $scope.availableFilterParams = data.availableFilterParams.map(function (s) { return s.replace(/\s+/g, '') });
-      $scope.availableFilterParamsToLoad = data.availableFilterParamsToLoad.map(function (s) { return s.replace(/\s+/g, '') });
+      data.forams.splice(data.forams.indexOf('class_name'),1);
+      data.forams.splice(data.forams.indexOf('foram_id'),1);
+      data.forams.splice(data.forams.indexOf('simulation_start'),1);
+      $scope.availableFilterParamsToLoad = data.forams;
+      data.forams.splice(data.forams.indexOf('is_diploid'),1);
+      $scope.availableFilterParams = data.forams;
+
     }, function (response) {
       console.log('GetFilterConfig::Error - ', response.status);
     });
@@ -437,11 +437,24 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
           }
           )
       }
-
-
     },
     function (err) {
       console.error(err);
+    }
+  );
+
+  ForamAPIService.getForamsDisplayAttributes().then(
+    function(res){
+      if(res.data) {
+        if (res.status < 400) {
+          $scope.displayAttributes = res.data.forams;
+        } else {
+          ToastService.showServerToast(res.data,'error',3000);
+        }
+      }
+    },
+    function(err){
+      ToastService.showToast('Cannot connect to server','error',3000);
     }
   );
 

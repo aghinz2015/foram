@@ -2,14 +2,8 @@
   <div class="large-12 columns">
     <h2 class="main-header">Browser</h2>
 
-    <div class="row clearfix">
-      <div class="small-6 columns">
-        <h3>Filters</h3>
-      </div>
-    </div>
-
     <accordion close-others="false">
-      <accordion-group heading="Genotype" ng-cloak>
+      <accordion-group heading="Filters" ng-cloak>
         <ul class="large-block-grid-1">
           <li ng-repeat="filter in filters">
             <div class="row">
@@ -29,36 +23,19 @@
             </div>
           </li>
         </ul>
-      </accordion-group>
 
-      <accordion-group heading="Haploid">
         <div class="row">
-          <div class="large-12 columns">
+          <div class="large-6 columns">
             <input type="checkbox" id="haploid-value" name="gender" ng-model="constantFilters.is_haploid" checked/>
             <label for="haploid-value">Haploid</label>
           </div>
-        </div>
 
-        <div class="row">
-          <div class="large-12 columns">
+          <div class="large-6 columns">
             <input type="checkbox" id="diploid-value" name="gender" ng-model="constantFilters.is_diploid" checked/>
             <label for="diploid-value">Diploid</label>
           </div>
         </div>
-      </accordion-group>
 
-      <accordion-group heading="Death step number" ng-cloak>
-        <div class="row">
-          <div class="large-4 columns">
-            <label for="start-value">Start</label>
-            <input type="number" id="start-value" step="1" ng-model="constantFilters.death_step_no_min" max="{{constantFilters.death_step_no_max}}"/>
-          </div>
-
-          <div class="large-4 columns end">
-            <label for="end-value">End</label>
-            <input type="number" id="end-value" step="1" ng-model="constantFilters.death_step_no_max" min="{{constantFilters.death_step_no_min}}"/>
-          </div>
-        </div>
       </accordion-group>
     </accordion>
 
@@ -75,10 +52,11 @@
         <button ng-click="visualize()" class="button">Visualize</button>
       </li>
 
+      <li><button class="button success" ng-click="open()">New filter</button></li>
+
       <li>
         <button href="#" data-dropdown="drop1" aria-controls="drop1" aria-expanded="false" class="button dropdown">Manage filters</button>
         <ul id="drop1" data-dropdown-content class="f-dropdown" aria-hidden="true">
-          <li><a ng-click="open()">New</a></li>
           <li><a ng-click="deleteFilters()">Delete</a></li>
           <li><a ng-click="editFilters()">Edit</a></li>
           <li><a ng-click="loadFilters()">Load</a></li>
@@ -95,12 +73,7 @@
     <div class="table-responsive" id="forams-table" ng-cloak>
       <table class="selectable no-border">
         <thead>
-          <th ng-repeat="(key,value) in forams[0]" ng-if="key != 'genotype' && key != '_id' && key != 'foram_id'" ng-click="switchSort(key,$event)">
-            <span>{{key | checkName:mappings}}</span>
-            <span class="fa fa-chevron-circle-down"></span>
-            <span class="fa fa-chevron-circle-up"></span>
-          </th>
-          <th ng-repeat="(key,value) in forams[0].genotype" ng-click="switchSort(key,$event)" ng-if="key != '_id'">
+          <th ng-repeat="key in displayAttributes" ng-if="key != 'genotype' && key != '_id' && key != 'foram_id'" ng-click="switchSort(key,$event)">
             <span>{{key | checkName:mappings}}</span>
             <span class="fa fa-chevron-circle-down"></span>
             <span class="fa fa-chevron-circle-up"></span>
@@ -109,13 +82,10 @@
 
         <tbody id="selectable">
           <tr ng-repeat="foram in forams" data-index="{{$index}}">
-            <td ng-repeat="(key, value) in foram" ng-if="key != 'genotype' && key != '_id' && key != 'foram_id' && key != 'second_parent_id' && key != 'first_parent_id'">
-              {{value}}
+            <td ng-repeat="key in displayAttributes" ng-if="key != 'genotype' && key != '_id' && key != 'foram_id'">
+              <span ng-show="foram[key] != undefined">{{foram[key]}}</span>
+              <span ng-show="foram.genotype[key] != undefined">{{foram.genotype[key].effective | number:precision}}</span>
             </td>
-            <td ng-repeat="(key, value) in foram.genotype" ng-if="key != '_id'">
-              {{value.effective | number:precision}}
-            </td>
-
           </tr>
         </tbody>
       </table>
