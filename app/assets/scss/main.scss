@@ -12,3 +12,26 @@
 @import "partials/toasts";
 @import "partials/panels";
 @import "partials/canvas";
+
+.loader {
+  background: rgba(0, 0, 0, 0.5) none repeat scroll 0 0;
+  height: 100%;
+  position: fixed;
+  width: 100%;
+  z-index: 1024;
+
+  .spinner-container {
+
+    position: fixed;
+    left: 116px;
+    right: 0;
+    top: 40%;
+    margin: 0 auto;
+    width: 1px;
+
+    .fa-spinner {
+      color: white;
+      position: relative
+    }
+  }
+}

@@ -1,5 +1,5 @@
-$selecting-color: #ffdfaa;
-$selected-color: #ffdfaa;
+$selecting-color: #008cba;
+$selected-color: #008cba;
 
 .no-border {
   border: none;
@@ -13,10 +13,16 @@ $selected-color: #ffdfaa;
   tr {
     &.ui-selecting {
       background: $selecting-color;
+      td {
+        color: white;
+      }
     }
 
     &.ui-selected {
       background: $selected-color;
+      td {
+        color: white;
+      }
     }
   }
 }
@@ -102,4 +108,18 @@ div.tabs-content {
 
 #forams-table th.asc .fa-chevron-circle-up, #forams-table th.desc .fa-chevron-circle-down {
   display: none;
+}
+
+.pagination {
+  li.active {
+    background: darkgray;
+    border-radius: 5px;
+    a {
+      color: white;
+
+      &:hover {
+        color: gray;
+      }
+    }
+  }
 }

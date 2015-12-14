@@ -27,15 +27,6 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
 
   /**
    *
-   * @returns {HttpPromise}
-   */
-  this.getForamsDisplayAttributes = function () {
-    return $http.get(attributesUrl);
-  };
-
-
-  /**
-   *
    * @param params
    * @returns {HttpPromise}
    */

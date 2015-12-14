@@ -65,3 +65,15 @@ $nav-color: #333;
     transition: all .25s ease-in-out;
   }
 }
+
+a.logo {
+  background: #fff none repeat scroll 0 0;
+  border: 3px solid black;
+  color: black;
+  display: block;
+  width: 100%;
+  label {
+    color: black;
+    font-size: 20px;
+  }
+}

@@ -1,24 +1,30 @@
+<div ng-show="loader" class="loader">
+  <div class="spinner-container">
+    <span class="fa fa-spin fa-spinner fa-5x"></span>
+  </div>
+</div>
+
 <div class="row" ng-cloak>
   <div class="large-12 columns">
     <h2 class="main-header">Browser</h2>
 
     <accordion close-others="false">
       <accordion-group heading="Filters" ng-cloak>
-        <ul class="large-block-grid-1">
-          <li ng-repeat="filter in filters">
+        <ul class="large-block-grid-1 filters-list" ng-show="filters.length">
+          <li ng-repeat="filter in filters" class="filter-item">
             <div class="row">
               <div class="small-12 large-6 columns">
                 <strong>{{filter.param}}</strong>
 
-                <span>from</span>
+                <span ng-show="filter.min">from</span>
                 <strong>{{filter.min}}</strong>
 
-                <span>to</span>
+                <span ng-show="filter.max">to</span>
                 <strong>{{filter.max}}</strong>
               </div>
 
               <div class="small-12 large-6 columns">
-                <a ng-click="deleteFilter($index)" class="right">Remove</a>
+                <a ng-click="deleteFilter($index)" class="right"><span class="fa fa-remove"></span></a>
               </div>
             </div>
           </li>
@@ -56,8 +62,6 @@
         <button ng-click="visualize()" class="button"><span class="fa fa-cube"></span> Visualize </button>
       </li>
 
-
-
       <li>
         <button href="#" data-dropdown="drop1" aria-controls="drop1" aria-expanded="false" class="button dropdown">Manage filters</button>
         <ul id="drop1" data-dropdown-content class="f-dropdown" aria-hidden="true">
@@ -92,6 +96,7 @@
             </td>
           </tr>
         </tbody>
+
       </table>
     </div>
 
@@ -113,6 +118,4 @@
 
   </div>
 </div>
- <script>
-        $(document).foundation();
- </script>
+

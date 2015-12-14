@@ -22,7 +22,6 @@
   ],
   "availableGroupingParameters": [
     "age",
-    "death_hour",
-    "generation"
+    "death_hour"
   ]
 }
