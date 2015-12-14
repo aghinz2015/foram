@@ -2,6 +2,7 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
 
   var foramsUrl = api_host + 'forams';
   var attributesUrl = api_host + 'forams/attribute_names';
+  var simulationsUrl = api_host + 'forams/simulation_starts';
   var generationsUrl = api_host + 'generations';
   var databasesUrl = api_host + 'user/mongo_sessions';
   var deathCoordinatesUrl = api_host + 'death_coordinates';
@@ -26,6 +27,14 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
    */
   this.getForamsAttributes = function () {
     return $http.get(attributesUrl);
+  };
+
+  /**
+   *
+   * @returns {HttpPromise}
+   */
+  this.getSimulations = function () {
+    return $http.get(simulationsUrl);
   };
 
   /**
@@ -75,4 +84,3 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
  * Created by ezimonczyk on 18/08/15.
  */
 'use strict';
-

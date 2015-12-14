@@ -8,6 +8,11 @@
   <div class="large-12 columns">
     <h2 class="main-header">Browser</h2>
 
+    <label for="format-param">Select simulation start</label>
+    <select id="format-param" ng-model="simulationStart">
+      <option ng-repeat="simulation in availableSimulations">{{simulation}}</option>
+    </select>
+
     <accordion close-others="false">
       <accordion-group heading="Filters" ng-cloak>
         <ul class="large-block-grid-1 filters-list" ng-show="filters.length">
@@ -133,4 +138,3 @@
     </div>
   </div>
 </div>
-

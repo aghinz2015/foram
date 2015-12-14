@@ -101,6 +101,26 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   var flatFilters = {},
       directions = ['asc','desc'];
 
+  // select simulation
+  ForamAPIService.getSimulations().then(
+    function (res) {
+      if(res.data) {
+        if (res.status < 400) {
+          $scope.availableSimulations = res.data.simulation_starts;
+        } else {
+          ToastService.showServerToast(res.data,'error',3000);
+        }
+      }
+    }, function (err) {
+      ToastService.showToast('Cannot connect to server','error',3000);
+    }
+  );
+
+  $scope.$watch('simulationStart', function () {
+    flatFilters['simulation_start'] = $scope.simulationStart;
+    loadForams();
+  });
+
   // prepare flat filters
   var prepareFilters = function () {
     var filters = {};
