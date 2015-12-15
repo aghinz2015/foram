@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFactory', 'GenotypeService', 'FileSaver', 'Blob', function ($scope, configService, simulationFactory, genotypeService, FileSaver, Blob) {
+app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFactory', 'GenotypeService', 'DataURLService', 'FileSaver', 'Blob', function ($scope, configService, simulationFactory, genotypeService, dataURLService, FileSaver, Blob) {
   var canvas = document.getElementById('visualization');
   var simulation = simulationFactory(canvas);
 
@@ -69,6 +69,13 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
 
   $scope.exportToCSV = function() {
     return simulation.exportToCSV();
+  };
+
+  $scope.takeScreenshot = function() {
+    var dataURL = simulation.takeScreenshot();
+    var data = dataURLService.dataURLToBlob(dataURL);
+
+    FileSaver.saveAs(data, 'foram.jpeg');
   };
 
   var increaseChambersCount = function() {
