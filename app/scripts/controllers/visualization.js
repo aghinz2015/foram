@@ -4,27 +4,27 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
   var canvas = document.getElementById('visualization');
   var simulation = simulationFactory(canvas);
 
-  $scope.genotype = genotypeService.fetchGenotype();
-  $scope.genotype = $scope.genotype || window._foram_genotype;
+  $scope.foram = genotypeService.fetchForamData();
+  $scope.foram = $scope.foram || window._foram_genotype;
+
   $scope.morphology = {};
 
   configService.getConfig('visualization').then(function(response) {
     var defaults = response.data.defaults;
 
-    $scope.structureAnalyzer = defaults.structureAnalyzer;
-    if (window._foram_chambers) {
-      $scope.structureAnalyzer.numChambers = window._foram_chambers;
-    }
     $scope.material = defaults.material;
 
-    simulation.simulate($scope.genotype, $scope.structureAnalyzer.numChambers);
+    simulation.simulate(
+      $scope.foram.genotype,
+      $scope.foram.chambersCount
+    );
 
     recalculateMorphology();
   });
 
 
   $scope.simulate = function() {
-    simulation.simulate($scope.genotype, $scope.structureAnalyzer.numChambers);
+    simulation.simulate($scope.foram.genotype, $scope.foram.chambersCount);
     recalculateMorphology();
   };
 
@@ -83,12 +83,12 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
   };
 
   var increaseChambersCount = function() {
-    $scope.structureAnalyzer.numChambers++;
+    $scope.foram.chambersCount++;
   };
 
   var decreaseChambersCount = function() {
-    if ($scope.structureAnalyzer.numChambers > 1) {
-      $scope.structureAnalyzer.numChambers--
+    if ($scope.foram.chambersCount > 1) {
+      $scope.foram.chambersCount--
     }
   };
 
