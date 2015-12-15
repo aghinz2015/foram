@@ -14,21 +14,15 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
   }
 
   configService.getConfig('visualization').then(function(response) {
-    var defaults = response.data.defaults;
+    applyDefaults(response.data.defaults);
+    $scope.simulate();
+  });
 
-    $scope.material = defaults.material;
-
+  $scope.simulate = function() {
     simulation.simulate(
       $scope.foram.genotype,
       $scope.foram.chambersCount
     );
-
-    recalculateMorphology();
-    resetToggles();
-  });
-
-  $scope.simulate = function() {
-    simulation.simulate($scope.foram.genotype, $scope.foram.chambersCount);
 
     recalculateMorphology();
     resetToggles();
@@ -109,10 +103,14 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
     }
   };
 
+  var applyDefaults = function(defaults) {
+    $scope.material = defaults.material;
+  };
+
   var resetToggles = function() {
     var toggle;
 
-    for (toggle in $scope.toggles) {
+    for (var toggle in $scope.toggles) {
       $scope.toggles[toggle] = false;
     }
   };
