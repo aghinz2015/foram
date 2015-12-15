@@ -73,6 +73,10 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
     FileSaver.saveAs(data, 'foram.jpeg');
   };
 
+  $scope.fitTarget = function() {
+    simulation.fitTarget();
+  };
+
   var increaseChambersCount = function() {
     $scope.structureAnalyzer.numChambers++;
   };
