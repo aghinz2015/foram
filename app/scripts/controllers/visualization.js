@@ -7,6 +7,12 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
   $scope.foram = genotypeService.fetchForamData();
   $scope.morphology = {};
 
+  $scope.toggles = {
+    centoridsPath:    false,
+    aperturesPath:    false,
+    thicknessVectors: false,
+  }
+
   configService.getConfig('visualization').then(function(response) {
     var defaults = response.data.defaults;
 
@@ -18,11 +24,14 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
     );
 
     recalculateMorphology();
+    resetToggles();
   });
 
   $scope.simulate = function() {
     simulation.simulate($scope.foram.genotype, $scope.foram.chambersCount);
+
     recalculateMorphology();
+    resetToggles();
   };
 
   $scope.evolve = function() {
@@ -43,14 +52,17 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
 
   $scope.toggleCentroidsPath = function() {
     simulation.toggleCentroidsPath();
+    $scope.toggles.centroidsPath = !$scope.toggles.centroidsPath;
   };
 
   $scope.toggleAperturesPath = function() {
     simulation.toggleAperturesPath();
+    $scope.toggles.aperturesPath = !$scope.toggles.aperturesPath;
   };
 
   $scope.toggleThicknessVectors = function() {
     simulation.toggleThicknessVectors();
+    $scope.toggles.thicknessVectors = !$scope.toggles.thicknessVectors;
   };
 
   $scope.applyOpacity = function() {
@@ -94,6 +106,14 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
       volume:      simulation.calculateVolume(),
       surface:     simulation.calculateSurfaceArea(),
       shapeFactor: simulation.calculateShapeFactor()
+    }
+  };
+
+  var resetToggles = function() {
+    var toggle;
+
+    for (toggle in $scope.toggles) {
+      $scope.toggles[toggle] = false;
     }
   };
 }]);

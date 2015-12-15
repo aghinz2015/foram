@@ -22,6 +22,10 @@
     &.markedout {
       background: #3a3a3a;
     }
+
+    &.selected {
+      background: #444444;
+    }
   }
 
   & > a {
