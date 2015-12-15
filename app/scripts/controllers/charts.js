@@ -8,7 +8,7 @@
  * Controller of the trunkApp
  */
 
-app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIService', function ($scope, $modal, ConfigService, ForamAPIService) {
+app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIService', 'ToastService', function ($scope, $modal, ConfigService, ForamAPIService, ToastService) {
 
   ////////////////////////    DIALOG    ///////////////////////////
 
@@ -16,14 +16,32 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
   $scope.availableGenes = [];
   $scope.availableGroupingParameters = [];
 
-  ConfigService.getChartConfig().then(
-    function (response) {
-      var data = response.data;
-      $scope.availableGenes = data.availableGenesParams;
-      $scope.availableGroupingParameters = data.availableGroupingParameters;
-    }, function (error) {
-      $scope.openErrorDialog();
-    });
+  ForamAPIService.getForamsAttributes().then(
+    function (res) {
+      if(res.data) {
+        if (res.status < 400) {
+          var data = res.data;
+          data.forams.splice(data.forams.indexOf('class_name'), 1);
+          data.forams.splice(data.forams.indexOf('foram_id'), 1);
+          data.forams.splice(data.forams.indexOf('simulation_start'), 1);
+          data.forams.splice(data.forams.indexOf('x'), 1);
+          data.forams.splice(data.forams.indexOf('y'), 1);
+          data.forams.splice(data.forams.indexOf('z'), 1);
+          data.forams.splice(data.forams.indexOf('is_diploid'), 1);
+          data.forams.splice(data.forams.indexOf('death_hour'), 1);
+          data.forams.splice(data.forams.indexOf('age'), 1);
+          data.forams.splice(data.forams.indexOf('chambers_count'), 1);
+          $scope.availableGenes = data.forams;
+        } else {
+          ToastService.showServerToast(res.data,'error',3000);
+        }
+      }
+    }, function (err) {
+      ToastService.showToast('Cannot connect to server','error',3000);
+    }
+  );
+
+  $scope.availableGroupingParameters = ["death_hour","age"];
 
   $scope.open = function () {
     modalInstance = $modal.open({
@@ -105,17 +123,23 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
       ],
       group_by: $scope.chartParams.groupingParameter
     };
-    ForamAPIService.getGenerations(flatParams).then(function (response) {
-      generations = response.data.result;
-      $scope.chart.xAxis.categories = generations.grouping_parameter.values;
-      $scope.chart.xAxis.title = {};
-      $scope.chart.xAxis.title.text = generations.grouping_parameter.name;
-      $scope.chart.xAxis.crosshair = true;
-      pushSeries(generations.gene1);
-      var title = "Change of attribute " + gene;
-      setChartTitle(title);
-    }, function (error) {
-      console.error(error);
+    ForamAPIService.getGenerations(flatParams).then(function (res) {
+      if(res.data) {
+        if (res.status < 400) {
+          generations = res.data.result;
+          $scope.chart.xAxis.categories = generations.grouping_parameter.values;
+          $scope.chart.xAxis.title = {};
+          $scope.chart.xAxis.title.text = generations.grouping_parameter.name;
+          $scope.chart.xAxis.crosshair = true;
+          pushSeries(generations.gene1);
+          var title = "Change of attribute " + gene;
+          setChartTitle(title);
+        } else {
+          ToastService.showServerToast(res.data,'error',3000);
+        }
+      }
+    }, function (err) {
+      ToastService.showToast('Cannot connect to server','error',3000);
     });
   };
 
@@ -123,16 +147,17 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
     var chart = getChartRef();
     chart.setTitle({ text: title });
   };
-  
-  
+
+
   ////////////////////////    EXPORT   ///////////////////////////
 
   $scope.export = {};
-  
+
   ConfigService.getExportOptions().then(
     function (response) {
       $scope.export = response.data.export;
-    });
+    }
+  );
 
   var options = {
     navigator: {

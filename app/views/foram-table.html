@@ -43,6 +43,14 @@
         </div>
 
       </accordion-group>
+      <accordion-group heading="Column visibility" ng-cloak>
+        <ul class="visibility-list">
+          <li ng-repeat="key in displayAttributes"  ng-if="key != '_id' && key != 'foram_id'" class="visible-column">
+            <span class="column-visible">{{key}}</span>
+            <input type="checkbox" ng-init="visibility[key]=true" ng-model="visibility[key]">
+          </li>
+        </ul>
+      </accordion-group>
     </accordion>
 
     <ul class="button-row">
@@ -79,9 +87,10 @@
     </ul>
 
     <div class="table-responsive" id="forams-table" ng-cloak>
+      <div>{{numberOfForams}} forams found</div>
       <table class="selectable no-border">
         <thead>
-          <th ng-repeat="key in displayAttributes" ng-if="key != 'genotype' && key != '_id' && key != 'foram_id'" ng-click="switchSort(key,$event)">
+          <th ng-repeat="key in displayAttributes" ng-if="key != '_id' && key != 'foram_id'" ng-click="switchSort(key,$event)" ng-show="visibility[key]">
             <span>{{key | checkName:mappings}}</span>
             <span class="fa fa-chevron-circle-down"></span>
             <span class="fa fa-chevron-circle-up"></span>
@@ -90,7 +99,7 @@
 
         <tbody id="selectable">
           <tr ng-repeat="foram in forams" data-index="{{$index}}">
-            <td ng-repeat="key in displayAttributes" ng-if="key != 'genotype' && key != '_id' && key != 'foram_id'">
+            <td ng-repeat="key in displayAttributes" ng-if="key != '_id' && key != 'foram_id'" ng-show="visibility[key]">
               <span ng-show="foram[key] != undefined">{{foram[key]}}</span>
               <span ng-show="foram.genotype[key] != undefined">{{foram.genotype[key].effective | number:precision}}</span>
             </td>

@@ -419,6 +419,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   $scope.precision = 16;
   $scope.mappings = {};
   $scope.loader = false;
+  $scope.visibility = {};
 
   SettingsService.getSettings().then(
     function(res){
