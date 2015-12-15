@@ -1,7 +1,7 @@
 'use strict';
 
 app.service('GenotypeService', ['DatasetService', function(datasetService) {
-  this.normalizeGenotype = function(genotype) {
+  var normalizeGenotype = function(genotype) {
     return {
       beta:                genotype.deviation_angle.effective,
       phi:                 genotype.rotation_angle.effective,
