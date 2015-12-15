@@ -13,5 +13,14 @@
                 <div class="swiper-button-prev swiper-button-white"></div>
             </div>
         </div>
+        <accordion close-others="false">
+            <accordion-group heading="Genotype parameters" ng-cloak> 
+                <div class="row">
+                    <div class="large-3 columns" ng-repeat="(key,value) in genotype">
+                        <strong>{{key}}:</strong> {{value | number:precision}}
+                    </div>
+                </div>
+            </accordion-group>
+        </accordion>
     </div>
 </div>

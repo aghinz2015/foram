@@ -1,12 +1,22 @@
 'use strict';
 
-app.controller('GalleryCtrl', ['$scope', '$timeout', 'DatasetService', 'SimulationFactory', function ($scope, $timeout, DatasetService, simulationFactory) {
+app.controller('GalleryCtrl', ['$scope', '$timeout', 'SettingsService', 'DatasetService', 'SimulationFactory', function ($scope, $timeout, SettingsService, DatasetService, simulationFactory) {
 
     var swiper;
     var loadedElements;
-    
+
     $scope.forams = DatasetService.getProducts();
-    
+    $scope.gene = {}
+
+    SettingsService.getSettings().then(
+        function (res) {
+            $scope.precision = res.data.settings_set.number_precision;
+        },
+        function (err) {
+            console.error(err);
+        }
+    );
+
     $timeout(function () {
         loadedElements = Array.apply(null, Array($scope.forams.length)).map(function () { return false });
         swiper = new Swiper('.swiper-container', {
@@ -19,7 +29,6 @@ app.controller('GalleryCtrl', ['$scope', '$timeout', 'DatasetService', 'Simulati
             onSlideChangeEnd: loadSimulation,
             lazyLoading: true
         });
-        console.log($scope.forams.length);
     });
 
     var normalizeGenotype = function (genotype) {
@@ -32,13 +41,15 @@ app.controller('GalleryCtrl', ['$scope', '$timeout', 'DatasetService', 'Simulati
     };
 
     var loadSimulation = function (swiper) {
-        if(loadedElements[swiper.activeIndex]) return;
+        $scope.$apply(function () {
+            $scope.genotype = normalizeGenotype($scope.forams[swiper.activeIndex].genotype);
+        });
+        if (loadedElements[swiper.activeIndex]) return;
         var element = document.getElementById(swiper.activeIndex);
         element.innerHTML = "";
         var simulation = simulationFactory(element);
-        $scope.genotype = normalizeGenotype($scope.forams[swiper.activeIndex].genotype);
         simulation.simulate($scope.genotype, 7);
         loadedElements[swiper.activeIndex] = true;
     };
-    
+
 }]);
