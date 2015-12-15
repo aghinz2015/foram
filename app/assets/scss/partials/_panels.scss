@@ -18,6 +18,10 @@
     padding: 10px;
     color: #fafafa;
     font-size: 12px;
+
+    &.markedout {
+      background: #3a3a3a;
+    }
   }
 
   & > a {
@@ -57,7 +61,7 @@
     padding: 2px;
     height: 30px;
     color: #fafafa;
-    border: 1px solid #3a3a3a;
+    border: 1px solid #444444;
     background: #333333;
     font-size: 12px;
   }
@@ -65,6 +69,6 @@
 
 .toolbar .action {
   a:hover {
-    background: #3a3a3a;
+    background: #444444;
   }
 }
