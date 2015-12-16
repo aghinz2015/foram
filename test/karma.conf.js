@@ -50,6 +50,7 @@ module.exports = function(config) {
       'bower_components/highstock/highstock.js',
       'bower_components/highstock/highcharts-more.js',
       'bower_components/highstock/modules/exporting.js',
+      'bower_components/d3/d3.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

@@ -54,6 +54,18 @@ var app = angular.module('trunkApp', ['ngRoute', 'mm.foundation', 'highcharts-ng
         templateUrl: 'views/user.html',
         controller: 'UserCtrl'
       })
+      .when('/3d-map', {
+        templateUrl: 'views/3d-map.html',
+        controller: '3DMapCtrl'
+      })
+      .when('/bubble-map/:type', {
+        templateUrl: 'views/bubble-map.html',
+        controller: 'BubbleMapCtrl'
+      })
+      .when('/tree', {
+        templateUrl: 'views/tree.html',
+        controller: 'TreeCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

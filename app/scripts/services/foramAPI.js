@@ -5,7 +5,9 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
       simulationsUrl = api_host + 'forams/simulation_starts',
       generationsUrl = api_host + 'generations',
       databasesUrl = api_host + 'user/mongo_sessions',
+      deathCoordinatesUrl = api_host + 'death_coordinates',
       databaseUrl = function (id) { return [databasesUrl, id].join('/');},
+      descendantsUrl = function(foramId) { return foramsUrl + '/' + foramId + '/descendants'; }
       simulation;
 
   /**
@@ -86,6 +88,13 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
     return $http.put(api_host + "foram_filters/" + id, {foram_filter: params});
   };
 
+  this.getDeathCoordinates = function (params) {
+    return $http.get(deathCoordinatesUrl, { params: params });
+  }
+
+  this.getDescendants = function (foramId, params) {
+    return $http.get(descendantsUrl(foramId), { params: params });
+  }
 }]);
 
 /**

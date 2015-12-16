@@ -41,6 +41,18 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     $location.path("/visualization");
   };
 
+  $scope.death3DMap = function() {
+    $location.path("/3d-map");
+  };
+
+  $scope.deathBubbleMap = function() {
+    $location.path("/bubble-map/bubble");
+  };
+
+  $scope.tree = function() {
+    $location.path("/tree");
+  };
+
   $scope.download = function () {
     var modalInstance = $modal.open({
       templateUrl: 'views/foram_downloader.html',
