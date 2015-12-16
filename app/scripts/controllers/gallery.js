@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('GalleryCtrl', ['$scope', '$timeout', 'SettingsService', 'DatasetService', 'SimulationFactory', function ($scope, $timeout, SettingsService, DatasetService, simulationFactory) {
+app.controller('GalleryCtrl', ['$location', '$scope', '$timeout', 'SettingsService', 'DatasetService', 'SimulationFactory', function ($location, $scope, $timeout, SettingsService, DatasetService, simulationFactory) {
 
     var swiper;
     var loadedElements;
@@ -42,14 +42,21 @@ app.controller('GalleryCtrl', ['$scope', '$timeout', 'SettingsService', 'Dataset
 
     var loadSimulation = function (swiper) {
         $scope.$apply(function () {
-            $scope.genotype = normalizeGenotype($scope.forams[swiper.activeIndex].genotype);
+            $scope.foram = [$scope.forams[swiper.activeIndex]];
+            $scope.genotype = normalizeGenotype($scope.foram[0].genotype);    
         });
+        
         if (loadedElements[swiper.activeIndex]) return;
         var element = document.getElementById(swiper.activeIndex);
         element.innerHTML = "";
         var simulation = simulationFactory(element);
         simulation.simulate($scope.genotype, 7);
         loadedElements[swiper.activeIndex] = true;
+    };
+    
+    $scope.visualize = function () {
+      DatasetService.putProducts($scope.foram);
+      $location.path("/visualization");
     };
 
 }]);
