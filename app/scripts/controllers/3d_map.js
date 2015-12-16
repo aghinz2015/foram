@@ -107,7 +107,7 @@ app.controller('3DMapCtrl', ['$scope', 'ForamAPIService', function ($scope, Fora
 
   ForamAPIService.getDeathCoordinates({type: "three_dimensions"}).then(function (response) {
     setUp3DColors();
-    setUpChart(response.data.death_coordinates);
+    setUpChart(response.data.data);
     addInteractivity();
   });
 
