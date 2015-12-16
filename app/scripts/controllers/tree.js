@@ -1,6 +1,6 @@
 app.controller('TreeCtrl', ['$scope', '$window', 'ForamAPIService', 'SimulationFactory', function ($scope, $window, ForamAPIService, simulationFactory) {
   //TODO - this argument should be passed in production app
-  var knownForamId = "566edff242617411ffca0700";
+  var knownForamId = "566f419f4d6163411a240700";
 
   $scope.goToVisualization = function() {
      var newWindow = $window.open("/#/visualization");
@@ -130,7 +130,7 @@ app.controller('TreeCtrl', ['$scope', '$window', 'ForamAPIService', 'SimulationF
                           })
                           .on("click", click)
                           .on("mouseover", function(d) {
-                              visualize(d.genotype, d.chambersCount);
+                              visualize(d.genotype, d.chambers_count);
                               tooltipTextBox.html(tooltipText(d));
                               div .style("left", (d3.event.pageX - 110) + "px")
                                   .style("top", (d3.event.pageY - 28) + "px")
