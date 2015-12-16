@@ -1,4 +1,4 @@
-app.controller('3DMapCtrl', ['$scope', 'ForamAPIService', function ($scope, ForamAPIService) {
+app.controller('3DMapCtrl', ['$scope', 'ForamAPIService', 'ToastService', function ($scope, ForamAPIService, ToastService) {
   var setUp3DColors = function() {
     Highcharts.getOptions().colors = $.map(Highcharts.getOptions().colors, function (color) {
         return {
@@ -13,7 +13,7 @@ app.controller('3DMapCtrl', ['$scope', 'ForamAPIService', function ($scope, Fora
             ]
         };
     });
-  }
+  };
 
   var setUpChart = function(chartData) {
     $scope.chart = new Highcharts.Chart({
@@ -36,7 +36,7 @@ app.controller('3DMapCtrl', ['$scope', 'ForamAPIService', function ($scope, Fora
             }
         },
         title: {
-            text: 'Death map'
+            text: null
         },
         plotOptions: {
             scatter: {
@@ -74,7 +74,7 @@ app.controller('3DMapCtrl', ['$scope', 'ForamAPIService', function ($scope, Fora
             data: chartData
         }]
     });
-  }
+  };
 
   var addInteractivity = function() {
     $($scope.chart.container).bind('mousedown.hc touchstart.hc', function (eStart) {
@@ -103,12 +103,39 @@ app.controller('3DMapCtrl', ['$scope', 'ForamAPIService', function ($scope, Fora
         }
       });
     });
-  }
+  };
 
-  ForamAPIService.getDeathCoordinates({type: "three_dimensions"}).then(function (response) {
-    setUp3DColors();
-    setUpChart(response.data.death_coordinates);
-    addInteractivity();
+  var refresh = function() {
+    ForamAPIService.getDeathCoordinates({type: "three_dimensions"}).then(function (response) {
+      setUp3DColors();
+      setUpChart(response.data.death_coordinates);
+      addInteractivity();
+    });
+  };
+
+  refresh();
+
+  // select simulation
+  ForamAPIService.getSimulations().then(
+    function (res) {
+      if(res.data) {
+        if (res.status < 400) {
+          $scope.availableSimulations = res.data.simulation_starts;
+        } else {
+          ToastService.showServerToast(res.data,'error',3000);
+        }
+      }
+    }, function (err) {
+      ToastService.showToast('Cannot connect to server','error',3000);
+    }
+  );
+
+  $scope.simulationStart = ForamAPIService.getCurrentSimulation();
+
+  $scope.$watch('simulationStart', function (newValue,oldValue) {
+    if(newValue) {
+      ForamAPIService.setSimulation(newValue);
+      refresh();
+    }
   });
-
 }]);

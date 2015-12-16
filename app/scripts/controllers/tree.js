@@ -1,6 +1,6 @@
 app.controller('TreeCtrl', ['$scope', '$window', 'ForamAPIService', 'SimulationFactory', function ($scope, $window, ForamAPIService, simulationFactory) {
   //TODO - this argument should be passed in production app
-  var knownForamId = "566edff242617411ffca0700";
+  var knownForamId = "5671ad55457269ad46ca0700";
 
   $scope.goToVisualization = function() {
      var newWindow = $window.open("/#/visualization");
@@ -30,6 +30,7 @@ app.controller('TreeCtrl', ['$scope', '$window', 'ForamAPIService', 'SimulationF
 
     var labelText = function(foram) {
       var genotype = foram.genotype;
+      console.log(foram.genotype.translationFactor[0]);
       var parameters = [ genotype.translation_factor[0],
                          genotype.growth_factor[0],
                          genotype.deviation_angle[0],

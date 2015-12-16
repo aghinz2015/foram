@@ -7,7 +7,7 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
       databasesUrl = api_host + 'user/mongo_sessions',
       deathCoordinatesUrl = api_host + 'death_coordinates',
       databaseUrl = function (id) { return [databasesUrl, id].join('/');},
-      descendantsUrl = function(foramId) { return foramsUrl + '/' + foramId + '/descendants'; }
+      descendantsUrl = function(foramId) { return foramsUrl + '/' + foramId + '/descendants';},
       simulation;
 
   /**
@@ -16,6 +16,10 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
      */
   this.setSimulation = function(simulation_id) {
     simulation = simulation_id;
+  };
+
+  this.getCurrentSimulation = function() {
+    return simulation;
   };
 
   /**

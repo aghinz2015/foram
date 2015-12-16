@@ -1,5 +1,18 @@
-{{currentTypeText()}}
-<ul class="button-row">
-  <button ng-click="swapType()" class="button">{{changeTypeText()}}</button>
-</ul>
-<p id="chart"></p>
+<div class="row" ng-cloak>
+  <div class="large-12 columns">
+    <h2 class="main-header inline">Death Map</h2>
+
+    <select class="simulation-picker" id="format-param" ng-model="simulationStart">
+      <option value="" disabled selected>Select simulation start</option>
+      <option ng-repeat="simulation in availableSimulations">{{simulation}}</option>
+    </select>
+
+    <ul class="button-row">
+      <button ng-click="swapType()" class="button">{{changeTypeText()}}</button>
+    </ul>
+    <p id="chart">
+      <span id="axis-title">{{zAxis}}</span>
+    </p>
+  </div>
+</div>
+

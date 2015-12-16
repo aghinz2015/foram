@@ -1,6 +1,7 @@
 #chart {
   margin-left: -40px;
   height: 506px;
+  position: relative;
 }
 
 text {
@@ -80,4 +81,15 @@ text {
   fill: none;
   stroke: #ccc;
   stroke-width: 1.5px;
+}
+
+#axis-title {
+  position: absolute;
+  right: 10px;
+  bottom: -100px;
+  text-transform: uppercase;
+  color: #aaa;
+  font-weight: 700;
+  width: 40px;
+  text-align: center;
 }

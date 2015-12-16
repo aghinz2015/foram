@@ -14,8 +14,13 @@
     },
     {
       "name": "Charts",
-      "icon": "pie-chart",
+      "icon": "line-chart",
       "args": "/charts"
+    },
+    {
+      "name": "Map",
+      "icon": "area-chart",
+      "args": "/bubble-map/bubble"
     },
     {
       "name": "User",
@@ -26,11 +31,6 @@
       "name": "Settings",
       "icon": "gear",
       "args": "/settings"
-    },
-    {
-      "name": "About",
-      "icon": "info-circle",
-      "args": "/about"
     }
   ]
 }

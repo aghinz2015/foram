@@ -24,6 +24,8 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
           data.forams.splice(data.forams.indexOf('class_name'), 1);
           data.forams.splice(data.forams.indexOf('foram_id'), 1);
           data.forams.splice(data.forams.indexOf('simulation_start'), 1);
+          data.forams.splice(data.forams.indexOf('first_parent_id'), 1);
+          data.forams.splice(data.forams.indexOf('second_parent_id'), 1);
           data.forams.splice(data.forams.indexOf('x'), 1);
           data.forams.splice(data.forams.indexOf('y'), 1);
           data.forams.splice(data.forams.indexOf('z'), 1);
@@ -268,6 +270,8 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
       ToastService.showToast('Cannot connect to server','error',3000);
     }
   );
+
+  $scope.simulationStart = ForamAPIService.getCurrentSimulation();
 
   Highcharts.createElement('link', {
     href: '//fonts.googleapis.com/css?family=Unica+One',

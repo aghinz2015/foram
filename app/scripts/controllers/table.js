@@ -112,6 +112,8 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     }
   );
 
+  $scope.simulationStart = ForamAPIService.getCurrentSimulation();
+
   $scope.$watch('simulationStart', function (newValue,oldValue) {
     if(newValue) {
       ForamAPIService.setSimulation(newValue);
