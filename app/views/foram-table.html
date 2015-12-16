@@ -6,10 +6,10 @@
 
 <div class="row" ng-cloak>
   <div class="large-12 columns">
-    <h2 class="main-header">Browser</h2>
+    <h2 class="main-header inline">Browser</h2>
 
-    <label for="format-param">Select simulation start</label>
-    <select id="format-param" ng-model="simulationStart">
+    <select class="simulation-picker" id="format-param" ng-model="simulationStart">
+      <option value="" disabled selected>Select simulation start</option>
       <option ng-repeat="simulation in availableSimulations">{{simulation}}</option>
     </select>
 

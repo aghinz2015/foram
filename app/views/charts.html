@@ -1,6 +1,11 @@
 <div class="row">
   <div class="large-12 columns">
-    <h2 class="main-header">Gene Chart</h2>
+    <h2 class="main-header inline">Gene Chart</h2>
+
+    <select class="simulation-picker" id="format-param" ng-model="simulationStart">
+      <option value="" disabled selected>Select simulation start</option>
+      <option ng-repeat="simulation in availableSimulations">{{simulation}}</option>
+    </select>
 
     <ul class="button-row">
       <li>

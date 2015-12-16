@@ -100,9 +100,11 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     }
   );
 
-  $scope.$watch('simulationStart', function () {
-    flatFilters['simulation_start'] = $scope.simulationStart;
-    loadForams();
+  $scope.$watch('simulationStart', function (newValue,oldValue) {
+    if(newValue) {
+      ForamAPIService.setSimulation(newValue);
+      filterForams();
+    }
   });
 
   // prepare flat filters
