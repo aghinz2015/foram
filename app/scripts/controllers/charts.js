@@ -78,6 +78,8 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
   };
 
   var pushSeries = function (geneSeries) {
+    var chart = getChartRef();
+    while(chart.series.length > 0) chart.series[0].remove(true);
     var toBePushed = [];
     for (var key in geneSeries) {
       if (key != "name" && geneSeries.hasOwnProperty(key)) {
@@ -101,15 +103,17 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
               serie = { data: geneSeries[key][k], name: name };
             }
             if (serie) {
-              if (!(name.indexOf('effective') > -1)) {
-                serie.visible = false;
-              }
-              toBePushed.push(serie);
+               chart = getChartRef();
+               console.log(serie);
+               chart.addSeries(serie);
             }
           }
       }
     }
-    $scope.chart.series = toBePushed;
+   
+    for(var i = 0; i < chart.series.length; i++) {
+      console.log(chart.series[i]);
+    };
   };
 
   var generateChart = function () {
