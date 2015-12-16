@@ -68,19 +68,7 @@
       </li>
 
       <li>
-        <button ng-click="generateChart()" class="button"><span class="fa fa-line-chart"></span> Chart </button>
-      </li>
-
-      <li>
-        <button ng-click="death3DMap()" class="button">3D map</button>
-      </li>
-
-      <li>
-        <button ng-click="deathBubbleMap()" class="button">Bubble map</button>
-      </li>
-
-      <li>
-        <button ng-click="tree()" class="button">Descendants tree</button>
+        <button ng-click="tree()" class="button"><span class="fa fa-sitemap"></span> Descendants tree</button>
       </li>
 
       <li>
@@ -88,7 +76,16 @@
       </li>
 
       <li>
-        <button href="#" data-dropdown="drop1" aria-controls="drop1" aria-expanded="false" class="button dropdown">Manage filters</button>
+        <button href="#" data-dropdown="drop2" aria-controls="drop2" aria-expanded="false" dropdown-toggle="#drop2" class="button dropdown">Generate charts</button>
+        <ul id="drop2" data-dropdown-content class="f-dropdown" aria-hidden="true">
+          <li><a ng-click="deathBubbleMap()">Death Map</a></li>
+          <li><a ng-click="death3DMap()">3D Death Map</a></li>
+          <li><a ng-click="generateChart()">Gene Chart</a></li>
+        </ul>
+      </li>
+
+      <li>
+        <button href="#" data-dropdown="drop1" aria-controls="drop1" aria-expanded="false" dropdown-toggle="#drop1" class="button dropdown">Manage filters</button>
         <ul id="drop1" data-dropdown-content class="f-dropdown" aria-hidden="true">
           <li><a ng-click="deleteFilters()">Delete</a></li>
           <li><a ng-click="editFilters()">Edit</a></li>

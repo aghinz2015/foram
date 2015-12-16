@@ -23,11 +23,6 @@
       "args": "/bubble-map/bubble"
     },
     {
-      "name": "User",
-      "icon": "user",
-      "args": "/user"
-    },
-    {
       "name": "Settings",
       "icon": "gear",
       "args": "/settings"

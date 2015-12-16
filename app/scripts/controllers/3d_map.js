@@ -15,7 +15,15 @@ app.controller('3DMapCtrl', ['$scope', 'ForamAPIService', 'ToastService', functi
     });
   };
 
-  var setUpChart = function(chartData) {
+  var setUpChart = function(data) {
+    var chartData = data.data,
+        minX = data.x_min,
+        maxX = data.x_max,
+        minY = data.y_min,
+        minZ = data.z_min,
+        maxZ = data.z_max,
+        maxY = data.y_max;
+
     $scope.chart = new Highcharts.Chart({
         chart: {
             renderTo: 'container',
@@ -46,18 +54,18 @@ app.controller('3DMapCtrl', ['$scope', 'ForamAPIService', 'ToastService', functi
             }
         },
         yAxis: {
-            min: 0,
-            max: 10,
+            min: minY,
+            max: maxY,
             title: null
         },
         xAxis: {
-            min: 0,
-            max: 10,
+            min: minX,
+            max: maxX,
             gridLineWidth: 1
         },
         zAxis: {
-            min: 0,
-            max: 10,
+            min: minZ,
+            max: maxZ,
             showFirstLabel: false
         },
         legend: {
@@ -108,7 +116,7 @@ app.controller('3DMapCtrl', ['$scope', 'ForamAPIService', 'ToastService', functi
   var refresh = function() {
     ForamAPIService.getDeathCoordinates({type: "three_dimensions"}).then(function (response) {
       setUp3DColors();
-      setUpChart(response.data.death_coordinates);
+      setUpChart(response.data);
       addInteractivity();
     });
   };

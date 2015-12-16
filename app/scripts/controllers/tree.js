@@ -1,12 +1,16 @@
-app.controller('TreeCtrl', ['$scope', '$window', 'ForamAPIService', 'SimulationFactory', function ($scope, $window, ForamAPIService, simulationFactory) {
-  //TODO - this argument should be passed in production app
-  var knownForamId = "5671ad55457269ad46ca0700";
+app.controller('TreeCtrl', ['$scope', '$window', 'ForamAPIService', 'SimulationFactory', '$location', function ($scope, $window, ForamAPIService, simulationFactory, $location) {
+
+  var searchObject = $location.search();
+
+  var foramId = searchObject.foramId,
+      level = searchObject.level;
+
 
   $scope.goToVisualization = function() {
      var newWindow = $window.open("/#/visualization");
      newWindow._foram_genotype = $scope.genotype;
      newWindow._foram_chambers = $scope.chambersCount;
-  }
+  };
 
   var addTooltipClearing = function() {
     var div = d3.select("#tree-tooltip");
@@ -30,7 +34,6 @@ app.controller('TreeCtrl', ['$scope', '$window', 'ForamAPIService', 'SimulationF
 
     var labelText = function(foram) {
       var genotype = foram.genotype;
-      console.log(foram.genotype.translationFactor[0]);
       var parameters = [ genotype.translation_factor[0],
                          genotype.growth_factor[0],
                          genotype.deviation_angle[0],
@@ -92,8 +95,8 @@ app.controller('TreeCtrl', ['$scope', '$window', 'ForamAPIService', 'SimulationF
 
     var visualize = function(genotype, chambersCount) {
       $scope.genotype = normalizeGenotype(genotype);
-      $scope.chambersCount = chambersCount;
-      simulation.simulate($scope.genotype, $scope.chambersCount);
+      $scope.chambers_count = chambersCount;
+      simulation.simulate($scope.genotype, $scope.chambers_count);
     }
 
     var plotTree = function(forams) {
@@ -109,9 +112,11 @@ app.controller('TreeCtrl', ['$scope', '$window', 'ForamAPIService', 'SimulationF
         }
       }
 
-      root.children.forEach(collapse);
+      if(root.children) {
+        root.children.forEach(collapse);
+      }
       update(root);
-    }
+    };
 
     d3.select(self.frameElement).style("height", "800px");
 
@@ -131,7 +136,7 @@ app.controller('TreeCtrl', ['$scope', '$window', 'ForamAPIService', 'SimulationF
                           })
                           .on("click", click)
                           .on("mouseover", function(d) {
-                              visualize(d.genotype, d.chambersCount);
+                              visualize(d.genotype, d.chambers_count);
                               tooltipTextBox.html(tooltipText(d));
                               div .style("left", (d3.event.pageX - 110) + "px")
                                   .style("top", (d3.event.pageY - 28) + "px")
@@ -219,9 +224,9 @@ app.controller('TreeCtrl', ['$scope', '$window', 'ForamAPIService', 'SimulationF
     }
 
     plotTree(data);
-  }
+  };
 
-  ForamAPIService.getDescendants(knownForamId, { level: 4 }).then(function (response) {
+  ForamAPIService.getDescendants(foramId, { level: level }).then(function (response) {
     prepareTree(response.data);
     addTooltipClearing();
   });
