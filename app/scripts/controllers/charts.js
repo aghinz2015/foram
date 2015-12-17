@@ -103,7 +103,7 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
               serie = { data: geneSeries[key][k], name: name };
             }
             if (serie) {
-              if (!(name.indexOf('effective') > -1)) {
+              if (!(name.indexOf('effective_') > -1)) {
                 serie.visible = false;
               }
               toBePushed.push(serie);
