@@ -8,8 +8,10 @@ app.controller('TreeCtrl', ['$scope', '$window', 'ForamAPIService', 'SimulationF
 
   $scope.goToVisualization = function() {
      var newWindow = $window.open("/#/visualization");
-     newWindow._foram_genotype = $scope.genotype;
-     newWindow._foram_chambers = $scope.chambersCount;
+     newWindow._foram = {
+       genotype: $scope.genotype,
+       chambersCount: $scope.chambers_count
+     };
   };
 
   var addTooltipClearing = function() {
