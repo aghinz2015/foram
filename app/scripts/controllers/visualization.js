@@ -65,11 +65,11 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
     var data = new Blob([obj], { type: 'text/plain;charset=utf-8' });
 
     FileSaver.saveAs(data, 'foram.obj');
-  }
+  };
 
   $scope.exportToCSV = function() {
     return simulation.exportToCSV();
-  }
+  };
 
   var increaseChambersCount = function() {
     $scope.structureAnalyzer.numChambers++;

@@ -5,6 +5,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
 
   //currentSet represents our currently  records with start and stop index
   var currentSet = { start: null, stop: null };
+  var treeModalInstance;
 
   // function which is responsible for selecting events
   $(function () {
@@ -50,6 +51,18 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   };
 
   $scope.tree = function() {
+    treeModalInstance = $modal.open({
+      templateUrl: 'views/tree_creator.html',
+      scope: $scope,
+      windowClass: 'small'
+    });
+  };
+
+  $scope.generateTree = function(level) {
+    treeModalInstance.close();
+    console.log($scope.selectedForams());
+    $location.search('level',level);
+    $location.search('foramId',$scope.selectedForams()[0]['_id']['$oid']);
     $location.path("/tree");
   };
 
@@ -96,6 +109,30 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   $scope.constantFilters = {};
   var flatFilters = {},
       directions = ['asc','desc'];
+
+  // select simulation
+  ForamAPIService.getSimulations().then(
+    function (res) {
+      if(res.data) {
+        if (res.status < 400) {
+          $scope.availableSimulations = res.data.simulation_starts;
+        } else {
+          ToastService.showServerToast(res.data,'error',3000);
+        }
+      }
+    }, function (err) {
+      ToastService.showToast('Cannot connect to server','error',3000);
+    }
+  );
+
+  $scope.simulationStart = ForamAPIService.getCurrentSimulation();
+
+  $scope.$watch('simulationStart', function (newValue,oldValue) {
+    if(newValue) {
+      ForamAPIService.setSimulation(newValue);
+      filterForams();
+    }
+  });
 
   // prepare flat filters
   var prepareFilters = function () {
@@ -431,6 +468,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   $scope.precision = 16;
   $scope.mappings = {};
   $scope.loader = false;
+  $scope.visibility = {};
 
   SettingsService.getSettings().then(
     function(res){

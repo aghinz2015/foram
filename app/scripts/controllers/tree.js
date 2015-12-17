@@ -1,12 +1,16 @@
-app.controller('TreeCtrl', ['$scope', '$window', 'ForamAPIService', 'SimulationFactory', function ($scope, $window, ForamAPIService, simulationFactory) {
-  //TODO - this argument should be passed in production app
-  var knownForamId = "566f419f4d6163411a240700";
+app.controller('TreeCtrl', ['$scope', '$window', 'ForamAPIService', 'SimulationFactory', '$location', function ($scope, $window, ForamAPIService, simulationFactory, $location) {
+
+  var searchObject = $location.search();
+
+  var foramId = searchObject.foramId,
+      level = searchObject.level;
+
 
   $scope.goToVisualization = function() {
      var newWindow = $window.open("/#/visualization");
      newWindow._foram_genotype = $scope.genotype;
      newWindow._foram_chambers = $scope.chambersCount;
-  }
+  };
 
   var addTooltipClearing = function() {
     var div = d3.select("#tree-tooltip");
@@ -91,8 +95,8 @@ app.controller('TreeCtrl', ['$scope', '$window', 'ForamAPIService', 'SimulationF
 
     var visualize = function(genotype, chambersCount) {
       $scope.genotype = normalizeGenotype(genotype);
-      $scope.chambersCount = chambersCount;
-      simulation.simulate($scope.genotype, $scope.chambersCount);
+      $scope.chambers_count = chambersCount;
+      simulation.simulate($scope.genotype, $scope.chambers_count);
     }
 
     var plotTree = function(forams) {
@@ -108,9 +112,11 @@ app.controller('TreeCtrl', ['$scope', '$window', 'ForamAPIService', 'SimulationF
         }
       }
 
-      root.children.forEach(collapse);
+      if(root.children) {
+        root.children.forEach(collapse);
+      }
       update(root);
-    }
+    };
 
     d3.select(self.frameElement).style("height", "800px");
 
@@ -218,9 +224,9 @@ app.controller('TreeCtrl', ['$scope', '$window', 'ForamAPIService', 'SimulationF
     }
 
     plotTree(data);
-  }
+  };
 
-  ForamAPIService.getDescendants(knownForamId, { level: 4 }).then(function (response) {
+  ForamAPIService.getDescendants(foramId, { level: level }).then(function (response) {
     prepareTree(response.data);
     addTooltipClearing();
   });

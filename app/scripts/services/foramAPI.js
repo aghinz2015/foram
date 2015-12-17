@@ -1,13 +1,26 @@
 app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) {
 
-  var foramsUrl = api_host + 'forams';
-  var attributesUrl = api_host + 'forams/attribute_names';
-  var generationsUrl = api_host + 'generations';
-  var databasesUrl = api_host + 'user/mongo_sessions';
-  var deathCoordinatesUrl = api_host + 'death_coordinates';
-  var databaseUrl = function (id) { return [databasesUrl, id].join('/'); };
-  var descendantsUrl = function(foramId) { return foramsUrl + '/' + foramId + '/descendants'; }
+  var foramsUrl = api_host + 'forams',
+      attributesUrl = api_host + 'forams/attribute_names',
+      simulationsUrl = api_host + 'forams/simulation_starts',
+      generationsUrl = api_host + 'generations',
+      databasesUrl = api_host + 'user/mongo_sessions',
+      deathCoordinatesUrl = api_host + 'death_coordinates',
+      databaseUrl = function (id) { return [databasesUrl, id].join('/');},
+      descendantsUrl = function(foramId) { return foramsUrl + '/' + foramId + '/descendants';},
+      simulation;
 
+  /**
+   *
+   * @param simulation_id
+     */
+  this.setSimulation = function(simulation_id) {
+    simulation = simulation_id;
+  };
+
+  this.getCurrentSimulation = function() {
+    return simulation;
+  };
 
   /**
    *
@@ -17,6 +30,9 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
   this.getForams = function (params, format) {
     if (format === undefined)
       format = '';
+    if(simulation) {
+      params['simulation_start'] = simulation;
+    }
     return $http.get(foramsUrl + format, { params: params });
   };
 
@@ -30,10 +46,21 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
 
   /**
    *
+   * @returns {HttpPromise}
+   */
+  this.getSimulations = function () {
+    return $http.get(simulationsUrl);
+  };
+
+  /**
+   *
    * @param params
    * @returns {HttpPromise}
    */
   this.getGenerations = function (params) {
+    if(simulation) {
+      params['simulation_start'] = simulation;
+    }
     return $http.get(generationsUrl, { params: params });
   };
 
@@ -43,6 +70,9 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
    * @returns {HttpPromise}
    */
   this.getForamsInfo = function(params) {
+    if(simulation) {
+      params['simulation_start'] = simulation;
+    }
     return $http.head(foramsUrl, {params: params});
   };
 
@@ -75,4 +105,3 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
  * Created by ezimonczyk on 18/08/15.
  */
 'use strict';
-
