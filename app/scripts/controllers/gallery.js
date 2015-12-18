@@ -3,7 +3,7 @@
 app.controller('GalleryCtrl', ['$location', '$scope', '$timeout', 'SettingsService', 'DatasetService', 'SimulationFactory', function ($location, $scope, $timeout, SettingsService, DatasetService, simulationFactory) {
 
     var swiper;
-    var loadedElements;
+    var simulation;
 
     $scope.forams = DatasetService.getProducts();
     $scope.gene = {}
@@ -15,10 +15,10 @@ app.controller('GalleryCtrl', ['$location', '$scope', '$timeout', 'SettingsServi
         function (err) {
             console.error(err);
         }
-    );
+        );
 
     $timeout(function () {
-        loadedElements = Array.apply(null, Array($scope.forams.length)).map(function () { return false });
+        simulation = simulationFactory(document.getElementById('0'));
         swiper = new Swiper('.swiper-container', {
             pagination: '.swiper-pagination',
             paginationClickable: true,
@@ -43,20 +43,16 @@ app.controller('GalleryCtrl', ['$location', '$scope', '$timeout', 'SettingsServi
     var loadSimulation = function (swiper) {
         $scope.$apply(function () {
             $scope.foram = [$scope.forams[swiper.activeIndex]];
-            $scope.genotype = normalizeGenotype($scope.foram[0].genotype);    
+            $scope.genotype = normalizeGenotype($scope.foram[0].genotype);
         });
-        
-        if (loadedElements[swiper.activeIndex]) return;
-        var element = document.getElementById(swiper.activeIndex);
-        element.innerHTML = "";
-        var simulation = simulationFactory(element);
         simulation.simulate($scope.genotype, 7);
-        loadedElements[swiper.activeIndex] = true;
-    };
-    
-    $scope.visualize = function () {
-      DatasetService.putProducts($scope.foram);
-      $location.path("/visualization");
+        var canvas = $('canvas');
+        canvas.detach();
+        canvas.appendTo("#" + swiper.activeIndex);
     };
 
+    $scope.visualize = function () {
+        DatasetService.putProducts($scope.foram);
+        $location.path("/visualization");
+    };
 }]);
