@@ -25,9 +25,10 @@ app.controller('GalleryCtrl', ['$location', '$scope', '$timeout', 'SettingsServi
             nextButton: '.swiper-button-next',
             prevButton: '.swiper-button-prev',
             spaceBetween: 30,
-            onInit: loadSimulation,
-            onSlideChangeEnd: loadSimulation,
-            lazyLoading: true
+            onInit: init,
+            onTransitionStart: loadSimulation,
+            onSlideChangeStart: moveAnimation,
+            lazyLoading: true,
         });
     });
 
@@ -45,10 +46,21 @@ app.controller('GalleryCtrl', ['$location', '$scope', '$timeout', 'SettingsServi
             $scope.foram = [$scope.forams[swiper.activeIndex]];
             $scope.genotype = normalizeGenotype($scope.foram[0].genotype);
         });
+        $scope.canvas = $('canvas');
+        $scope.canvas.detach();
         simulation.simulate($scope.genotype, 7);
-        var canvas = $('canvas');
-        canvas.detach();
-        canvas.appendTo("#" + swiper.activeIndex);
+    };
+    
+    var moveAnimation = function (swiper) {
+        $scope.canvas.appendTo("#" + swiper.activeIndex);      
+    };
+    
+    var init = function (swiper) {
+        $scope.$apply(function () {
+            $scope.foram = [$scope.forams[swiper.activeIndex]];
+            $scope.genotype = normalizeGenotype($scope.foram[0].genotype);
+        });
+        simulation.simulate($scope.genotype, 7);  
     };
 
     $scope.visualize = function () {
