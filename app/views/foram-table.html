@@ -6,7 +6,12 @@
 
 <div class="row" ng-cloak>
   <div class="large-12 columns">
-    <h2 class="main-header">Browser</h2>
+    <h2 class="main-header inline">Browser</h2>
+
+    <select class="simulation-picker" id="format-param" ng-model="simulationStart">
+      <option value="" disabled selected>Select simulation start</option>
+      <option ng-repeat="simulation in availableSimulations">{{simulation}}</option>
+    </select>
 
     <label for="format-param">Select simulation start</label>
     <select id="format-param" ng-model="simulationStart">
@@ -48,6 +53,14 @@
         </div>
 
       </accordion-group>
+      <accordion-group heading="Column visibility" ng-cloak>
+        <ul class="visibility-list">
+          <li ng-repeat="key in displayAttributes"  ng-if="key != '_id' && key != 'foram_id'" class="visible-column">
+            <span class="column-visible">{{key}}</span>
+            <input type="checkbox" ng-init="visibility[key]=true" ng-model="visibility[key]">
+          </li>
+        </ul>
+      </accordion-group>
     </accordion>
 
     <ul class="button-row">
@@ -60,23 +73,20 @@
       </li>
 
       <li>
-        <button ng-click="generateChart()" class="button"><span class="fa fa-line-chart"></span> Chart </button>
-      </li>
-
-      <li>
-        <button ng-click="death3DMap()" class="button">3D map</button>
-      </li>
-
-      <li>
-        <button ng-click="deathBubbleMap()" class="button">Bubble map</button>
-      </li>
-
-      <li>
-        <button ng-click="tree()" class="button">Descendants tree</button>
+        <button ng-click="tree()" class="button"><span class="fa fa-sitemap"></span> Descendants tree</button>
       </li>
 
       <li>
         <button ng-click="visualize()" class="button"><span class="fa fa-cube"></span> Visualize </button>
+      </li>
+
+      <li>
+        <button href="#" data-dropdown="drop2" aria-controls="drop2" aria-expanded="false" dropdown-toggle="#drop2" class="button dropdown">Generate charts</button>
+        <ul id="drop2" data-dropdown-content class="f-dropdown" aria-hidden="true">
+          <li><a ng-click="deathBubbleMap()">Death Map</a></li>
+          <li><a ng-click="death3DMap()">3D Death Map</a></li>
+          <li><a ng-click="generateChart()">Gene Chart</a></li>
+        </ul>
       </li>
       
       <li>
@@ -84,7 +94,7 @@
       </li>
 
       <li>
-        <button href="#" data-dropdown="drop1" aria-controls="drop1" aria-expanded="false" class="button dropdown">Manage filters</button>
+        <button href="#" data-dropdown="drop1" aria-controls="drop1" aria-expanded="false" dropdown-toggle="#drop1" class="button dropdown">Manage filters</button>
         <ul id="drop1" data-dropdown-content class="f-dropdown" aria-hidden="true">
           <li><a ng-click="deleteFilters()">Delete</a></li>
           <li><a ng-click="editFilters()">Edit</a></li>
@@ -100,9 +110,10 @@
     </ul>
 
     <div class="table-responsive" id="forams-table" ng-cloak>
+      <div>{{numberOfForams}} forams found</div>
       <table class="selectable no-border">
         <thead>
-          <th ng-repeat="key in displayAttributes" ng-if="key != 'genotype' && key != '_id' && key != 'foram_id'" ng-click="switchSort(key,$event)">
+          <th ng-repeat="key in displayAttributes" ng-if="key != '_id' && key != 'foram_id'" ng-click="switchSort(key,$event)" ng-show="visibility[key]">
             <span>{{key | checkName:mappings}}</span>
             <span class="fa fa-chevron-circle-down"></span>
             <span class="fa fa-chevron-circle-up"></span>
@@ -111,7 +122,7 @@
 
         <tbody id="selectable">
           <tr ng-repeat="foram in forams" data-index="{{$index}}">
-            <td ng-repeat="key in displayAttributes" ng-if="key != 'genotype' && key != '_id' && key != 'foram_id'">
+            <td ng-repeat="key in displayAttributes" ng-if="key != '_id' && key != 'foram_id'" ng-show="visibility[key]">
               <span ng-show="foram[key] != undefined">{{foram[key]}}</span>
               <span ng-show="foram.genotype[key] != undefined">{{foram.genotype[key].effective | number:precision}}</span>
             </td>

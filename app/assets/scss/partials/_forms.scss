@@ -24,3 +24,9 @@ button {
 .disabled {
   pointer-events: none;
 }
+
+.simulation-picker {
+  display: inline-block;
+  width: 25%;
+  margin: 0 10px 5px;
+}

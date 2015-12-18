@@ -1,1 +1,12 @@
-<div id="container"></div>
+<div class="row" ng-cloak>
+  <div class="large-12 columns">
+    <h2 class="main-header inline">3D Death Map</h2>
+
+    <select class="simulation-picker" id="format-param" ng-model="simulationStart">
+      <option value="" disabled selected>Select simulation start</option>
+      <option ng-repeat="simulation in availableSimulations">{{simulation}}</option>
+    </select>
+
+    <div id="container"></div>
+  </div>
+</div>

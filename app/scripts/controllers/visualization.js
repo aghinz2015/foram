@@ -1,31 +1,33 @@
 'use strict';
 
-app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFactory', 'GenotypeService', 'FileSaver', 'Blob', function ($scope, configService, simulationFactory, genotypeService, FileSaver, Blob) {
+app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFactory', 'GenotypeService', 'DataURLService', 'FileSaver', 'Blob', function ($scope, configService, simulationFactory, genotypeService, dataURLService, FileSaver, Blob) {
   var canvas = document.getElementById('visualization');
   var simulation = simulationFactory(canvas);
 
-  $scope.genotype = genotypeService.fetchGenotype();
-  $scope.genotype = $scope.genotype || window._foram_genotype;
+  $scope.foram = genotypeService.fetchForamData();
+  $scope.foram = $scope.foram || window._foram;
+
   $scope.morphology = {};
 
+  $scope.toggles = {
+    centoridsPath:    false,
+    aperturesPath:    false,
+    thicknessVectors: false,
+  }
+
   configService.getConfig('visualization').then(function(response) {
-    var defaults = response.data.defaults;
-
-    $scope.structureAnalyzer = defaults.structureAnalyzer;
-    if (window._foram_chambers) {
-      $scope.structureAnalyzer.numChambers = window._foram_chambers;
-    }
-    $scope.material = defaults.material;
-
-    simulation.simulate($scope.genotype, $scope.structureAnalyzer.numChambers);
-
-    recalculateMorphology();
+    applyDefaults(response.data.defaults);
+    $scope.simulate();
   });
 
-
   $scope.simulate = function() {
-    simulation.simulate($scope.genotype, $scope.structureAnalyzer.numChambers);
+    simulation.simulate(
+      $scope.foram.genotype,
+      $scope.foram.chambersCount
+    );
+
     recalculateMorphology();
+    resetToggles();
   };
 
   $scope.evolve = function() {
@@ -46,14 +48,17 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
 
   $scope.toggleCentroidsPath = function() {
     simulation.toggleCentroidsPath();
+    $scope.toggles.centroidsPath = !$scope.toggles.centroidsPath;
   };
 
   $scope.toggleAperturesPath = function() {
     simulation.toggleAperturesPath();
+    $scope.toggles.aperturesPath = !$scope.toggles.aperturesPath;
   };
 
   $scope.toggleThicknessVectors = function() {
     simulation.toggleThicknessVectors();
+    $scope.toggles.thicknessVectors = !$scope.toggles.thicknessVectors;
   };
 
   $scope.applyOpacity = function() {
@@ -65,19 +70,30 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
     var data = new Blob([obj], { type: 'text/plain;charset=utf-8' });
 
     FileSaver.saveAs(data, 'foram.obj');
-  }
+  };
 
   $scope.exportToCSV = function() {
     return simulation.exportToCSV();
-  }
+  };
+
+  $scope.takeScreenshot = function() {
+    var dataURL = simulation.takeScreenshot();
+    var data = dataURLService.dataURLToBlob(dataURL);
+
+    FileSaver.saveAs(data, 'foram.jpeg');
+  };
+
+  $scope.fitTarget = function() {
+    simulation.fitTarget();
+  };
 
   var increaseChambersCount = function() {
-    $scope.structureAnalyzer.numChambers++;
+    $scope.foram.chambersCount++;
   };
 
   var decreaseChambersCount = function() {
-    if ($scope.structureAnalyzer.numChambers > 1) {
-      $scope.structureAnalyzer.numChambers--
+    if ($scope.foram.chambersCount > 1) {
+      $scope.foram.chambersCount--
     }
   };
 
@@ -86,6 +102,18 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
       volume:      simulation.calculateVolume(),
       surface:     simulation.calculateSurfaceArea(),
       shapeFactor: simulation.calculateShapeFactor()
+    }
+  };
+
+  var applyDefaults = function(defaults) {
+    $scope.material = defaults.material;
+  };
+
+  var resetToggles = function() {
+    var toggle;
+
+    for (var toggle in $scope.toggles) {
+      $scope.toggles[toggle] = false;
     }
   };
 }]);

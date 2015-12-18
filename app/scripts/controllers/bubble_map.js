@@ -1,14 +1,15 @@
-app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAPIService', function ($scope, $routeParams, $location, ForamAPIService) {
+app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAPIService', '$window', 'ToastService', function ($scope, $routeParams, $location, ForamAPIService, $window, ToastService) {
   $scope.type = $routeParams.type || "bubble";
+  $scope.zAxis = ($scope.type == "bubble") ? "depth" : "time";
 
-  $scope.changeTypeText = function() {
-    var result = "Change to grouping by ";
+    $scope.changeTypeText = function() {
+    var result = "Group by ";
     if ($scope.type == "bubble") {
       return result + "death time";
     } else {
       return  result + "depth"
     }
-  }
+  };
 
   $scope.currentTypeText = function() {
     var result = "Currently grouped by ";
@@ -17,7 +18,8 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
     } else {
       return  result + "death time";
     }
-  }
+  };
+
 
   $scope.swapType = function() {
     if ($scope.type == "bubble") {
@@ -27,7 +29,7 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
     }
 
     $location.path("/bubble-map/" + $scope.type);
-  }
+  };
 
   function x(d) { return d.x; }
   function y(d) { return d.y; }
@@ -36,16 +38,20 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
   function color(d) { return d.x * d.y; }
 
   var prepareChart = function(data) {
-    var minZ = data.z_min;
-    var maxZ = data.z_max;
+    var minZ = data.z_min,
+        maxZ = data.z_max,
+        maxX = data.x_max,
+        minX = data.x_min,
+        maxY = data.y_max,
+        minY = data.y_min;
 
     var margin = {top: 19.5, right: 19.5, bottom: 19.5, left: 80.5},
-        width = 960 - margin.right,
-        height = 500 - margin.top - margin.bottom;
+        width = $window.innerWidth - 220 - margin.right,
+        height = $window.innerHeight - 200 - margin.top - margin.bottom;
 
     //TODO - consider scaling by values from data
-    var xScale = d3.scale.linear().domain([0, 10]).range([0, width]),
-        yScale = d3.scale.linear().domain([0, 10]).range([height, 0]),
+    var xScale = d3.scale.linear().domain([minX-1, maxX+1]).range([0, width]),
+        yScale = d3.scale.linear().domain([minY-1, maxY+1]).range([height, 0]),
         radiusScale = d3.scale.sqrt().domain([0, 50]).range([0, 40]),
         colorScale = d3.scale.category10();
 
@@ -188,12 +194,46 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
         }
         return a[1];
       }
-    }
+    };
 
     plotChart(data.data);
-  }
+  };
 
-  ForamAPIService.getDeathCoordinates({ type: $scope.type}).then(function (response) {
-    prepareChart(response.data)
+  var refresh = function() {
+    ForamAPIService.getDeathCoordinates({ type: $scope.type})
+      .then(
+        function (res) {
+          prepareChart(res.data)
+        },
+        function(err){
+          console.log(err);
+        }
+      )
+  };
+
+  refresh();
+
+  // select simulation
+  ForamAPIService.getSimulations().then(
+    function (res) {
+      if(res.data) {
+        if (res.status < 400) {
+          $scope.availableSimulations = res.data.simulation_starts;
+        } else {
+          ToastService.showServerToast(res.data,'error',3000);
+        }
+      }
+    }, function (err) {
+      ToastService.showToast('Cannot connect to server','error',3000);
+    }
+  );
+
+  $scope.simulationStart = ForamAPIService.getCurrentSimulation();
+
+  $scope.$watch('simulationStart', function (newValue,oldValue) {
+    if(newValue) {
+      ForamAPIService.setSimulation(newValue);
+      refresh();
+    }
   });
 }]);

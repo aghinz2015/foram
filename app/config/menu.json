@@ -14,23 +14,18 @@
     },
     {
       "name": "Charts",
-      "icon": "pie-chart",
+      "icon": "line-chart",
       "args": "/charts"
     },
     {
-      "name": "User",
-      "icon": "user",
-      "args": "/user"
+      "name": "Map",
+      "icon": "area-chart",
+      "args": "/bubble-map/bubble"
     },
     {
       "name": "Settings",
       "icon": "gear",
       "args": "/settings"
-    },
-    {
-      "name": "About",
-      "icon": "info-circle",
-      "args": "/about"
     }
   ]
 }
