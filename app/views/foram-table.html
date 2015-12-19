@@ -13,11 +13,6 @@
       <option ng-repeat="simulation in availableSimulations">{{simulation}}</option>
     </select>
 
-    <label for="format-param">Select simulation start</label>
-    <select id="format-param" ng-model="simulationStart">
-      <option ng-repeat="simulation in availableSimulations">{{simulation}}</option>
-    </select>
-
     <accordion close-others="false">
       <accordion-group heading="Filters" ng-cloak>
         <ul class="large-block-grid-1 filters-list" ng-show="filters.length">
@@ -88,7 +83,7 @@
           <li><a ng-click="generateChart()">Gene Chart</a></li>
         </ul>
       </li>
-      
+
       <li>
         <button ng-click="showForamGallery()" class="button">Gallery</button>
       </li>

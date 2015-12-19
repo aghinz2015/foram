@@ -17,7 +17,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
         }
       });
     });
-  
+
     $scope.selectedForams = function () {
       var foramsSelected = [];
       currentSet.forEach(function (element, index) {
@@ -97,7 +97,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       $scope.selectedForams().length > 1 ? DatasetService.putProducts($scope.selectedForams()) : DatasetService.putProducts($scope.forams);
       $location.path('/gallery');
     };
-  
+
     ////////////////////////    FILTERS    ///////////////////////////
 
     // variables
