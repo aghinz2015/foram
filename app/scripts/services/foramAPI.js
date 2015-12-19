@@ -10,6 +10,7 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
       descendantsUrl = function(foramId) { return foramsUrl + '/' + foramId + '/descendants';},
       simulation;
 
+
   /**
    *
    * @param simulation_id

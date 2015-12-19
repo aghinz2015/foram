@@ -11,146 +11,150 @@
 
 var app = angular.module('trunkApp', ['ngRoute', 'mm.foundation', 'highcharts-ng', 'colorpicker.module', 'ngCookies', 'ngFileSaver', 'config']);
 
-  // basic routing config
-  app.config(function ($routeProvider, $httpProvider) {
-    $routeProvider
-      .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
-      })
-      .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl'
-      })
-      .when('/charts', {
-        templateUrl: 'views/charts.html',
-        controller: 'ChartsCtrl'
-      })
-      .when('/table', {
-        templateUrl: 'views/foram-table.html',
-        controller: 'TableCtrl'
-      })
-      .when('/databases', {
-        templateUrl: 'views/settings.html',
-        controller: 'SettingsCtrl'
-      })
-      .when('/settings', {
-        templateUrl: 'views/settings.html',
-        controller: 'SettingsCtrl'
-      })
-      .when('/visualization', {
-        templateUrl: 'views/visualization.html',
-        controller: 'VisualizationCtrl'
-      })
-      .when('/sign', {
-        templateUrl: 'views/login.html',
-        controller: 'LoginCtrl'
-      })
-      .when('/register', {
-        templateUrl: 'views/register.html',
-        controller: 'RegisterCtrl'
-      })
-      .when('/user', {
-        templateUrl: 'views/user.html',
-        controller: 'UserCtrl'
-      })
-      .when('/3d-map', {
-        templateUrl: 'views/3d-map.html',
-        controller: '3DMapCtrl'
-      })
-      .when('/bubble-map/:type', {
-        templateUrl: 'views/bubble-map.html',
-        controller: 'BubbleMapCtrl'
-      })
-      .when('/tree', {
-        templateUrl: 'views/tree.html',
-        controller: 'TreeCtrl'
-      })
-      .otherwise({
-        redirectTo: '/'
-      });
+// basic routing config
+app.config(function ($routeProvider, $httpProvider) {
+  $routeProvider
+    .when('/', {
+      templateUrl: 'views/main.html',
+      controller: 'MainCtrl'
+    })
+    .when('/about', {
+      templateUrl: 'views/about.html',
+      controller: 'AboutCtrl'
+    })
+    .when('/charts', {
+      templateUrl: 'views/charts.html',
+      controller: 'ChartsCtrl'
+    })
+    .when('/table', {
+      templateUrl: 'views/foram-table.html',
+      controller: 'TableCtrl'
+    })
+    .when('/databases', {
+      templateUrl: 'views/settings.html',
+      controller: 'SettingsCtrl'
+    })
+    .when('/settings', {
+      templateUrl: 'views/settings.html',
+      controller: 'SettingsCtrl'
+    })
+    .when('/visualization', {
+      templateUrl: 'views/visualization.html',
+      controller: 'VisualizationCtrl'
+    })
+    .when('/sign', {
+      templateUrl: 'views/login.html',
+      controller: 'LoginCtrl'
+    })
+    .when('/register', {
+      templateUrl: 'views/register.html',
+      controller: 'RegisterCtrl'
+    })
+    .when('/user', {
+      templateUrl: 'views/user.html',
+      controller: 'UserCtrl'
+    })
+    .when('/3d-map', {
+      templateUrl: 'views/3d-map.html',
+      controller: '3DMapCtrl'
+    })
+    .when('/bubble-map/:type', {
+      templateUrl: 'views/bubble-map.html',
+      controller: 'BubbleMapCtrl'
+    })
+    .when('/tree', {
+      templateUrl: 'views/tree.html',
+      controller: 'TreeCtrl'
+    })
+    .when('/gallery', {
+      templateUrl: 'views/gallery.html',
+      controller: 'GalleryCtrl'
+    })
+    .otherwise({
+      redirectTo: '/'
+    });
 
-    $httpProvider.interceptors.push('APIInterceptor');
-  })
-    .filter('forceInt', function(){
-    return function(input) {
+  $httpProvider.interceptors.push('APIInterceptor');
+})
+  .filter('forceInt', function () {
+    return function (input) {
       return parseInt(input, 10);
     };
   })
-    .filter('forceFloat', function(){
-    return function(input){
+  .filter('forceFloat', function () {
+    return function (input) {
       return parseFloat(input);
     }
   })
-    .filter('checkName',function(){
-      return function(input,mappings){
-        return mappings[input] ? mappings[input] : input;
-      }
-    });
-
-  app.run(function($rootScope, $location, $cookies, $http) {
-    // keep user logged in after page refresh
-    try {
-      $rootScope.globals = $cookies.getObject('globals') || {};
+  .filter('checkName', function () {
+    return function (input, mappings) {
+      return mappings[input] ? mappings[input] : input;
     }
-    catch (e) {
-      $rootScope.globals = {};
-    }
-    if($rootScope.globals.currentUser) {
-      $http.defaults.headers.common['Authorization'] = 'Token token="' + $rootScope.globals.currentUser.token + '", email="' + $rootScope.globals.currentUser.email + '"';
-    }
-
-    $rootScope.$on('$locationChangeStart', function(event, next, current) {
-      // redirect to login page if not logged in and trying to access a restricted page
-      var restrictedPage = $.inArray($location.path(), ['/sign', '/register']) === -1;
-      var loggedIn = $rootScope.globals.currentUser;
-      if(restrictedPage && !loggedIn) {
-        $location.path('/sign');
-      }
-    })
   });
 
-  app.service('APIInterceptor', ['$location', function($location) {
-    return {
-      responseError: function(response) {
-        // redirect to login page if api returns unauthorized
-        if (response.status === 401) {
-          $location.path('/login');
-        }
-        return response;
-      }
+app.run(function ($rootScope, $location, $cookies, $http) {
+  // keep user logged in after page refresh
+  try {
+    $rootScope.globals = $cookies.getObject('globals') || {};
+  }
+  catch (e) {
+    $rootScope.globals = {};
+  }
+  if ($rootScope.globals.currentUser) {
+    $http.defaults.headers.common['Authorization'] = 'Token token="' + $rootScope.globals.currentUser.token + '", email="' + $rootScope.globals.currentUser.email + '"';
+  }
+
+  $rootScope.$on('$locationChangeStart', function (event, next, current) {
+    // redirect to login page if not logged in and trying to access a restricted page
+    var restrictedPage = $.inArray($location.path(), ['/sign', '/register']) === -1;
+    var loggedIn = $rootScope.globals.currentUser;
+    if (restrictedPage && !loggedIn) {
+      $location.path('/sign');
     }
-  }]);
+  })
+});
 
-  app.service('DatasetService', function() {
-    var productList = [];
+app.service('APIInterceptor', ['$location', function ($location) {
+  return {
+    responseError: function (response) {
+      // redirect to login page if api returns unauthorized
+      if (response.status === 401) {
+        $location.path('/login');
+      }
+      return response;
+    }
+  }
+}]);
 
-    this.putProducts = function(newDataset) {
-      productList = newDataset;
-    };
+app.service('DatasetService', function () {
+  var productList = [];
 
-    this.getProducts = function(){
-      return productList;
-    };
-
-    this.getFirstProduct = function() {
-      return productList[0];
-    };
-  });
-
-  var Viewer = {
-    'Scene': null
+  this.putProducts = function (newDataset) {
+    productList = newDataset;
   };
 
+  this.getProducts = function () {
+    return productList;
+  };
 
-app.directive('autocomplete', function() {
+  this.getFirstProduct = function () {
+    return productList[0];
+  };
+});
+
+var Viewer = {
+  'Scene': null
+};
+
+
+app.directive('autocomplete', function () {
 
   return {
 
     restrict: 'A',
-    link: function( $scope, el, attr ) {
+    link: function ($scope, el, attr) {
 
-      el.bind('change', function(e) {
+      el.bind('change', function (e) {
 
         e.preventDefault();
 

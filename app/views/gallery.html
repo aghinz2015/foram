@@ -1,0 +1,31 @@
+<div class="row">
+    <div class="large-12 columns">
+        <h2 class="main-header">Gallery</h2>
+        <div class="row">
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide" id={{$index}} ng-repeat="foram in forams"></div>
+                </div>
+                <!-- Add Pagination -->
+                <div class="swiper-pagination swiper-pagination-white"></div>
+                <!-- Add Arrows -->
+                <div class="swiper-button-next swiper-button-white"></div>
+                <div class="swiper-button-prev swiper-button-white"></div>
+            </div>
+        </div>
+        <accordion close-others="false">
+            <accordion-group heading="Genotype" ng-cloak> 
+                <div class="row">
+                    <div class="large-3 columns" ng-repeat="(key,value) in genotype">
+                        <strong>{{key}}:</strong> {{value | number:precision}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="large-3 columns">
+                        <button ng-click="visualize()"> Visualize </button>
+                    </div>
+                </div>
+            </accordion-group>
+        </accordion>
+    </div>
+</div>
