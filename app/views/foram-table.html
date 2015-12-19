@@ -14,7 +14,7 @@
     </select>
 
     <accordion close-others="false">
-      <accordion-group heading="Filters" ng-cloak>
+      <accordion-group heading="Filters" is-open="accordion.isopen" ng-cloak>
         <ul class="large-block-grid-1 filters-list" ng-show="filters.length">
           <li ng-repeat="filter in filters" class="filter-item">
             <div class="row">

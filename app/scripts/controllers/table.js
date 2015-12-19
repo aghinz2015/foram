@@ -4,6 +4,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     ////////////////////////    SELECTABLES    ///////////////////////////
     var currentSet = [];
     var treeModalInstance;
+    $scope.accordion = {isopen: false};
 
     // function which is responsible for selecting events
     $(function () {
@@ -197,6 +198,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       if (!checkIntersectingFilters() && $scope.newFilter.param) {
         $scope.filters.push($scope.newFilter);
         $scope.newFilter = {};
+        $scope.accordion.isopen = true;  
       }
     };
 
@@ -209,6 +211,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
         haploid: true
       };
       filterForams();
+      $scope.accordion.isopen = false;
     };
 
     // delete filter and load forams
