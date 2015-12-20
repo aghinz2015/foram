@@ -126,6 +126,8 @@ app.controller('TreeCtrl', ['$scope', '$window', 'ForamAPIService', 'SimulationF
       var nodes = tree.nodes(root).reverse(),
           links = tree.links(nodes);
 
+      var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
       nodes.forEach(function(d) { d.y = d.depth * 180; });
 
       var node = svg.selectAll("g.node")
@@ -140,8 +142,12 @@ app.controller('TreeCtrl', ['$scope', '$window', 'ForamAPIService', 'SimulationF
                           .on("mouseover", function(d) {
                               visualize(d.genotype, d.chambers_count);
                               tooltipTextBox.html(tooltipText(d));
+                              var top = d3.event.pageY - 28;
+                              if (top + 345 > windowHeight) {
+                                top = windowHeight - 370;
+                              }
                               div .style("left", (d3.event.pageX - 110) + "px")
-                                  .style("top", (d3.event.pageY - 28) + "px")
+                                  .style("top", top + "px")
                                   .style("opacity", .9);
                           })
                           .on("mouseleave", function(d) {
