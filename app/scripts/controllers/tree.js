@@ -131,7 +131,7 @@ app.controller('TreeCtrl', ['$scope', '$window', 'ForamAPIService', 'SimulationF
       nodes.forEach(function(d) { d.y = d.depth * 180; });
 
       var node = svg.selectAll("g.node")
-                    .data(nodes, function(d) { return d.id || (d.id = ++i); });
+                    .data(nodes, function(d) { return d.id + d.parent_id; });
 
       var nodeEnter = node.enter().append("g")
                           .attr("class", "node")
@@ -146,7 +146,7 @@ app.controller('TreeCtrl', ['$scope', '$window', 'ForamAPIService', 'SimulationF
                               if (top + 345 > windowHeight) {
                                 top = windowHeight - 370;
                               }
-                              div .style("left", (d3.event.pageX - 110) + "px")
+                              div .style("left", (d3.event.pageX - 100) + "px")
                                   .style("top", top + "px")
                                   .style("opacity", .9);
                           })
@@ -192,9 +192,8 @@ app.controller('TreeCtrl', ['$scope', '$window', 'ForamAPIService', 'SimulationF
       nodeExit.select("text")
               .style("fill-opacity", 1e-6);
 
-      //TODO - change to fenotype
       var link = svg.selectAll("path.link")
-                    .data(links, function(d) { return d.target.id; });
+                    .data(links, function(d) {return d.target.id + d.target.parent_id; });
 
       link.enter().insert("path", "g")
           .attr("class", "link")
