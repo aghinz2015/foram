@@ -193,7 +193,10 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
           displayZ(zScale.invert(d3.mouse(this)[0]));
         }
 
-        function changeCurrentZ(value, propagateToInput = true) {
+        function changeCurrentZ(value, propagateToInput) {
+          if (propagateToInput === undefined) {
+            propagateToInput = true;
+          }
           currentZ = value;
           displayZ(value, propagateToInput);
         }
@@ -251,7 +254,10 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
         return function(t) { displayZ(z(t)); };
       }
 
-      function displayZ(z, propagateToInput = true) {
+      function displayZ(z, propagateToInput) {
+        if (propagateToInput === undefined) {
+          propagateToInput = true;
+        }
         var rounded = Math.round(z);
         currentZ = rounded;
         if (propagateToInput) {
