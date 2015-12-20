@@ -27,6 +27,8 @@ app.controller('3DMapCtrl', ['$scope', 'ForamAPIService', 'ToastService', functi
     $scope.chart = new Highcharts.Chart({
         chart: {
             renderTo: 'container',
+            height: 800,
+            width: 1800,
             margin: 100,
             type: 'scatter',
             options3d: {
