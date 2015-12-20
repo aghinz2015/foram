@@ -135,8 +135,6 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
       var endArrow = d3.select("#endArrow");
       var zInput = d3.select("#zInput");
 
-      zInput.attr("value", minZ);
-
       svg.transition()
           .duration(30000)
           .ease("linear")
@@ -195,9 +193,9 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
           displayZ(zScale.invert(d3.mouse(this)[0]));
         }
 
-        function changeCurrentZ(value) {
+        function changeCurrentZ(value, propagateToInput = true) {
           currentZ = value;
-          displayZ(value);
+          displayZ(value, propagateToInput);
         }
 
         startArrow.on("click", function() {
@@ -225,7 +223,7 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
           if (newValue > maxZ) {
             newValue = maxZ;
           }
-          changeCurrentZ(newValue);
+          changeCurrentZ(newValue, false);
         })
 
         rightArrow.on("click", function() {
@@ -253,10 +251,12 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
         return function(t) { displayZ(z(t)); };
       }
 
-      function displayZ(z) {
+      function displayZ(z, propagateToInput = true) {
         var rounded = Math.round(z);
         currentZ = rounded;
-        zInput.property("value", rounded);
+        if (propagateToInput) {
+          zInput.property("value", rounded);
+        }
         dot.data(interpolateData(z), key).call(position).sort(order);
         label.text(rounded);
       }
