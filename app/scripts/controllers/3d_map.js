@@ -35,7 +35,7 @@ app.controller('3DMapCtrl', ['$scope', 'ForamAPIService', 'ToastService', functi
                 enabled: true,
                 alpha: 10,
                 beta: 30,
-                depth: 250,
+                depth: 800,
                 viewDistance: 5,
 
                 frame: {
