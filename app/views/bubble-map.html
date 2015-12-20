@@ -8,7 +8,15 @@
     </select>
 
     <ul class="button-row">
-      <button ng-click="swapType()" class="button">{{changeTypeText()}}</button>
+      <li>
+        <button ng-click="swapType()" class="button">{{changeTypeText()}}</button>
+      </li>
+      <li>
+        <button id="leftArrow"><</button>
+      </li>
+      <li>
+        <button id="rightArrow">></button>
+      </li>
     </ul>
     <p id="chart">
       <span id="axis-title">{{zAxis}}</span>

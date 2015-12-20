@@ -2,7 +2,7 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
   $scope.type = $routeParams.type || "bubble";
   $scope.zAxis = ($scope.type == "bubble") ? "depth" : "time";
 
-    $scope.changeTypeText = function() {
+  $scope.changeTypeText = function() {
     var result = "Group by ";
     if ($scope.type == "bubble") {
       return result + "death time";
@@ -44,6 +44,8 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
         minX = data.x_min,
         maxY = data.y_max,
         minY = data.y_min;
+
+    var currentZ = minZ;
 
     var margin = {top: 19.5, right: 19.5, bottom: 19.5, left: 80.5},
         width = $window.innerWidth - 220 - margin.right,
@@ -96,6 +98,7 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
                    .text(minZ);
 
     var plotChart = function(forams) {
+      var interactionEnabled = false;
       var bisect = d3.bisector(function(d) { return d[0]; });
 
       var dot = svg.append("g")
@@ -121,11 +124,17 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
                        .attr("height", box.height)
                        .on("mouseover", enableInteraction);
 
+      var leftArrow = d3.select("#leftArrow");
+      var rightArrow = d3.select("#rightArrow");
+
       svg.transition()
           .duration(30000)
           .ease("linear")
           .tween("z", tweenZ)
           .each("end", enableInteraction);
+
+      leftArrow.on("mouseover", enableInteraction);
+      rightArrow.on("mouseover", enableInteraction);
 
       function position(dot) {
         dot .attr("cx", function(d) { return xScale(x(d)); })
@@ -138,6 +147,10 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
       }
 
       function enableInteraction() {
+        if (interactionEnabled) {
+          return;
+        }
+
         var zScale = d3.scale.linear()
                        .domain([minZ, maxZ])
                        .range([box.x + 10, box.x + box.width - 10])
@@ -161,6 +174,23 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
         function mousemove() {
           displayZ(zScale.invert(d3.mouse(this)[0]));
         }
+
+        function changeCurrentZ(value) {
+          currentZ = value;
+          displayZ(value);
+        }
+
+        leftArrow.on("click", function() {
+          var newValue = (currentZ == minZ) ? minZ : currentZ - 1;
+          changeCurrentZ(newValue);
+        });
+
+        rightArrow.on("click", function() {
+          var newValue = (currentZ == maxZ) ? maxZ : currentZ + 1;
+          changeCurrentZ(newValue);
+        });
+
+        interactionEnabled = true;
       }
 
       function tweenZ() {
@@ -169,17 +199,19 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
       }
 
       function displayZ(z) {
+        var rounded = Math.round(z);
+        currentZ = rounded;
         dot.data(interpolateData(z), key).call(position).sort(order);
-        label.text(Math.round(z));
+        label.text(rounded);
       }
 
       function interpolateData(z) {
         return forams.map(function(d) {
           return {
             name: d.name,
-            x: interpolateValues(d.x, z),
+            x: d.x,
             size: interpolateValues(d.size, z),
-            y: interpolateValues(d.y, z)
+            y: d.y
           };
         });
       }
@@ -187,6 +219,13 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
       function interpolateValues(values, z) {
         var i = bisect.left(values, z, 0, values.length - 1),
             a = values[i];
+        var distance = Math.abs(a[0] - z);
+        if (distance > 1) {
+          return 0;
+        }
+        else if (distance == 1) {
+          return a[1] * 0.5;
+        }
         if (i > 0) {
           var b = values[i - 1],
               t = (z - a[0]) / (b[0] - a[0]);
