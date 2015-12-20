@@ -244,38 +244,19 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     // filter forams - get total number and then load forams
     var filterForams = function () {
       $scope.loader = true;
-      ForamAPIService.getForamsInfo(flatFilters)
+      ForamAPIService.getForams(flatFilters)
         .then(function (res) {
           if (res.status < 400) {
             var headers = res.headers();
             $scope.numberOfForams = headers.total;
             foramsPerPage = headers["per-page"];
-            loadForams();
+            $scope.forams = res.data.forams;
           } else {
-            ToastService.showServerToast(res.data, 'error', 3000);
+            ToastService.showServerToast(res.data, 'error', 5000);
           }
-
-        }, function (err) {
-          ToastService.showToast('Cannot connect to server', 'error', 3000);
           $scope.loader = false;
-        });
-    };
-
-    // load forams with current filters
-    var loadForams = function () {
-      ForamAPIService.getForams(flatFilters)
-        .then(function (res) {
-          if (res.data) {
-            if (res.status < 400) {
-              $scope.forams = res.data.forams;
-              $scope.loader = false;
-            } else {
-              ToastService.showServerToast(res.data, 'error', 3000);
-              $scope.loader = false;
-            }
-          }
         }, function (err) {
-          ToastService.showToast("Error!", 'error', 3000);
+          ToastService.showToast('Cannot connect to server', 'error', 5000);
           $scope.loader = false;
         });
     };

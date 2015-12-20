@@ -65,18 +65,6 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
     return $http.get(generationsUrl, { params: params });
   };
 
-  /**
-   *
-   * @param params
-   * @returns {HttpPromise}
-   */
-  this.getForamsInfo = function(params) {
-    if(simulation) {
-      params['simulation_start'] = simulation;
-    }
-    return $http.head(foramsUrl, {params: params});
-  };
-
   this.getFilters = function(params) {
     return $http.get(api_host + "foram_filters", {params: params});
   };
