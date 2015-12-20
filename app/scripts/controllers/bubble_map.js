@@ -2,6 +2,8 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
   $scope.type = $routeParams.type || "bubble";
   $scope.zAxis = ($scope.type == "bubble") ? "depth" : "time";
 
+  var dividingFactor = 20;
+
   $scope.changeTypeText = function() {
     var result = "Group by ";
     if ($scope.type == "bubble") {
@@ -45,7 +47,7 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
         maxY = data.y_max,
         minY = data.y_min;
 
-    var currentZ = minZ;
+    currentZ = minZ;
 
     var margin = {top: 19.5, right: 19.5, bottom: 19.5, left: 80.5},
         width = $window.innerWidth - 220 - margin.right,
@@ -100,6 +102,7 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
     var plotChart = function(forams) {
       var interactionEnabled = false;
       var bisect = d3.bisector(function(d) { return d[0]; });
+      var currentZ = minZ;
 
       var dot = svg.append("g")
                    .attr("class", "dots")
@@ -124,8 +127,15 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
                        .attr("height", box.height)
                        .on("mouseover", enableInteraction);
 
+      var startArrow = d3.select("#startArrow");
+      var fastLeftArrow = d3.select("#fastLeftArrow");
       var leftArrow = d3.select("#leftArrow");
       var rightArrow = d3.select("#rightArrow");
+      var fastRightArrow = d3.select("#fastRightArrow");
+      var endArrow = d3.select("#endArrow");
+      var zInput = d3.select("#zInput");
+
+      zInput.attr("value", minZ);
 
       svg.transition()
           .duration(30000)
@@ -133,8 +143,13 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
           .tween("z", tweenZ)
           .each("end", enableInteraction);
 
+      startArrow.on("mouseover", enableInteraction);
+      fastLeftArrow.on("mouseover", enableInteraction);
       leftArrow.on("mouseover", enableInteraction);
+      zInput.on("mouseover", enableInteraction);
       rightArrow.on("mouseover", enableInteraction);
+      fastRightArrow.on("mouseover", enableInteraction);
+      endArrow.on("mouseover", enableInteraction);
 
       function position(dot) {
         dot .attr("cx", function(d) { return xScale(x(d)); })
@@ -155,6 +170,11 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
                        .domain([minZ, maxZ])
                        .range([box.x + 10, box.x + box.width - 10])
                        .clamp(true);
+
+        var fastStep = (maxZ - minZ) / 20;
+        if (fastStep < 1) {
+          fastStep = 1;
+        }
 
         svg.transition().duration(0);
 
@@ -180,14 +200,49 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
           displayZ(value);
         }
 
+        startArrow.on("click", function() {
+          changeCurrentZ(minZ);
+        });
+
+        fastLeftArrow.on("click", function() {
+          var newValue = currentZ - fastStep;
+          if (newValue < minZ) {
+            newValue = minZ;
+          }
+          changeCurrentZ(newValue);
+        });
+
         leftArrow.on("click", function() {
           var newValue = (currentZ == minZ) ? minZ : currentZ - 1;
           changeCurrentZ(newValue);
         });
 
+        zInput.on("input", function() {
+          var newValue = this.value;
+          if (newValue < minZ) {
+            newValue = minZ;
+          }
+          if (newValue > maxZ) {
+            newValue = maxZ;
+          }
+          changeCurrentZ(newValue);
+        })
+
         rightArrow.on("click", function() {
           var newValue = (currentZ == maxZ) ? maxZ : currentZ + 1;
           changeCurrentZ(newValue);
+        });
+
+        fastRightArrow.on("click", function() {
+          var newValue = currentZ + fastStep;
+          if (newValue > maxZ) {
+            newValue = maxZ;
+          }
+          changeCurrentZ(newValue);
+        });
+
+        endArrow.on("click", function() {
+          changeCurrentZ(maxZ);
         });
 
         interactionEnabled = true;
@@ -201,6 +256,7 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
       function displayZ(z) {
         var rounded = Math.round(z);
         currentZ = rounded;
+        zInput.property("value", rounded);
         dot.data(interpolateData(z), key).call(position).sort(order);
         label.text(rounded);
       }
