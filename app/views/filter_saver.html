@@ -1,35 +1,18 @@
-<h3 ng-hide="filtersSaved">Select name for filters</h3>
+<h3>Select name for filter set</h3>
 
-<div class="row" ng-hide="filtersSaved">
+<div class="row">
   <div class="large-12 columns">
     <input ng-model="filtersToSave.name" ng-required="true"/>
   </div>
 </div>
 
-<div class="clearfix" ng-hide="filtersSaved">
+<div class="clearfix">
   <ul class="button-row right">
     <li>
       <button ng-click="cancel()" class="button secondary">Cancel</button>
     </li>
-
     <li>
       <button ng-click="saveFilters()" class="button">Save filters</button>
-    </li>
-  </ul>
-</div>
-
-<div class="row" ng-hide="!filtersSaved">
-  <div class="large-12 columns">
-    <div data-alert class="alert-box success radius">
-      Filters named {{filtersToSave.name}} saved!
-    </div>
-  </div>
-</div>
-
-<div class="clearfix" ng-hide="!filtersSaved">
-  <ul class="button-row right">
-    <li>
-      <button ng-click="cancel()" class="button">OK</button>
     </li>
   </ul>
 </div>

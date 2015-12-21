@@ -20,4 +20,5 @@ app.controller('FilterDeleterCtrl', ['$scope', '$modalInstance', 'filter', 'Fora
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
+  
 }]);

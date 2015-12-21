@@ -10,6 +10,6 @@ app.controller('FilterEditorCtrl', ['$scope', '$modalInstance', 'filter', 'avail
   
   $scope.save = function () {
     $modalInstance.close($scope.filter);
-  }
+  };
     
 }]);

@@ -328,6 +328,9 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
           },
           ForamAPIService: function () {
             return ForamAPIService;
+          },
+          ToastService: function () {
+            return ToastService;
           }
         }
       });
@@ -356,8 +359,13 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       var id = $scope.loadedFilterSet._id.$oid;
 
       ForamAPIService.editFilters(id, flatFilters).then(function (response) {
+        if(response.status < 400) {
+          ToastService.showToast('Set updated successfully', 'success', 3000);
+        } else {
+          ToastService.showServerToast(response.data, 'error', 3000);         
+        }
       }, function (error) {
-        console.log('editFilters::Error -', error);
+        ToastService.showToast('Cannot connect to server', 'error', 3000);
       });
     };
 
@@ -377,9 +385,11 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       });   
       
       modalInstance.result.then(function (deleted) {
-        console.log(deleted);
         if(deleted) {
           $scope.clearFilters();
+           ToastService.showToast('Set deleted successfully', 'success', 3000);
+        } else {
+          ToastService.showToast('Error occured while deleting set', 'error', 3000);
         }
       });    
     };
