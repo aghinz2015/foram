@@ -296,22 +296,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       });
     };
 
-
-    $scope.deleteFilters = function () {
-      $modal.open({
-        templateUrl: 'views/filter_deleter.html',
-        controller: 'FilterDeleterCtrl',
-        windowClass: 'small',
-        resolve: {
-          ForamAPIService: function () {
-            return ForamAPIService;
-          }
-        }
-      });
-    };
-
     $scope.editFilters = function (index) {
-      console.log($scope.filters[index]);
       var modalInstance = $modal.open({
         templateUrl: 'views/filter_editor.html',
         controller: 'FilterEditorCtrl',
@@ -365,7 +350,40 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       });
     };
 
+    $scope.updateFiltersSet = function () {
+      flatFilters = prepareFilters();
+      flatFilters.name = $scope.loadedFilterSet.name;
+      var id = $scope.loadedFilterSet._id.$oid;
 
+      ForamAPIService.editFilters(id, flatFilters).then(function (response) {
+      }, function (error) {
+        console.log('editFilters::Error -', error);
+      });
+    };
+
+    $scope.deleteFiltersSet = function () {
+      var modalInstance = $modal.open({
+        templateUrl: 'views/filter_deleter.html',
+        controller: 'FilterDeleterCtrl',
+        windowClass: 'small',
+        resolve: {
+          filter: function () {
+            return $scope.loadedFilterSet;
+          },
+          ForamAPIService: function () {
+            return ForamAPIService;
+          }
+        }
+      });   
+      
+      modalInstance.result.then(function (deleted) {
+        console.log(deleted);
+        if(deleted) {
+          $scope.clearFilters();
+        }
+      });    
+    };
+    
     ////////////////////////    PAGINATION    ///////////////////////////
 
     $scope.currentPage = 1;

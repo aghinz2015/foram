@@ -26,19 +26,20 @@
             <button class="button primary" ng-click="loadFilters()"><span class="fa fa-arrow-down" /> Load filters</button>
           </li>
           <li>
-            <button ng-click="saveFilters()"><span class="fa fa-floppy-o"/> Save filters</button>
+            <button ng-click="saveFilters()"><span class="fa fa-floppy-o" /> Save filters</button>
           </li>
           <li>
-            <button href="#" data-dropdown="drop1" aria-controls="drop1" aria-expanded="false" dropdown-toggle="#drop1" class="button dropdown">Manage filters</button>
-            <ul id="drop1" data-dropdown-content class="f-dropdown" aria-hidden="true">
-              <li><a ng-click="deleteFilters()">Delete</a></li>
-
-
-            </ul>
+            <button ng-click="updateFiltersSet()" ng-show="loadedFilterSet._id != undefined"><span class="fa fa-repeat" /> Update filters</button>
+          </li>
+          <li>
+            <button class="button alert" ng-click="deleteFiltersSet()" ng-show="loadedFilterSet._id != undefined"><span class="fa fa-trash" /> Delete set</button>
           </li>
         </ul>
         <div class="row" ng-show="loadedFilterSet.name != undefined">
-          Using loaded filter set {{loadedFilterSet.name}}
+          <div class="large-2 columns">
+            <label for="used-name">Used filter set name </label>
+            <input id="used-name" ng-model="loadedFilterSet.name"/>
+          </div>        
         </div>
         <div class="panel" ng-show="filters.length">
           <ul class="large-block-grid-1 filters-list">

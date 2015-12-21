@@ -1,28 +1,23 @@
 'use strict';
 
-app.controller('FilterDeleterCtrl', ['$scope', '$modalInstance', 'ForamAPIService', function ($scope, $modalInstance, ForamAPIService) {
+app.controller('FilterDeleterCtrl', ['$scope', '$modalInstance', 'filter', 'ForamAPIService', function ($scope, $modalInstance, filter, ForamAPIService) {
 
-  $scope.loadedFilters = [];
-  $scope.selectedFilter = {};
-  $scope.filtersDeleted = false;
-  
+  $scope.filter = filter;
+  var deleted = false;
+
   $scope.deleteFilters = function () {
-    var id = $scope.selectedFilter.data._id.$oid;
-    ForamAPIService.deleteFilters(id).then(function(response) {
-      $scope.filtersDeleted = true;
-    }, function(error) {
-      console.log('deleteFilters::Error -', error);
-    });  
+    var id = $scope.filter._id.$oid;
+    ForamAPIService.deleteFilters(id).then(function (response) {
+      if (response.status < 400) {
+        deleted = true;
+      } 
+       $modalInstance.close(deleted);
+    }, function (error) {
+       $modalInstance.close(deleted);
+    }); 
   };
 
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
-  
-  ForamAPIService.getFilters().then(function (response) {
-        $scope.loadedFilters = response.data.foram_filters;
-      }, function (error) {
-        console.log("getFilters::Error - ", error)
-    });
-  
 }]);
