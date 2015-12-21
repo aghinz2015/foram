@@ -1,7 +1,18 @@
 'use strict';
 
-app.controller('FilterEditorCtrl', ['$scope', '$modalInstance', 'ForamAPIService', 'availableFilterParams' ,function ($scope, $modalInstance, ForamAPIService, availableFilterParams) {
+app.controller('FilterEditorCtrl', ['$scope', '$modalInstance', 'filter', 'availableFilterParams', function ($scope, $modalInstance, filter, availableFilterParams) {
   $scope.availableFilterParams = availableFilterParams;
+  $scope.filter = filter;
+  
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+  
+  $scope.save = function () {
+    $modalInstance.close($scope.filter);
+  }
+  
+  /*
   $scope.loadedFilters = [];
   $scope.selectedFilter = {};
   $scope.filtersSaved = false;
@@ -28,9 +39,7 @@ app.controller('FilterEditorCtrl', ['$scope', '$modalInstance', 'ForamAPIService
     });
   };
 
-  $scope.cancel = function () {
-    $modalInstance.dismiss('cancel');
-  };
+  
   
   ForamAPIService.getFilters().then(function (response) {
         $scope.loadedFilters = response.data.foram_filters;
@@ -53,5 +62,6 @@ app.controller('FilterEditorCtrl', ['$scope', '$modalInstance', 'ForamAPIService
     console.log(params);
     return params;
   };
+  */
   
 }]);

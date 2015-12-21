@@ -107,6 +107,8 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     var flatFilters = {},
       directions = ['asc', 'desc'];
 
+    $scope.loadedFilterSet = {};
+
     // select simulation
     ForamAPIService.getSimulations().then(
       function (res) {
@@ -204,6 +206,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     $scope.clearFilters = function () {
       $scope.filters = [];
       flatFilters = {};
+      $scope.loadedFilterSet = {};
       $scope.constantFilters = {
         diploid: true,
         haploid: true
@@ -280,11 +283,12 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     };
 
     var unflattenFilter = function (filter) {
+      if (filter['is_diploid'] != null) {
+        $scope.constantFilters['is_diploid'] = filter['is_diploid'];
+        $scope.constantFilters['is_haploid'] = !filter['is_diploid'];
+      }
+
       $scope.availableFilterParamsToLoad.forEach(function (element) {
-        if (element == 'is_diploid' && filter[element] != null) {
-          $scope.constantFilters[element] = filter[element];
-          $scope.constantFilters['is_haploid'] = !filter[element];
-        }
         var unflattedFilter = { param: element };
         if (filter[element + '_min'] != null) unflattedFilter['min'] = filter[element + '_min'];
         if (filter[element + '_max'] != null) unflattedFilter['max'] = filter[element + '_max'];
@@ -306,20 +310,24 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       });
     };
 
-    $scope.editFilters = function () {
-      $modal.open({
+    $scope.editFilters = function (index) {
+      console.log($scope.filters[index]);
+      var modalInstance = $modal.open({
         templateUrl: 'views/filter_editor.html',
         controller: 'FilterEditorCtrl',
         windowClass: 'small',
         resolve: {
-          ForamAPIService: function () {
-            return ForamAPIService;
+          filter: function () {
+            return $scope.filters[index];
           },
           availableFilterParams: function () {
             return $scope.availableFilterParams;
           }
         }
       });
+      modalInstance.result.then(function (filter) {
+        $scope.filters[index] = filter;
+      })
     };
 
     $scope.saveFilters = function () {
@@ -351,6 +359,8 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       });
 
       modalInstance.result.then(function (loadedFilter) {
+        $scope.loadedFilterSet._id = loadedFilter._id;
+        $scope.loadedFilterSet.name = loadedFilter.name;
         unflattenFilter(loadedFilter);
       });
     };

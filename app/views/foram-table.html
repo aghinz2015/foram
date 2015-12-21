@@ -20,16 +20,26 @@
             <button class="button success" ng-click="open()"><span class="fa fa-plus-square"></span> New filter </button>
           </li>
           <li>
+            <button class="button primary" ng-click="clearFilters()"><span class="fa fa-eraser" /> Clear filters</button>
+          </li>
+          <li>
+            <button class="button primary" ng-click="loadFilters()"><span class="fa fa-arrow-down" /> Load filters</button>
+          </li>
+          <li>
+            <button ng-click="saveFilters()"><span class="fa fa-floppy-o"/> Save filters</button>
+          </li>
+          <li>
             <button href="#" data-dropdown="drop1" aria-controls="drop1" aria-expanded="false" dropdown-toggle="#drop1" class="button dropdown">Manage filters</button>
             <ul id="drop1" data-dropdown-content class="f-dropdown" aria-hidden="true">
               <li><a ng-click="deleteFilters()">Delete</a></li>
-              <li><a ng-click="editFilters()">Edit</a></li>
-              <li><a ng-click="loadFilters()">Load</a></li>
-              <li><a ng-click="clearFilters()">Reset</a></li>
-              <li><a ng-click="saveFilters()">Save</a></li>
+
+
             </ul>
           </li>
         </ul>
+        <div class="row" ng-show="loadedFilterSet.name != undefined">
+          Using loaded filter set {{loadedFilterSet.name}}
+        </div>
         <div class="panel" ng-show="filters.length">
           <ul class="large-block-grid-1 filters-list">
             <li ng-repeat="filter in filters" class="filter-item">
@@ -46,6 +56,8 @@
 
                 <div class="small-12 large-6 columns">
                   <a ng-click="deleteFilter($index)" class="right"><span class="fa fa-remove"></span></a>
+
+                  <a ng-click="editFilters($index)" class="right"><span class="fa fa-pencil"></span></a>
                 </div>
               </div>
             </li>
