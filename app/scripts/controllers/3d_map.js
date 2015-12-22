@@ -122,8 +122,9 @@ app.controller('3DMapCtrl', ['$scope', 'ForamAPIService', 'ToastService', functi
     });
   };
 
-  refresh();
   setUp3DColors();
+  refresh();
+
 
   // select simulation
   ForamAPIService.getSimulations().then(

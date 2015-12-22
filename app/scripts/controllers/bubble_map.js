@@ -62,7 +62,10 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
     var xAxis = d3.svg.axis().orient("bottom").scale(xScale),
         yAxis = d3.svg.axis().scale(yScale).orient("left");
 
-    var svg = d3.select("#chart").append("svg")
+    var clear = d3.select("svg").remove();
+
+    var svg = d3.select("#chart")
+                .append("svg")
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
                 .append("g")
@@ -227,7 +230,7 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
             newValue = maxZ;
           }
           changeCurrentZ(newValue, false);
-        })
+        });
 
         rightArrow.on("click", function() {
           var newValue = (currentZ == maxZ) ? maxZ : currentZ + 1;
