@@ -47,7 +47,7 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
         maxY = data.y_max,
         minY = data.y_min;
 
-    currentZ = minZ;
+    var currentZ = minZ;
 
     var margin = {top: 19.5, right: 19.5, bottom: 19.5, left: 80.5},
         width = $window.innerWidth - 220 - margin.right,
