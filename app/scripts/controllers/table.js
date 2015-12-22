@@ -321,6 +321,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       filtersToSave.name = $scope.loadedFilterSet.name;
       ForamAPIService.saveFilters(filtersToSave).then(function (response) {
         if (response.status < 400) {
+          $scope.loadedFilterSet = response.data;
           ToastService.showToast('Set saved successfully', 'success', 3000);
         } else {
           ToastService.showServerToast(response.data, 'error', 3000);
