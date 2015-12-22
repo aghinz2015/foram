@@ -15,32 +15,64 @@
 
     <accordion close-others="false">
       <accordion-group heading="Filters" ng-cloak>
-        <ul class="large-block-grid-1 filters-list" ng-show="filters.length">
-          <li ng-repeat="filter in filters" class="filter-item">
-            <div class="row">
-              <div class="small-12 large-6 columns">
-                <strong>{{filter.param}}</strong>
-
-                <span ng-show="filter.min">from</span>
-                <strong>{{filter.min}}</strong>
-
-                <span ng-show="filter.max">to</span>
-                <strong>{{filter.max}}</strong>
-              </div>
-
-              <div class="small-12 large-6 columns">
-                <a ng-click="deleteFilter($index)" class="right"><span class="fa fa-remove"></span></a>
-              </div>
-            </div>
+        <ul class="button-row">
+          <li>
+            <button class="button success" ng-click="open()"><span class="fa fa-plus-square"></span> New filter </button>
+          </li>
+          <li>
+            <button class="button primary" ng-click="clearFilters()"><span class="fa fa-eraser" /> Clear filters</button>
+          </li>
+          <li>
+            <button class="button primary" ng-click="loadFilters()"><span class="fa fa-arrow-down" /> Load filters</button>
+          </li>
+          <li>
+            <button ng-click="saveFilters()" ng-disabled="form.$invalid"><span class="fa fa-floppy-o" /> Save filters</button>
+          </li>
+          <li>
+            <button ng-click="updateFiltersSet()" ng-show="loadedFilterSet._id != undefined" ng-disabled="form.$invalid"><span class="fa fa-repeat" /> Update filters</button>
+          </li>
+          <li>
+            <button class="button alert" ng-click="deleteFiltersSet()" ng-show="loadedFilterSet._id != undefined"><span class="fa fa-trash" /> Delete set</button>
           </li>
         </ul>
+        <div class="row" ng-show="filters.length">
+          <div class="large-2 columns">
+            <form name="form">
+              <label for="used-name"> Filter set name</label>
+              <input id="used-name" ng-model="loadedFilterSet.name" required/>
+            </form>
+          </div>
+        </div>
+        <div class="panel" ng-show="filters.length">
+          <ul class="large-block-grid-1 filters-list">
+            <li ng-repeat="filter in filters" class="filter-item">
+              <div class="row">
+                <div class="small-12 large-6 columns">
+                  <strong>{{filter.param}}</strong>
 
+                  <span ng-show="filter.min != undefined">from</span>
+                  <strong>{{filter.min}}</strong>
+
+                  <span ng-show="filter.max != undefined">to</span>
+                  <strong>{{filter.max}}</strong>
+                </div>
+
+                <div class="small-12 large-6 columns">
+                  <a ng-click="deleteFilter($index)" class="right"><span class="fa fa-remove"></span></a>
+
+                  <a ng-click="editFilters($index)" class="right"><span class="fa fa-pencil"></span></a>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
         <div class="row">
           <div class="large-6 columns">
             <input type="checkbox" id="haploid-value" name="gender" ng-model="constantFilters.is_haploid" checked/>
             <label for="haploid-value">Haploid</label>
           </div>
-
+        </div>
+        <div class="row">
           <div class="large-6 columns">
             <input type="checkbox" id="diploid-value" name="gender" ng-model="constantFilters.is_diploid" checked/>
             <label for="diploid-value">Diploid</label>
@@ -50,7 +82,7 @@
       </accordion-group>
       <accordion-group heading="Column visibility" ng-cloak>
         <ul class="visibility-list">
-          <li ng-repeat="key in displayAttributes"  ng-if="key != '_id' && key != 'foram_id'" class="visible-column">
+          <li ng-repeat="key in displayAttributes" ng-if="key != '_id' && key != 'foram_id'" class="visible-column">
             <span class="column-visible">{{key}}</span>
             <input type="checkbox" ng-init="visibility[key]=true" ng-model="visibility[key]">
           </li>
@@ -61,10 +93,6 @@
     <ul class="button-row">
       <li>
         <button ng-click="filterData()" class="button"><span class="fa fa-filter"></span> Filter </button>
-      </li>
-
-      <li>
-        <button class="button success" ng-click="open()"><span class="fa fa-plus-square"></span> New filter </button>
       </li>
 
       <li>
@@ -86,17 +114,6 @@
 
       <li>
         <button ng-click="showForamGallery()" class="button">Gallery</button>
-      </li>
-
-      <li>
-        <button href="#" data-dropdown="drop1" aria-controls="drop1" aria-expanded="false" dropdown-toggle="#drop1" class="button dropdown">Manage filters</button>
-        <ul id="drop1" data-dropdown-content class="f-dropdown" aria-hidden="true">
-          <li><a ng-click="deleteFilters()">Delete</a></li>
-          <li><a ng-click="editFilters()">Edit</a></li>
-          <li><a ng-click="loadFilters()">Load</a></li>
-          <li><a ng-click="clearFilters()">Reset</a></li>
-          <li><a ng-click="saveFilters()">Save</a></li>
-        </ul>
       </li>
 
       <li>

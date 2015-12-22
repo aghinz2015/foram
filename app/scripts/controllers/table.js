@@ -107,6 +107,8 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     var flatFilters = {},
       directions = ['asc', 'desc'];
 
+    $scope.loadedFilterSet = {};
+
     // select simulation
     ForamAPIService.getSimulations().then(
       function (res) {
@@ -204,6 +206,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     $scope.clearFilters = function () {
       $scope.filters = [];
       flatFilters = {};
+      $scope.loadedFilterSet = {};
       $scope.constantFilters = {
         diploid: true,
         haploid: true
@@ -280,11 +283,12 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     };
 
     var unflattenFilter = function (filter) {
+      if (filter['is_diploid'] != null) {
+        $scope.constantFilters['is_diploid'] = filter['is_diploid'];
+        $scope.constantFilters['is_haploid'] = !filter['is_diploid'];
+      }
+
       $scope.availableFilterParamsToLoad.forEach(function (element) {
-        if (element == 'is_diploid' && filter[element] != null) {
-          $scope.constantFilters[element] = filter[element];
-          $scope.constantFilters['is_haploid'] = !filter[element];
-        }
         var unflattedFilter = { param: element };
         if (filter[element + '_min'] != null) unflattedFilter['min'] = filter[element + '_min'];
         if (filter[element + '_max'] != null) unflattedFilter['max'] = filter[element + '_max'];
@@ -292,51 +296,38 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       });
     };
 
-
-    $scope.deleteFilters = function () {
-      $modal.open({
-        templateUrl: 'views/filter_deleter.html',
-        controller: 'FilterDeleterCtrl',
-        windowClass: 'small',
-        resolve: {
-          ForamAPIService: function () {
-            return ForamAPIService;
-          }
-        }
-      });
-    };
-
-    $scope.editFilters = function () {
-      $modal.open({
+    $scope.editFilters = function (index) {
+      var modalInstance = $modal.open({
         templateUrl: 'views/filter_editor.html',
         controller: 'FilterEditorCtrl',
         windowClass: 'small',
         resolve: {
-          ForamAPIService: function () {
-            return ForamAPIService;
+          filter: function () {
+            return $scope.filters[index];
           },
           availableFilterParams: function () {
             return $scope.availableFilterParams;
           }
         }
       });
+      modalInstance.result.then(function (filter) {
+        $scope.filters[index] = filter;
+      })
     };
 
     $scope.saveFilters = function () {
       var filtersToSave = {};
       filtersToSave = prepareFilters();
-      var modalInstance = $modal.open({
-        templateUrl: 'views/filter_saver.html',
-        controller: 'FilterSaverCtrl',
-        windowClass: 'small',
-        resolve: {
-          filtersToSave: function () {
-            return filtersToSave;
-          },
-          ForamAPIService: function () {
-            return ForamAPIService;
-          }
+      filtersToSave.name = $scope.loadedFilterSet.name;
+      ForamAPIService.saveFilters(filtersToSave).then(function (response) {
+        if (response.status < 400) {
+          $scope.loadedFilterSet = response.data;
+          ToastService.showToast('Set saved successfully', 'success', 3000);
+        } else {
+          ToastService.showServerToast(response.data, 'error', 3000);
         }
+      }, function (error) {
+        ToastService.showToast('Cannot connect to server', 'error', 3000);
       });
     };
 
@@ -344,6 +335,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       $scope.filters = [];
       flatFilters = {};
       $scope.constantFilters = {};
+      $scope.loadedFilterSet = {};
       var modalInstance = $modal.open({
         templateUrl: 'views/filter_loader.html',
         controller: 'FilterLoaderCtrl',
@@ -351,11 +343,53 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       });
 
       modalInstance.result.then(function (loadedFilter) {
+        $scope.loadedFilterSet._id = loadedFilter._id;
+        $scope.loadedFilterSet.name = loadedFilter.name;
         unflattenFilter(loadedFilter);
       });
     };
 
+    $scope.updateFiltersSet = function () {
+      flatFilters = prepareFilters();
+      flatFilters.name = $scope.loadedFilterSet.name;
+      var id = $scope.loadedFilterSet._id.$oid;
 
+      ForamAPIService.editFilters(id, flatFilters).then(function (response) {
+        if (response.status < 400) {
+          ToastService.showToast('Set updated successfully', 'success', 3000);
+        } else {
+          ToastService.showServerToast(response.data, 'error', 3000);
+        }
+      }, function (error) {
+        ToastService.showToast('Cannot connect to server', 'error', 3000);
+      });
+    };
+
+    $scope.deleteFiltersSet = function () {
+      var modalInstance = $modal.open({
+        templateUrl: 'views/filter_deleter.html',
+        controller: 'FilterDeleterCtrl',
+        windowClass: 'small',
+        resolve: {
+          filter: function () {
+            return $scope.loadedFilterSet;
+          },
+          ForamAPIService: function () {
+            return ForamAPIService;
+          }
+        }
+      });
+
+      modalInstance.result.then(function (deleted) {
+        if (deleted) {
+          $scope.clearFilters();
+          ToastService.showToast('Set deleted successfully', 'success', 3000);
+        } else {
+          ToastService.showToast('Error occured while deleting set', 'error', 3000);
+        }
+      });
+    };
+    
     ////////////////////////    PAGINATION    ///////////////////////////
 
     $scope.currentPage = 1;
