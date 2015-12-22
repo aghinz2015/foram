@@ -33,10 +33,10 @@ app.service('UserService', ['$http', 'api_host', 'SettingsService', 'ForamAPISer
       mappings: {}
     };
 
-    console.log(settings);
-
-    for(var i = 0; i < settings.mappings.length; i++){
-      settings_data.mappings[settings.mappings[i].name] = settings.mappings[i].display;
+    if(settings && settings.mappings) {
+      for (var i = 0; i < settings.mappings.length; i++) {
+        settings_data.mappings[settings.mappings[i].name] = settings.mappings[i].display;
+      }
     }
 
     settings_data.number_precision = settings.number_precision;

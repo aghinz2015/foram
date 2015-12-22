@@ -1,10 +1,10 @@
-app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService', 'ConfigService', 'DatasetService', 'SettingsService', 'ToastService',
-  function ($location, $scope, $modal, ForamAPIService, ConfigService, DatasetService, SettingsService, ToastService) {
+app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService', 'ConfigService', 'DatasetService', 'SettingsService', 'ToastService', 'UserService',
+  function ($location, $scope, $modal, ForamAPIService, ConfigService, DatasetService, SettingsService, ToastService, UserService) {
 
     ////////////////////////    SELECTABLES    ///////////////////////////
     var currentSet = [];
     var treeModalInstance;
-    var treeLevel;
+    $scope.treeLevel;
 
     // function which is responsible for selecting events
     $(function () {
@@ -44,11 +44,22 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       $location.path("/bubble-map/bubble");
     };
 
-  $scope.generateTree = function(level) {
-    $location.search('level',treeLevel);
-    $location.search('foramId',$scope.selectedForams()[0]['_id']['$oid']);
+  $scope.tree = function () {
+    treeModalInstance = $modal.open({
+        templateUrl: 'views/tree_creator.html',
+        scope: $scope,
+        windowClass: 'small'
+    });
+  };
+
+  $scope.generateTree = function (level) {
+    treeModalInstance.close();
+    $location.search('level', level);
+    $location.search('foramId', $scope.selectedForams()[0]['_id']['$oid']);
+    UserService.updateUserSettings({tree_level: level});
     $location.path("/tree");
   };
+
 
     $scope.download = function () {
       var modalInstance = $modal.open({
@@ -380,7 +391,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
         }
       });
     };
-    
+
     ////////////////////////    PAGINATION    ///////////////////////////
 
     $scope.currentPage = 1;
@@ -476,7 +487,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
   SettingsService.getSettings().then(
     function(res){
       $scope.precision = res.data.settings_set.number_precision;
-      treeLevel = res.data.settings_set.tree_level;
+      $scope.treeLevel = res.data.settings_set.tree_level;
       if (!angular.equals({}, res.data.settings_set.mappings)) {
         $scope.mappings = res.data.settings_set.mappings;
       }
