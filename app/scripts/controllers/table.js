@@ -318,21 +318,15 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     $scope.saveFilters = function () {
       var filtersToSave = {};
       filtersToSave = prepareFilters();
-      var modalInstance = $modal.open({
-        templateUrl: 'views/filter_saver.html',
-        controller: 'FilterSaverCtrl',
-        windowClass: 'small',
-        resolve: {
-          filtersToSave: function () {
-            return filtersToSave;
-          },
-          ForamAPIService: function () {
-            return ForamAPIService;
-          },
-          ToastService: function () {
-            return ToastService;
-          }
+      filtersToSave.name = $scope.loadedFilterSet.name;
+      ForamAPIService.saveFilters(filtersToSave).then(function (response) {
+        if (response.status < 400) {
+          ToastService.showToast('Set saved successfully', 'success', 3000);
+        } else {
+          ToastService.showServerToast(response.data, 'error', 3000);
         }
+      }, function (error) {
+        ToastService.showToast('Cannot connect to server', 'error', 3000);
       });
     };
 
@@ -340,6 +334,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       $scope.filters = [];
       flatFilters = {};
       $scope.constantFilters = {};
+      $scope.loadedFilterSet = {};
       var modalInstance = $modal.open({
         templateUrl: 'views/filter_loader.html',
         controller: 'FilterLoaderCtrl',
@@ -359,10 +354,10 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       var id = $scope.loadedFilterSet._id.$oid;
 
       ForamAPIService.editFilters(id, flatFilters).then(function (response) {
-        if(response.status < 400) {
+        if (response.status < 400) {
           ToastService.showToast('Set updated successfully', 'success', 3000);
         } else {
-          ToastService.showServerToast(response.data, 'error', 3000);         
+          ToastService.showServerToast(response.data, 'error', 3000);
         }
       }, function (error) {
         ToastService.showToast('Cannot connect to server', 'error', 3000);
@@ -382,16 +377,16 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
             return ForamAPIService;
           }
         }
-      });   
-      
+      });
+
       modalInstance.result.then(function (deleted) {
-        if(deleted) {
+        if (deleted) {
           $scope.clearFilters();
-           ToastService.showToast('Set deleted successfully', 'success', 3000);
+          ToastService.showToast('Set deleted successfully', 'success', 3000);
         } else {
           ToastService.showToast('Error occured while deleting set', 'error', 3000);
         }
-      });    
+      });
     };
     
     ////////////////////////    PAGINATION    ///////////////////////////
