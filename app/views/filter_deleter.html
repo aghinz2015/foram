@@ -1,10 +1,7 @@
-<h3 ng-hide="filtersDeleted">Select filter to delete</h3>
+<h3 ng-hide="filtersDeleted">Delete filter set</h3>
 
-<div class="row" ng-hide="filtersDeleted">
-  <div class="large-12 columns">
-    <label for="filter-id">Filter name</label>
-    <select ng-options="filter as filter.name for filter in loadedFilters" ng-model="selectedFilter.data"></select>
-  </div>
+<div class="alert alert-danger" role="alert">
+  Do you really want to delete filter set named {{filter.name}}?
 </div>
 
 <div class="clearfix" ng-hide="filtersDeleted">
@@ -15,22 +12,6 @@
 
     <li>
       <button ng-click="deleteFilters()" class="button">Delete filter</button>
-    </li>
-  </ul>
-</div>
-
-<div class="row" ng-hide="!filtersDeleted">
-  <div class="large-12 columns">
-    <div data-alert class="alert-box success radius">
-      Filters named {{filtersToSave.name}} deleted!
-    </div>
-  </div>
-</div>
-
-<div class="clearfix" ng-hide="!filtersDeleted">
-  <ul class="button-row right">
-    <li>
-      <button ng-click="cancel()" class="button">OK</button>
     </li>
   </ul>
 </div>
