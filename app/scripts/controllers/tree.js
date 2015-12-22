@@ -2,6 +2,8 @@ app.controller('TreeCtrl', ['$scope', '$window', 'ForamAPIService', 'SimulationF
 
   var searchObject = $location.search();
 
+  var timeoutId;
+
   var foramId = searchObject.foramId,
       level = searchObject.level;
 
