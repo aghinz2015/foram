@@ -4,6 +4,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     ////////////////////////    SELECTABLES    ///////////////////////////
     var currentSet = [];
     var treeModalInstance;
+    var treeLevel;
 
     // function which is responsible for selecting events
     $(function () {
@@ -43,21 +44,11 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       $location.path("/bubble-map/bubble");
     };
 
-    $scope.tree = function () {
-      treeModalInstance = $modal.open({
-        templateUrl: 'views/tree_creator.html',
-        scope: $scope,
-        windowClass: 'small'
-      });
-    };
-
-    $scope.generateTree = function (level) {
-      treeModalInstance.close();
-      console.log($scope.selectedForams());
-      $location.search('level', level);
-      $location.search('foramId', $scope.selectedForams()[0]['_id']['$oid']);
-      $location.path("/tree");
-    };
+  $scope.generateTree = function(level) {
+    $location.search('level',treeLevel);
+    $location.search('foramId',$scope.selectedForams()[0]['_id']['$oid']);
+    $location.path("/tree");
+  };
 
     $scope.download = function () {
       var modalInstance = $modal.open({
@@ -448,17 +439,18 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     $scope.loader = false;
     $scope.visibility = {};
 
-    SettingsService.getSettings().then(
-      function (res) {
-        $scope.precision = res.data.settings_set.number_precision;
-        if (!angular.equals({}, res.data.settings_set.mappings)) {
-          $scope.mappings = res.data.settings_set.mappings;
-        }
-      },
-      function (err) {
-        console.error(err);
+  SettingsService.getSettings().then(
+    function(res){
+      $scope.precision = res.data.settings_set.number_precision;
+      treeLevel = res.data.settings_set.tree_level;
+      if (!angular.equals({}, res.data.settings_set.mappings)) {
+        $scope.mappings = res.data.settings_set.mappings;
       }
-      );
+    },
+    function (err) {
+      console.error(err);
+    }
+  );
 
     //////////////// INIT /////////////////////
 

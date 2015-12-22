@@ -117,13 +117,13 @@ app.controller('3DMapCtrl', ['$scope', 'ForamAPIService', 'ToastService', functi
 
   var refresh = function() {
     ForamAPIService.getDeathCoordinates({type: "three_dimensions"}).then(function (response) {
-      setUp3DColors();
       setUpChart(response.data);
       addInteractivity();
     });
   };
 
   refresh();
+  setUp3DColors();
 
   // select simulation
   ForamAPIService.getSimulations().then(

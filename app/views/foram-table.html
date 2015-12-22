@@ -14,7 +14,7 @@
     </select>
 
     <accordion close-others="false">
-      <accordion-group heading="Filters" ng-cloak>
+      <accordion-group heading="Filters" ng-cloak id="filtersAcc">
         <ul class="large-block-grid-1 filters-list" ng-show="filters.length">
           <li ng-repeat="filter in filters" class="filter-item">
             <div class="row">
@@ -68,7 +68,7 @@
       </li>
 
       <li>
-        <button ng-click="tree()" class="button"><span class="fa fa-sitemap"></span> Descendants tree</button>
+        <button ng-click="generateTree()" class="button"><span class="fa fa-sitemap"></span> Descendants tree</button>
       </li>
 
       <li>

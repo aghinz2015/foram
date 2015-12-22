@@ -74,6 +74,16 @@
               </div>
             </div>
             <div class="row">
+              <label for="tree-level-param" ng-class="{error: userSettings.level.$invalid}">Tree Level
+                <input id="tree-level-param" type="number" min="0" max="16" name="level" ng-model="settings.tree_level">
+              </label>
+              <div role="alert">
+                  <span class="error" ng-show="userSettings.level.$invalid">
+                    Tree level should be an integer between 0 and 16!
+                  </span>
+              </div>
+            </div>
+            <div class="row">
               <caption>Genes display</caption>
               <table class="display-settings">
                 <tr>

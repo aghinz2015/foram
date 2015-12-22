@@ -13,4 +13,6 @@ app.controller('FilterCreatorCtrl', function ($scope, $modalInstance, availableF
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
+
+
 });

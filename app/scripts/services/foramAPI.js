@@ -82,8 +82,11 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
   };
 
   this.getDeathCoordinates = function (params) {
+    if(simulation) {
+      params['simulation_start'] = simulation;
+    }
     return $http.get(deathCoordinatesUrl, { params: params });
-  }
+  };
 
   this.getDescendants = function (foramId, params) {
     return $http.get(descendantsUrl(foramId), { params: params });

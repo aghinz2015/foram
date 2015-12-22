@@ -33,11 +33,14 @@ app.service('UserService', ['$http', 'api_host', 'SettingsService', function($ht
       mappings: {}
     };
 
+    console.log(settings);
+
     for(var i = 0; i < settings.mappings.length; i++){
       settings_data.mappings[settings.mappings[i].name] = settings.mappings[i].display;
     }
 
     settings_data.number_precision = settings.number_precision;
+    settings_data.tree_level = settings.tree_level;
 
     SettingsService.saveSettings(settings_data);
 

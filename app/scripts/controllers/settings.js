@@ -70,6 +70,7 @@ app.controller('SettingsCtrl',['$scope', '$location', '$modal', 'UserService', '
       if(res.data && res.status < 400) {
 
         $scope.settings.number_precision = res.data.user.settings_set.number_precision;
+        $scope.settings.tree_level = res.data.user.settings_set.tree_level;
 
         if(!angular.equals({},res.data.user.settings_set.mappings)) {
           for (var gene in res.data.user.settings_set.mappings) {
