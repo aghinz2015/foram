@@ -1,6 +1,6 @@
 'use strict';
 
-app.service('UserService', ['$http', 'api_host', 'SettingsService', function($http, api_host, SettingsService) {
+app.service('UserService', ['$http', 'api_host', 'SettingsService', 'ForamAPIService', function($http, api_host, SettingsService, ForamAPIService) {
   var databasesUrl = api_host + 'user/mongo_sessions';
   var databaseUrl = function (id) { return [databasesUrl, id].join('/'); };
   var userUrl = api_host + 'user';
@@ -107,6 +107,7 @@ app.service('UserService', ['$http', 'api_host', 'SettingsService', function($ht
      */
   this.changeDatabaseStatus = function (database, enable) {
     var data = { mongo_session: { active: enable } };
+    ForamAPIService.setSimulation(null);
     return $http.patch(databaseUrl(database.id), data);
   }
 
