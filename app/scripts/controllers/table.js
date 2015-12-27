@@ -1,5 +1,5 @@
-app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService', 'ConfigService', 'DatasetService', 'SettingsService', 'ToastService', 'UserService',
-  function ($location, $scope, $modal, ForamAPIService, ConfigService, DatasetService, SettingsService, ToastService, UserService) {
+app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService', 'ConfigService', 'DatasetService', 'SettingsService', 'ToastService', 'UserService', 'FileSaver',
+  function ($location, $scope, $modal, ForamAPIService, ConfigService, DatasetService, SettingsService, ToastService, UserService, FileSaver) {
 
     ////////////////////////    SELECTABLES    ///////////////////////////
     var currentSet = [];
@@ -70,26 +70,24 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
 
       modalInstance.result.then(function (newDownload) {
         flatFilters = prepareFilters();
+        $scope.loader = true;
         ForamAPIService.getForams(flatFilters, newDownload.format)
           .then(
             function (res) {
+              $scope.loader = false;
               if (res.data) {
                 if (res.status < 400) {
-                  var anchor = angular.element('<a/>');
-                  anchor.css({ display: 'none' });
-                  angular.element(document.body).append(anchor);
-                  anchor.attr({
-                    href: 'data:attachment/csv;charset=utf-8,' + encodeURI(res.data),
-                    target: '_blank',
-                    download: newDownload.file_name + newDownload.format
-                  })[0].click();
-                  anchor.remove();
+                  var format = newDownload.format === '.csv' ? 'text/csv' : 'text/plain';
+                  var blob = new Blob([res.data], { type: format });
+
+                  FileSaver.saveAs(blob, newDownload.fileName + newDownload.format);
                 } else {
                   ToastService.showServerToast(res.data, 'error', 3000);
                 }
               }
             },
             function (err) {
+              $scope.loader = false;
               ToastService.showToast('Cannot connect to server', 'error', 3000);
             });
       });
