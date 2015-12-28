@@ -2,6 +2,7 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
 
   var foramsUrl = api_host + 'forams',
       attributesUrl = api_host + 'forams/attribute_names',
+      filtersAttributesUrl = api_host + 'foram_filters/attribute_names',
       simulationsUrl = api_host + 'forams/simulation_starts',
       generationsUrl = api_host + 'generations',
       databasesUrl = api_host + 'user/mongo_sessions',
@@ -43,6 +44,14 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
    */
   this.getForamsAttributes = function () {
     return $http.get(attributesUrl);
+  };
+
+  /**
+   *
+   * @returns {HttpPromise}
+   */
+  this.getFiltersAttributes = function (params) {
+    return $http.get(filtersAttributesUrl,{params: params});
   };
 
   /**

@@ -16,24 +16,12 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
   $scope.availableGenes = [];
   $scope.availableGroupingParameters = [];
 
-  ForamAPIService.getForamsAttributes().then(
+  ForamAPIService.getFiltersAttributes({only_numeric: true}).then(
     function (res) {
       if(res.data) {
         if (res.status < 400) {
           var data = res.data;
-          data.forams.splice(data.forams.indexOf('class_name'), 1);
-          data.forams.splice(data.forams.indexOf('foram_id'), 1);
-          data.forams.splice(data.forams.indexOf('simulation_start'), 1);
-          data.forams.splice(data.forams.indexOf('first_parent_id'), 1);
-          data.forams.splice(data.forams.indexOf('second_parent_id'), 1);
-          data.forams.splice(data.forams.indexOf('x'), 1);
-          data.forams.splice(data.forams.indexOf('y'), 1);
-          data.forams.splice(data.forams.indexOf('z'), 1);
-          data.forams.splice(data.forams.indexOf('is_diploid'), 1);
-          data.forams.splice(data.forams.indexOf('death_hour'), 1);
-          data.forams.splice(data.forams.indexOf('age'), 1);
-          data.forams.splice(data.forams.indexOf('chambers_count'), 1);
-          $scope.availableGenes = data.forams;
+          $scope.availableGenes = data.attributes;
         } else {
           ToastService.showServerToast(res.data,'error',3000);
         }

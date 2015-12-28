@@ -106,10 +106,12 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     $scope.filters = [];
     $scope.newFilter = {};
     $scope.constantFilters = {};
+    $scope.editName = false;
     var flatFilters = {},
       directions = ['asc', 'desc'];
 
-    $scope.loadedFilterSet = {};
+    $scope.loadedFilterSet = {name: "Set filter name"};
+
 
     // select simulation
     ForamAPIService.getSimulations().then(
@@ -208,7 +210,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     $scope.clearFilters = function () {
       $scope.filters = [];
       flatFilters = {};
-      $scope.loadedFilterSet = {};
+      $scope.loadedFilterSet = {name: "Set filter name"};
       $scope.constantFilters = {
         diploid: true,
         haploid: true
@@ -460,12 +462,6 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
           if (res.status < 400) {
             var data = res.data;
             $scope.displayAttributes = data.forams;
-            data.forams.splice(data.forams.indexOf('class_name'), 1);
-            data.forams.splice(data.forams.indexOf('foram_id'), 1);
-            data.forams.splice(data.forams.indexOf('simulation_start'), 1);
-            $scope.availableFilterParamsToLoad = data.forams;
-            data.forams.splice(data.forams.indexOf('is_diploid'), 1);
-            $scope.availableFilterParams = data.forams;
           } else {
             ToastService.showServerToast(res.data, 'error', 3000);
           }
@@ -473,7 +469,24 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       }, function (err) {
         ToastService.showToast('Cannot connect to server', 'error', 3000);
       }
-      );
+    );
+
+    ForamAPIService.getFiltersAttributes().then(
+      function (res) {
+        if (res.data) {
+          if (res.status < 400) {
+            var data = res.data;
+            $scope.availableFilterParamsToLoad = data.attributes;
+            data.attributes.splice(data.attributes.indexOf('is_diploid'), 1);
+            $scope.availableFilterParams = data.attributes;
+          } else {
+            ToastService.showServerToast(res.data, 'error', 3000);
+          }
+        }
+      }, function (err) {
+        ToastService.showToast('Cannot connect to server', 'error', 3000);
+      }
+    );
 
 
 
