@@ -13,14 +13,19 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
   ////////////////////////    DIALOG    ///////////////////////////
 
   var modalInstance;
+  $scope.loader = true;
   $scope.availableGenes = [];
   $scope.availableGroupingParameters = [];
+  $scope.availableGroupingParameters = ["death_hour","age"];
 
   ForamAPIService.getFiltersAttributes({only_numeric: true}).then(
     function (res) {
       if(res.data) {
         if (res.status < 400) {
           var data = res.data;
+          data.attributes.splice(data.attributes.indexOf('death_hour'),1);
+          data.attributes.splice(data.attributes.indexOf('age'),1);
+          data.attributes.splice(data.attributes.indexOf('chambers_count'),1);
           $scope.availableGenes = data.attributes;
         } else {
           ToastService.showServerToast(res.data,'error',3000);
@@ -31,7 +36,7 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
     }
   );
 
-  $scope.availableGroupingParameters = ["death_hour","age"];
+
 
   $scope.open = function () {
     modalInstance = $modal.open({
@@ -104,6 +109,7 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
   };
 
   var generateChart = function () {
+    $scope.loader = true;
     if (!$scope.chartParams.gene) return;
 
     var gene = $scope.chartParams.gene.replace(/\s+/g, '');
@@ -130,12 +136,15 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
           setChartTitle(title);
           var chart = getChartRef();
           chart.redraw();
+          $scope.loader = false;
         } else {
           ToastService.showServerToast(res.data,'error',3000);
+          $scope.loader = false;
         }
       }
     }, function (err) {
       ToastService.showToast('Cannot connect to server','error',3000);
+      $scope.loader = false;
     });
   };
 
@@ -243,6 +252,8 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
 
   $scope.open();
 
+
+
   $scope.$watch('simulationStart', function (newValue,oldValue) {
     if(newValue) {
       ForamAPIService.setSimulation(newValue);
@@ -274,5 +285,7 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
   }, null, document.getElementsByTagName('head')[0]);
 
   Highcharts.setOptions(options);
+
+  $scope.loader = false;
 
 }]);
