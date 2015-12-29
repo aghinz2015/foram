@@ -22,12 +22,20 @@
 }
 
 .arrows {
+
+  position: relative;
+  width: 404px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+
   li {
 
     vertical-align: middle;
 
     &.input {
       margin: -20px 5px 0;
+      text-align: center;
     }
 
     button {

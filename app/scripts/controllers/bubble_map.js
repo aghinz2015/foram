@@ -51,7 +51,7 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
 
     var margin = {top: 19.5, right: 19.5, bottom: 19.5, left: 80.5},
         width = $window.innerWidth - 220 - margin.right,
-        height = $window.innerHeight - 200 - margin.top - margin.bottom;
+        height = $window.innerHeight - 240 - margin.top - margin.bottom;
 
     //TODO - consider scaling by values from data
     var xScale = d3.scale.linear().domain([minX-1, maxX+1]).range([0, width]),
