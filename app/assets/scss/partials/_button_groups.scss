@@ -20,3 +20,22 @@
     }
   }
 }
+
+.arrows {
+  li {
+
+    vertical-align: middle;
+
+    &.input {
+      margin: -20px 5px 0;
+    }
+
+    button {
+      padding: 5px 10px;
+    }
+
+    input {
+      margin-bottom: 0;
+    }
+  }
+}

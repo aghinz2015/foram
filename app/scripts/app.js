@@ -9,7 +9,7 @@
  * Main module of the application.
  */
 
-var app = angular.module('trunkApp', ['ngRoute', 'mm.foundation', 'highcharts-ng', 'colorpicker.module', 'ngCookies', 'ngFileSaver', 'config', 'xeditable']);
+var app = angular.module('trunkApp', ['ngRoute', 'mm.foundation', 'highcharts-ng', 'colorpicker.module', 'ngCookies', 'ngFileSaver', 'config']);
 
 // basic routing config
 app.config(function ($routeProvider, $httpProvider) {
@@ -92,7 +92,7 @@ app.config(function ($routeProvider, $httpProvider) {
     }
   });
 
-app.run(function ($rootScope, $location, $cookies, $http, editableOptions) {
+app.run(function ($rootScope, $location, $cookies, $http) {
   // keep user logged in after page refresh
   try {
     $rootScope.globals = $cookies.getObject('globals') || {};
@@ -103,8 +103,6 @@ app.run(function ($rootScope, $location, $cookies, $http, editableOptions) {
   if ($rootScope.globals.currentUser) {
     $http.defaults.headers.common['Authorization'] = 'Token token="' + $rootScope.globals.currentUser.token + '", email="' + $rootScope.globals.currentUser.email + '"';
   }
-
-  editableOptions.theme = 'default';
 
   $rootScope.$on('$locationChangeStart', function (event, next, current) {
     // redirect to login page if not logged in and trying to access a restricted page

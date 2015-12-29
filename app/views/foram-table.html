@@ -149,6 +149,9 @@
     <div ng-show="pagination.pageCount() > 1" ng-cloak>
       <ul class="pagination">
         <li ng-class="pagination.prevPageDisabled()">
+          <a href ng-click="pagination.firstPage()">« First</a>
+        </li>
+        <li ng-class="pagination.prevPageDisabled()">
           <a href ng-click="pagination.prevPage()">« Prev</a>
         </li>
 
@@ -158,6 +161,9 @@
 
         <li ng-class="pagination.nextPageDisabled()">
           <a href ng-click="pagination.nextPage()">Next »</a>
+        </li>
+        <li ng-class="pagination.nextPageDisabled()">
+          <a href ng-click="pagination.lastPage()">Last »</a>
         </li>
       </ul>
     </div>

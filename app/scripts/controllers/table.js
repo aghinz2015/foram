@@ -418,12 +418,23 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
         }
       },
 
+      lastPage: function() {
+        var lastPage = $scope.pagination.pageCount();
+        $scope.currentPage = lastPage;
+      },
+
+      firstPage: function() {
+        $scope.currentPage = 1;
+      },
+
       nextPageDisabled: function () {
         return $scope.currentPage === this.pageCount() - 1 ? "disabled" : "";
       },
 
       pageCount: function () {
-        return Math.ceil($scope.numberOfForams / foramsPerPage);
+        var pages = parseInt($scope.numberOfForams/foramsPerPage);
+        var lastPage = (pages*foramsPerPage < $scope.numberOfForams) ? pages+1 : pages;
+        return lastPage;
       },
 
       setPage: function (n) {
@@ -439,12 +450,16 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
 
         start = $scope.currentPage;
         if (start > $scope.pagination.pageCount() - rangeSize) {
-          start = $scope.pagination.pageCount() - rangeSize;
+          start = $scope.pagination.pageCount() + 1 - rangeSize;
         }
+
+        console.log(start);
 
         for (var i = start; i < start + rangeSize; i++) {
           ret.push(i);
         }
+
+        console.log(ret);
         return ret;
       }
     };
