@@ -23,13 +23,18 @@
 
 .arrows {
 
-  position: relative;
-  width: 404px;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
+  text-align: center;
 
   li {
+
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
 
     vertical-align: middle;
 
