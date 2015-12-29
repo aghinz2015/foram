@@ -453,13 +453,10 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
           start = $scope.pagination.pageCount() + 1 - rangeSize;
         }
 
-        console.log(start);
-
         for (var i = start; i < start + rangeSize; i++) {
           ret.push(i);
         }
 
-        console.log(ret);
         return ret;
       }
     };

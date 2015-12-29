@@ -172,9 +172,10 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
                        .range([box.x + 10, box.x + box.width - 10])
                        .clamp(true);
 
-        var fastStep = (maxZ - minZ) / 20;
+        var fastStep = (maxZ - minZ) / 10;
+        console.log(fastStep);
         if (fastStep < 1) {
-          fastStep = 1;
+          fastStep = 2;
         }
 
         svg.transition().duration(0);
