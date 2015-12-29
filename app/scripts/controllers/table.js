@@ -96,7 +96,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     };
 
     $scope.showForamGallery = function () {
-      $scope.selectedForams().length > 1 ? DatasetService.putProducts($scope.selectedForams()) : DatasetService.putProducts($scope.forams);
+      $scope.selectedForams().length > 0 ? DatasetService.putProducts($scope.selectedForams()) : DatasetService.putProducts($scope.forams);
       $location.path('/gallery');
     };
 
