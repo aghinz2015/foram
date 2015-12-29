@@ -52,6 +52,7 @@ module.exports = function(config) {
       'bower_components/highstock/modules/exporting.js',
       'bower_components/d3/d3.js',
       'bower_components/Swiper/dist/js/swiper.js',
+      'bower_components/angular-local-storage/dist/angular-local-storage.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

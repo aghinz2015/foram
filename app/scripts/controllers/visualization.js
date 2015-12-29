@@ -5,7 +5,7 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
   var simulation = simulationFactory(canvas);
 
   $scope.foram = genotypeService.fetchForamData();
-  $scope.foram = $scope.foram || window._foram;
+  $scope.foram = window._foram || $scope.foram;
 
   $scope.morphology = {};
 
