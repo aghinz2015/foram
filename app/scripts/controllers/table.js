@@ -110,7 +110,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     var flatFilters = {},
       directions = ['asc', 'desc'];
 
-    $scope.loadedFilterSet = { name: "Set filter name" };
+    $scope.loadedFilterSet = { name: "Set filter set name" };
 
 
     // select simulation
@@ -210,7 +210,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     $scope.clearFilters = function () {
       $scope.filters = [];
       flatFilters = {};
-      $scope.loadedFilterSet = { name: "Set filter name" };
+      $scope.loadedFilterSet = { name: "Set filters set name" };
       $scope.constantFilters = {
         diploid: true,
         haploid: true

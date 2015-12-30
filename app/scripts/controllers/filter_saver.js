@@ -11,9 +11,11 @@ app.controller('FilterSaverCtrl', function ($scope, $modalInstance, filtersToSav
         $modalInstance.close(response.data);
       } else {
         ToastService.showServerToast(response.data, 'error', 3000);
+        $modalInstance.dismiss('cancel');
       }
     }, function (error) {
       ToastService.showToast('Cannot connect to server', 'error', 3000);
+      $modalInstance.dismiss('cancel');
     });
     
   };
