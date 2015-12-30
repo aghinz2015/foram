@@ -267,6 +267,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     };
 
     $scope.open = function () {
+      var filters = prepareFilters();
       var modalInstance = $modal.open({
         templateUrl: 'views/filter-creator.html',
         controller: 'FilterCreatorCtrl',
@@ -277,6 +278,9 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
           },
           precision: function () {
             return $scope.precision;
+          },
+          filters: function () {
+            return filters;
           }
         }
       });

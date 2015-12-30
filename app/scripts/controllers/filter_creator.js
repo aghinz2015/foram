@@ -1,7 +1,9 @@
 'use strict';
 
-app.controller('FilterCreatorCtrl', function ($scope, $modalInstance, availableFilterParams, precision, ForamAPIService, ToastService) {
-
+app.controller('FilterCreatorCtrl', function ($scope, $modalInstance, availableFilterParams, precision, filters, ForamAPIService, ToastService) {
+  
+  var params = filters;
+  
   $scope.availableFilterParams = availableFilterParams;
   $scope.precision = precision;
   
@@ -17,7 +19,8 @@ app.controller('FilterCreatorCtrl', function ($scope, $modalInstance, availableF
 
   $scope.$watch('newFilter.param', function () {
     if ($scope.newFilter.param !== undefined) {
-      ForamAPIService.getAttributeStats($scope.newFilter.param).then(
+      params['attribute'] = $scope.newFilter.param;
+      ForamAPIService.getAttributeStats(params).then(
         function (res) {
           if (res.data) {
             if (res.status < 400) {

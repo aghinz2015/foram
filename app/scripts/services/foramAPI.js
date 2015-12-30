@@ -93,8 +93,8 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
     return $http.get(descendantsUrl(foramId), { params: params });
   };
   
-  this.getAttributeStats = function (attribute) {
-    return $http.get(attributeStatsUrl, {params: {attribute: attribute}});  
+  this.getAttributeStats = function (params) {
+    return $http.get(attributeStatsUrl, {params : params});  
   };
   
 }]);
