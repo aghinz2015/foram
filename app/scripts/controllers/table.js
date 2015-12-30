@@ -44,21 +44,21 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       $location.path("/bubble-map/bubble");
     };
 
-  $scope.tree = function () {
-    treeModalInstance = $modal.open({
+    $scope.tree = function () {
+      treeModalInstance = $modal.open({
         templateUrl: 'views/tree_creator.html',
         scope: $scope,
         windowClass: 'small'
-    });
-  };
+      });
+    };
 
-  $scope.generateTree = function (level) {
-    treeModalInstance.close();
-    $location.search('level', level);
-    $location.search('foramId', $scope.selectedForams()[0]['_id']['$oid']);
-    UserService.updateUserSettings({tree_level: level});
-    $location.path("/tree");
-  };
+    $scope.generateTree = function (level) {
+      treeModalInstance.close();
+      $location.search('level', level);
+      $location.search('foramId', $scope.selectedForams()[0]['_id']['$oid']);
+      UserService.updateUserSettings({ tree_level: level });
+      $location.path("/tree");
+    };
 
 
     $scope.download = function () {
@@ -110,7 +110,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     var flatFilters = {},
       directions = ['asc', 'desc'];
 
-    $scope.loadedFilterSet = {name: "Set filter name"};
+    $scope.loadedFilterSet = { name: "Set filter name" };
 
 
     // select simulation
@@ -210,7 +210,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     $scope.clearFilters = function () {
       $scope.filters = [];
       flatFilters = {};
-      $scope.loadedFilterSet = {name: "Set filter name"};
+      $scope.loadedFilterSet = { name: "Set filter name" };
       $scope.constantFilters = {
         diploid: true,
         haploid: true
@@ -300,7 +300,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       });
     };
 
-    $scope.editFilters = function (index) {
+    $scope.editFilter = function (index) {
       var modalInstance = $modal.open({
         templateUrl: 'views/filter_editor.html',
         controller: 'FilterEditorCtrl',
@@ -319,27 +319,36 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       })
     };
 
-    $scope.saveFilters = function () {
+    $scope.saveFiltersSet = function () {
       var filtersToSave = {};
       filtersToSave = prepareFilters();
       filtersToSave.name = $scope.loadedFilterSet.name;
-      ForamAPIService.saveFilters(filtersToSave).then(function (response) {
-        if (response.status < 400) {
-          $scope.loadedFilterSet = response.data;
-          ToastService.showToast('Set saved successfully', 'success', 3000);
-        } else {
-          ToastService.showServerToast(response.data, 'error', 3000);
+
+      var modalInstance = $modal.open({
+        templateUrl: 'views/filter_saver.html',
+        controller: 'FilterSaverCtrl',
+        windowClass: 'small',
+        resolve: {
+          filtersToSave: function () {
+            return filtersToSave;
+          },
+          ForamAPIService: function () {
+            return ForamAPIService;
+          },
+          ToastService: function () {
+            return ToastService;
+          }
         }
-      }, function (error) {
-        ToastService.showToast('Cannot connect to server', 'error', 3000);
       });
+
+      modalInstance.result.then(function (loadedFilter) {
+        $scope.loadedFilterSet._id = loadedFilter._id;
+        $scope.loadedFilterSet.name = loadedFilter.name;
+      });
+
     };
 
     $scope.loadFilters = function () {
-      $scope.filters = [];
-      flatFilters = {};
-      $scope.constantFilters = {};
-      $scope.loadedFilterSet = {};
       var modalInstance = $modal.open({
         templateUrl: 'views/filter_loader.html',
         controller: 'FilterLoaderCtrl',
@@ -347,6 +356,10 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       });
 
       modalInstance.result.then(function (loadedFilter) {
+        $scope.filters = [];
+        flatFilters = {};
+        $scope.constantFilters = {};
+        $scope.loadedFilterSet = {};
         $scope.loadedFilterSet._id = loadedFilter._id;
         $scope.loadedFilterSet.name = loadedFilter.name;
         unflattenFilter(loadedFilter);
@@ -358,9 +371,9 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       flatFilters.name = $scope.loadedFilterSet.name;
       var id = $scope.loadedFilterSet._id.$oid;
 
-      ForamAPIService.editFilters(id, flatFilters).then(function (response) {
+      ForamAPIService.updateFilters(id, flatFilters).then(function (response) {
         if (response.status < 400) {
-          ToastService.showToast('Set updated successfully', 'success', 3000);
+          ToastService.showToast('Filters set updated successfully', 'success', 3000);
         } else {
           ToastService.showServerToast(response.data, 'error', 3000);
         }
@@ -387,7 +400,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       modalInstance.result.then(function (deleted) {
         if (deleted) {
           $scope.clearFilters();
-          ToastService.showToast('Set deleted successfully', 'success', 3000);
+          ToastService.showToast('Filters set deleted successfully', 'success', 3000);
         } else {
           ToastService.showToast('Error occured while deleting set', 'error', 3000);
         }
@@ -418,12 +431,12 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
         }
       },
 
-      lastPage: function() {
+      lastPage: function () {
         var lastPage = $scope.pagination.pageCount();
         $scope.currentPage = lastPage;
       },
 
-      firstPage: function() {
+      firstPage: function () {
         $scope.currentPage = 1;
       },
 
@@ -432,8 +445,8 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       },
 
       pageCount: function () {
-        var pages = parseInt($scope.numberOfForams/foramsPerPage);
-        var lastPage = (pages*foramsPerPage < $scope.numberOfForams) ? pages+1 : pages;
+        var pages = parseInt($scope.numberOfForams / foramsPerPage);
+        var lastPage = (pages * foramsPerPage < $scope.numberOfForams) ? pages + 1 : pages;
         return lastPage;
       },
 
@@ -481,7 +494,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       }, function (err) {
         ToastService.showToast('Cannot connect to server', 'error', 3000);
       }
-    );
+      );
 
     ForamAPIService.getFiltersAttributes().then(
       function (res) {
@@ -498,7 +511,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       }, function (err) {
         ToastService.showToast('Cannot connect to server', 'error', 3000);
       }
-    );
+      );
 
 
 
@@ -509,18 +522,18 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     $scope.loader = false;
     $scope.visibility = {};
 
-  SettingsService.getSettings().then(
-    function(res){
-      $scope.precision = res.data.settings_set.number_precision;
-      $scope.treeLevel = res.data.settings_set.tree_level;
-      if (!angular.equals({}, res.data.settings_set.mappings)) {
-        $scope.mappings = res.data.settings_set.mappings;
+    SettingsService.getSettings().then(
+      function (res) {
+        $scope.precision = res.data.settings_set.number_precision;
+        $scope.treeLevel = res.data.settings_set.tree_level;
+        if (!angular.equals({}, res.data.settings_set.mappings)) {
+          $scope.mappings = res.data.settings_set.mappings;
+        }
+      },
+      function (err) {
+        console.error(err);
       }
-    },
-    function (err) {
-      console.error(err);
-    }
-  );
+      );
 
     //////////////// INIT /////////////////////
 

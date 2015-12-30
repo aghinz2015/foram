@@ -26,19 +26,19 @@
             <button class="button primary" ng-click="clearFilters()"><span class="fa fa-eraser"></span> Clear filters</button>
           </li>
           <li>
-            <button class="button primary" ng-click="loadFilters()"><span class="fa fa-share"></span> Load filters</button>
+            <button class="button primary" ng-click="loadFilters()"><span class="fa fa-share"></span> Load set</button>
           </li>
           <li>
-            <button class="button primary" ng-click="saveFilters()" ng-disabled="form.$invalid"><span class="fa fa-floppy-o"></span> Save filters</button>
+            <button class="button primary" ng-click="saveFiltersSet()" ng-disabled="form.$invalid"><span class="fa fa-floppy-o"></span> Save set as </button>
           </li>
           <li>
-            <button class="button primary" ng-click="updateFiltersSet()" ng-show="loadedFilterSet._id != undefined" ng-disabled="form.$invalid"><span class="fa fa-repeat"></span> Update filters</button>
+            <button class="button primary" ng-click="updateFiltersSet()" ng-show="loadedFilterSet._id != undefined" ng-disabled="form.$invalid"><span class="fa fa-repeat"></span> Save set </button>
           </li>
           <li>
             <button class="button alert" ng-click="deleteFiltersSet()" ng-show="loadedFilterSet._id != undefined"><span class="fa fa-trash"></span> Delete set</button>
           </li>
         </ul>
-        <div class="row" ng-show="filters.length">
+        <div class="row">
           <div class="large-2 columns">
             <form name="nameForm" class="filters-name">
               <span class='filter-name' ng-hide="editName" ng-click="editName = !editName">{{loadedFilterSet.name}}</span>
@@ -60,7 +60,7 @@
                   <span ng-show="filter.max != undefined">to</span>
                   <strong>{{filter.max}}</strong>
                   <span class="edit-group">
-                    <a ng-click="editFilters($index)"><span class="fa fa-pencil"></span></a>
+                    <a ng-click="editFilter($index)"><span class="fa fa-pencil"></span></a>
                     <a ng-click="deleteFilter($index)"><span class="fa fa-remove"></span></a>
                   </span>
                 </div>

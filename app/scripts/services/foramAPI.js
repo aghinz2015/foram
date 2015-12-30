@@ -86,7 +86,7 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
     return $http.delete(api_host + "foram_filters/" + id);
   };
 
-  this.editFilters = function(id, params) {
+  this.updateFilters = function(id, params) {
     return $http.put(api_host + "foram_filters/" + id, {foram_filter: params});
   };
 
