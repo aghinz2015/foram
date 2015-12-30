@@ -9,6 +9,21 @@
   </div>
 </div>
 
+<div class="row" ng-show="stats != undefined">
+  <div class="large-12 columns">
+    <div class="large-6 columns">
+       Parameter extreme values in database
+    </div>
+    <div class="large-3 columns">
+      Min: {{ stats.min | number:precision}}
+    </div>
+    <div class="large-3 columns">
+      Max: {{ stats.max | number:precision}}
+    </div>
+  </div>
+  
+</div>
+
 <div class="row">
   <div class="large-12 columns">
     <label for="min-value">Min value</label>

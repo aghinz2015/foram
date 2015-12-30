@@ -274,6 +274,9 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
         resolve: {
           availableFilterParams: function () {
             return $scope.availableFilterParams;
+          },
+          precision: function () {
+            return $scope.precision;
           }
         }
       });
