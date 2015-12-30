@@ -331,19 +331,12 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
         resolve: {
           filtersToSave: function () {
             return filtersToSave;
-          },
-          ForamAPIService: function () {
-            return ForamAPIService;
-          },
-          ToastService: function () {
-            return ToastService;
           }
         }
       });
 
       modalInstance.result.then(function (loadedFilter) {
-        $scope.loadedFilterSet._id = loadedFilter._id;
-        $scope.loadedFilterSet.name = loadedFilter.name;
+        $scope.loadedFilterSet = { _id: loadedFilter._id, name: loadedFilter.name };
       });
 
     };
@@ -352,16 +345,14 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       var modalInstance = $modal.open({
         templateUrl: 'views/filter_loader.html',
         controller: 'FilterLoaderCtrl',
-        windowClass: 'small'
+        windowClass: 'small', 
       });
 
       modalInstance.result.then(function (loadedFilter) {
         $scope.filters = [];
         flatFilters = {};
         $scope.constantFilters = {};
-        $scope.loadedFilterSet = {};
-        $scope.loadedFilterSet._id = loadedFilter._id;
-        $scope.loadedFilterSet.name = loadedFilter.name;
+        $scope.loadedFilterSet = { _id: loadedFilter._id, name: loadedFilter.name };
         unflattenFilter(loadedFilter);
       });
     };
@@ -390,9 +381,6 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
         resolve: {
           filter: function () {
             return $scope.loadedFilterSet;
-          },
-          ForamAPIService: function () {
-            return ForamAPIService;
           }
         }
       });
