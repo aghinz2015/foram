@@ -10,15 +10,15 @@ app.controller('FilterDeleterCtrl', ['$scope', '$modalInstance', 'filter', 'Fora
     ForamAPIService.deleteFilters(id).then(function (response) {
       if (response.status < 400) {
         deleted = true;
-      } 
-       $modalInstance.close(deleted);
+      }
+      $modalInstance.close(deleted);
     }, function (error) {
-       $modalInstance.close(deleted);
-    }); 
+      $modalInstance.close(deleted);
+    });
   };
 
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
-  
+
 }]);
