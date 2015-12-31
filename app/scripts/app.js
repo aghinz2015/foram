@@ -9,7 +9,7 @@
  * Main module of the application.
  */
 
-var app = angular.module('trunkApp', ['ngRoute', 'mm.foundation', 'highcharts-ng', 'colorpicker.module', 'ngCookies', 'ngFileSaver', 'config']);
+var app = angular.module('trunkApp', ['ngRoute', 'mm.foundation', 'highcharts-ng', 'colorpicker.module', 'ngCookies', 'LocalStorageModule', 'ngFileSaver', 'config']);
 
 // basic routing config
 app.config(function ($routeProvider, $httpProvider) {
@@ -126,19 +126,18 @@ app.service('APIInterceptor', ['$location', function ($location) {
   }
 }]);
 
-app.service('DatasetService', function () {
-  var productList = [];
+app.service('DatasetService', function (localStorageService) {
 
   this.putProducts = function (newDataset) {
-    productList = newDataset;
+    localStorageService.set('foram-storage', newDataset);
   };
 
   this.getProducts = function () {
-    return productList;
+    return localStorageService.get('foram-storage');
   };
 
   this.getFirstProduct = function () {
-    return productList[0];
+    return localStorageService.get('foram-storage')[0];
   };
 });
 

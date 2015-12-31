@@ -48,19 +48,19 @@ app.controller('GalleryCtrl', ['$location', '$scope', '$timeout', 'SettingsServi
         });
         $scope.canvas = $('canvas');
         $scope.canvas.detach();
-        simulation.simulate($scope.genotype, 7);
+        simulation.simulate($scope.genotype, $scope.foram[0].chambers_count);
     };
-    
+
     var moveAnimation = function (swiper) {
-        $scope.canvas.appendTo("#" + swiper.activeIndex);      
+        $scope.canvas.appendTo("#" + swiper.activeIndex);
     };
-    
+
     var init = function (swiper) {
         $scope.$apply(function () {
             $scope.foram = [$scope.forams[swiper.activeIndex]];
             $scope.genotype = normalizeGenotype($scope.foram[0].genotype);
         });
-        simulation.simulate($scope.genotype, 7);  
+        simulation.simulate($scope.genotype, $scope.foram[0].chambers_count);
     };
 
     $scope.visualize = function () {

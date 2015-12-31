@@ -3,6 +3,7 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
   var foramsUrl = api_host + 'forams',
       attributesUrl = api_host + 'forams/attribute_names',
       filtersAttributesUrl = api_host + 'foram_filters/attribute_names',
+      attributeStatsUrl = api_host + 'forams/attribute_stats',
       simulationsUrl = api_host + 'forams/simulation_starts',
       generationsUrl = api_host + 'generations',
       databasesUrl = api_host + 'user/mongo_sessions',
@@ -99,7 +100,12 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
 
   this.getDescendants = function (foramId, params) {
     return $http.get(descendantsUrl(foramId), { params: params });
-  }
+  };
+
+  this.getAttributeStats = function (params) {
+    return $http.get(attributeStatsUrl, {params : params});
+  };
+
 }]);
 
 /**

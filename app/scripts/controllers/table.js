@@ -96,7 +96,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     };
 
     $scope.showForamGallery = function () {
-      $scope.selectedForams().length > 1 ? DatasetService.putProducts($scope.selectedForams()) : DatasetService.putProducts($scope.forams);
+      $scope.selectedForams().length > 0 ? DatasetService.putProducts($scope.selectedForams()) : DatasetService.putProducts($scope.forams);
       $location.path('/gallery');
     };
 
@@ -269,6 +269,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     };
 
     $scope.open = function () {
+      var filters = prepareFilters();
       var modalInstance = $modal.open({
         templateUrl: 'views/filter-creator.html',
         controller: 'FilterCreatorCtrl',
@@ -276,6 +277,12 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
         resolve: {
           availableFilterParams: function () {
             return $scope.availableFilterParams;
+          },
+          precision: function () {
+            return $scope.precision;
+          },
+          filters: function () {
+            return filters;
           }
         }
       });
