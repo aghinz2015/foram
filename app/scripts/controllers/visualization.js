@@ -13,6 +13,7 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
     centoridsPath:    false,
     aperturesPath:    false,
     thicknessVectors: false,
+    coloring:         false
   }
 
   configService.getConfig('visualization').then(function(response) {
@@ -87,6 +88,27 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
     simulation.fitTarget();
   };
 
+  $scope.recolour = function() {
+    if ($scope.toggles.coloring) {
+      colour();
+    }
+  };
+
+  $scope.updateColorsList = function() {
+    updateColorsList();
+    $scope.recolour();
+  };
+
+  $scope.toggleColoring = function() {
+    if ($scope.toggles.coloring) {
+      simulation.decolour();
+    } else {
+      colour();
+    }
+
+    $scope.toggles.coloring = !$scope.toggles.coloring;
+  };
+
   var increaseChambersCount = function() {
     $scope.foram.chambersCount++;
   };
@@ -106,7 +128,20 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
   };
 
   var applyDefaults = function(defaults) {
-    $scope.material = defaults.material;
+    $scope.material = {
+      opacity: defaults.material.opacity,
+      colors:  []
+    };
+
+    var flatColors = defaults.material.colors;
+
+    for (var i = 0; i < flatColors.length; i++) {
+      $scope.material.colors.push(
+        { value: flatColors[i] }
+      );
+    }
+
+    $scope.material.colorsCount = flatColors.length;
   };
 
   var resetToggles = function() {
@@ -114,6 +149,41 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
 
     for (var toggle in $scope.toggles) {
       $scope.toggles[toggle] = false;
+    }
+  };
+
+  var colour = function() {
+    simulation.colour(fetchColors());
+  };
+
+  var fetchColors = function() {
+    var colors = $scope.material.colors;
+    var flatColors = [];
+
+    for (var i = 0; i < colors.length; i++) {
+      flatColors.push(colors[i].value);
+    }
+
+    return flatColors;
+  };
+
+  var updateColorsList = function() {
+    var definedColorsCount  = $scope.material.colors.length;
+    var selectedColorsCount = $scope.material.colorsCount;
+
+    var colorsCountDiff = selectedColorsCount - definedColorsCount;
+
+    if (colorsCountDiff >= 0) {
+      for (var i = 0; i < colorsCountDiff; i++) {
+        $scope.material.colors.push(
+          { value: "#ffffff" }
+        );
+      }
+    } else {
+      $scope.material.colors.splice(
+        selectedColorsCount,
+        Math.abs(colorsCountDiff)
+      );
     }
   };
 }]);

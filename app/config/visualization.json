@@ -1,7 +1,8 @@
 {
   "defaults": {
     "material": {
-      "opacity": 0.8
+      "opacity": 0.8,
+      "colors": ["#ff0000", "#00ff00", "#0000ff"]
     }
   }
 }

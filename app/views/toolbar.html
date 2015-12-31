@@ -2,7 +2,7 @@
   <accordion-group heading="Genotype" class="folder">
     <ul class="folder-items">
       <li class="field">
-        <div class="property-name">
+        <div class="property">
           <span>Phi:</span>
         </div>
 
@@ -10,7 +10,7 @@
       </li>
 
       <li class="field">
-        <div class="property-name">
+        <div class="property">
           <span>Beta:</span>
         </div>
 
@@ -18,7 +18,7 @@
       </li>
 
       <li class="field">
-        <div class="property-name">
+        <div class="property">
           <span>Growth factor:</span>
         </div>
 
@@ -26,7 +26,7 @@
       </li>
 
       <li class="field">
-        <div class="property-name">
+        <div class="property">
           <span>Translation factor:</span>
         </div>
 
@@ -34,7 +34,7 @@
       </li>
 
       <li class="field">
-        <div class="property-name">
+        <div class="property">
           <span>Wall thickness factor:</span>
         </div>
 
@@ -46,7 +46,7 @@
   <accordion-group heading="Structure analyzer" is-open="true" class="folder">
     <ul class="folder-items">
       <li class="field">
-        <div class="property-name">
+        <div class="property">
           <span>Number of chambers:</span>
         </div>
 
@@ -90,6 +90,12 @@
       </li>
 
       <li class="action">
+        <a ng-click="toggleColoring()" ng-class="{selected: toggles.coloring}">
+          Coloring
+        </a>
+      </li>
+
+      <li class="action">
         <a ng-click="toggleChambers()">
           Toggle chambers
         </a>
@@ -106,19 +112,19 @@
   <accordion-group heading="Morphology" class="folder">
     <ul class="folder-items">
       <li class="field">
-        <div class="property-name">
+        <div class="property">
           <span>Volume: {{morphology.volume | number: 3}} &micro;m&sup3;</span>
         </div>
       </li>
 
       <li class="field">
-        <div class="property-name">
+        <div class="property">
           <span>Surface: {{morphology.surface | number: 3}} &micro;m&sup2;</span>
         </div>
       </li>
 
       <li class="field">
-        <div class="property-name">
+        <div class="property">
           <span>Shape factor: {{morphology.shapeFactor | number: 3}} &micro;m</span>
         </div>
       </li>
@@ -128,11 +134,36 @@
   <accordion-group heading="Material" class="folder">
     <ul class="folder-items">
       <li class="field">
-        <div class="property-name">
+        <div class="property">
           <span>Opacity: {{material.opacity}}</span>
         </div>
 
         <input ng-change="applyOpacity()" ng-model="material.opacity" type="range" min="0" max="1" step="0.01">
+      </li>
+
+      <li class="field">
+        <div class="property">
+          <span>Number of colors:</span>
+        </div>
+
+        <input ng-model="material.colorsCount" ng-change="updateColorsList()" type="number" min="0" max="10"/>
+      </li>
+
+      <li class="field" ng-show="material.colorsCount > 0">
+        <div class="property">
+          <span>Colors:</span>
+        </div>
+
+        <ul class="no-bullets">
+          <li ng-repeat="color in material.colors track by $index">
+            <input colorpicker="hex"
+                   ng-model="color.value"
+                   ng-change="recolour()"
+                   ng-style="{'background-color': color.value}"
+                   type="text"
+                   class="property">
+          </li>
+        </ul>
       </li>
     </ul>
   </accordion-group>
