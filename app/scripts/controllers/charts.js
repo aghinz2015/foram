@@ -13,27 +13,17 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
   ////////////////////////    DIALOG    ///////////////////////////
 
   var modalInstance;
+  $scope.loader = true;
   $scope.availableGenes = [];
   $scope.availableGroupingParameters = [];
+  $scope.availableGroupingParameters = ["death_hour","age"];
 
-  ForamAPIService.getForamsAttributes().then(
+  ForamAPIService.getFiltersAttributes({only_numeric: true, only_genotype: true}).then(
     function (res) {
       if(res.data) {
         if (res.status < 400) {
           var data = res.data;
-          data.forams.splice(data.forams.indexOf('class_name'), 1);
-          data.forams.splice(data.forams.indexOf('foram_id'), 1);
-          data.forams.splice(data.forams.indexOf('simulation_start'), 1);
-          data.forams.splice(data.forams.indexOf('first_parent_id'), 1);
-          data.forams.splice(data.forams.indexOf('second_parent_id'), 1);
-          data.forams.splice(data.forams.indexOf('x'), 1);
-          data.forams.splice(data.forams.indexOf('y'), 1);
-          data.forams.splice(data.forams.indexOf('z'), 1);
-          data.forams.splice(data.forams.indexOf('is_diploid'), 1);
-          data.forams.splice(data.forams.indexOf('death_hour'), 1);
-          data.forams.splice(data.forams.indexOf('age'), 1);
-          data.forams.splice(data.forams.indexOf('chambers_count'), 1);
-          $scope.availableGenes = data.forams;
+          $scope.availableGenes = data.attributes;
         } else {
           ToastService.showServerToast(res.data,'error',3000);
         }
@@ -43,7 +33,7 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
     }
   );
 
-  $scope.availableGroupingParameters = ["death_hour","age"];
+
 
   $scope.open = function () {
     modalInstance = $modal.open({
@@ -116,6 +106,7 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
   };
 
   var generateChart = function () {
+    $scope.loader = true;
     if (!$scope.chartParams.gene) return;
 
     var gene = $scope.chartParams.gene.replace(/\s+/g, '');
@@ -142,12 +133,15 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
           setChartTitle(title);
           var chart = getChartRef();
           chart.redraw();
+          $scope.loader = false;
         } else {
           ToastService.showServerToast(res.data,'error',3000);
+          $scope.loader = false;
         }
       }
     }, function (err) {
       ToastService.showToast('Cannot connect to server','error',3000);
+      $scope.loader = false;
     });
   };
 
@@ -255,6 +249,8 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
 
   $scope.open();
 
+
+
   $scope.$watch('simulationStart', function (newValue,oldValue) {
     if(newValue) {
       ForamAPIService.setSimulation(newValue);
@@ -286,5 +282,7 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
   }, null, document.getElementsByTagName('head')[0]);
 
   Highcharts.setOptions(options);
+
+  $scope.loader = false;
 
 }]);

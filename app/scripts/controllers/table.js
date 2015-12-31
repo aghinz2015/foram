@@ -44,21 +44,21 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       $location.path("/bubble-map/bubble");
     };
 
-  $scope.tree = function () {
-    treeModalInstance = $modal.open({
+    $scope.tree = function () {
+      treeModalInstance = $modal.open({
         templateUrl: 'views/tree_creator.html',
         scope: $scope,
         windowClass: 'small'
-    });
-  };
+      });
+    };
 
-  $scope.generateTree = function (level) {
-    treeModalInstance.close();
-    $location.search('level', level);
-    $location.search('foramId', $scope.selectedForams()[0]['_id']['$oid']);
-    UserService.updateUserSettings({tree_level: level});
-    $location.path("/tree");
-  };
+    $scope.generateTree = function (level) {
+      treeModalInstance.close();
+      $location.search('level', level);
+      $location.search('foramId', $scope.selectedForams()[0]['_id']['$oid']);
+      UserService.updateUserSettings({ tree_level: level });
+      $location.path("/tree");
+    };
 
 
     $scope.download = function () {
@@ -106,10 +106,12 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     $scope.filters = [];
     $scope.newFilter = {};
     $scope.constantFilters = {};
+    $scope.editName = false;
     var flatFilters = {},
       directions = ['asc', 'desc'];
 
-    $scope.loadedFilterSet = {};
+    $scope.loadedFilterSet = { name: "Set filter set name" };
+
 
     // select simulation
     ForamAPIService.getSimulations().then(
@@ -208,7 +210,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     $scope.clearFilters = function () {
       $scope.filters = [];
       flatFilters = {};
-      $scope.loadedFilterSet = {};
+      $scope.loadedFilterSet = { name: "Set filters set name" };
       $scope.constantFilters = {
         diploid: true,
         haploid: true
@@ -305,7 +307,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       });
     };
 
-    $scope.editFilters = function (index) {
+    $scope.editFilter = function (index) {
       var modalInstance = $modal.open({
         templateUrl: 'views/filter_editor.html',
         controller: 'FilterEditorCtrl',
@@ -324,36 +326,40 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       })
     };
 
-    $scope.saveFilters = function () {
+    $scope.saveFiltersSet = function () {
       var filtersToSave = {};
       filtersToSave = prepareFilters();
       filtersToSave.name = $scope.loadedFilterSet.name;
-      ForamAPIService.saveFilters(filtersToSave).then(function (response) {
-        if (response.status < 400) {
-          $scope.loadedFilterSet = response.data;
-          ToastService.showToast('Set saved successfully', 'success', 3000);
-        } else {
-          ToastService.showServerToast(response.data, 'error', 3000);
-        }
-      }, function (error) {
-        ToastService.showToast('Cannot connect to server', 'error', 3000);
-      });
-    };
 
-    $scope.loadFilters = function () {
-      $scope.filters = [];
-      flatFilters = {};
-      $scope.constantFilters = {};
-      $scope.loadedFilterSet = {};
       var modalInstance = $modal.open({
-        templateUrl: 'views/filter_loader.html',
-        controller: 'FilterLoaderCtrl',
-        windowClass: 'small'
+        templateUrl: 'views/filter_saver.html',
+        controller: 'FilterSaverCtrl',
+        windowClass: 'small',
+        resolve: {
+          filtersToSave: function () {
+            return filtersToSave;
+          }
+        }
       });
 
       modalInstance.result.then(function (loadedFilter) {
-        $scope.loadedFilterSet._id = loadedFilter._id;
-        $scope.loadedFilterSet.name = loadedFilter.name;
+        $scope.loadedFilterSet = { _id: loadedFilter._id, name: loadedFilter.name };
+      });
+
+    };
+
+    $scope.loadFilters = function () {
+      var modalInstance = $modal.open({
+        templateUrl: 'views/filter_loader.html',
+        controller: 'FilterLoaderCtrl',
+        windowClass: 'small', 
+      });
+
+      modalInstance.result.then(function (loadedFilter) {
+        $scope.filters = [];
+        flatFilters = {};
+        $scope.constantFilters = {};
+        $scope.loadedFilterSet = { _id: loadedFilter._id, name: loadedFilter.name };
         unflattenFilter(loadedFilter);
       });
     };
@@ -363,9 +369,9 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       flatFilters.name = $scope.loadedFilterSet.name;
       var id = $scope.loadedFilterSet._id.$oid;
 
-      ForamAPIService.editFilters(id, flatFilters).then(function (response) {
+      ForamAPIService.updateFilters(id, flatFilters).then(function (response) {
         if (response.status < 400) {
-          ToastService.showToast('Set updated successfully', 'success', 3000);
+          ToastService.showToast('Filters set updated successfully', 'success', 3000);
         } else {
           ToastService.showServerToast(response.data, 'error', 3000);
         }
@@ -382,9 +388,6 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
         resolve: {
           filter: function () {
             return $scope.loadedFilterSet;
-          },
-          ForamAPIService: function () {
-            return ForamAPIService;
           }
         }
       });
@@ -392,7 +395,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       modalInstance.result.then(function (deleted) {
         if (deleted) {
           $scope.clearFilters();
-          ToastService.showToast('Set deleted successfully', 'success', 3000);
+          ToastService.showToast('Filters set deleted successfully', 'success', 3000);
         } else {
           ToastService.showToast('Error occured while deleting set', 'error', 3000);
         }
@@ -423,12 +426,23 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
         }
       },
 
+      lastPage: function () {
+        var lastPage = $scope.pagination.pageCount();
+        $scope.currentPage = lastPage;
+      },
+
+      firstPage: function () {
+        $scope.currentPage = 1;
+      },
+
       nextPageDisabled: function () {
         return $scope.currentPage === this.pageCount() - 1 ? "disabled" : "";
       },
 
       pageCount: function () {
-        return Math.ceil($scope.numberOfForams / foramsPerPage);
+        var pages = parseInt($scope.numberOfForams / foramsPerPage);
+        var lastPage = (pages * foramsPerPage < $scope.numberOfForams) ? pages + 1 : pages;
+        return lastPage;
       },
 
       setPage: function (n) {
@@ -444,12 +458,13 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
 
         start = $scope.currentPage;
         if (start > $scope.pagination.pageCount() - rangeSize) {
-          start = $scope.pagination.pageCount() - rangeSize;
+          start = $scope.pagination.pageCount() + 1 - rangeSize;
         }
 
         for (var i = start; i < start + rangeSize; i++) {
           ret.push(i);
         }
+
         return ret;
       }
     };
@@ -467,12 +482,23 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
           if (res.status < 400) {
             var data = res.data;
             $scope.displayAttributes = data.forams;
-            data.forams.splice(data.forams.indexOf('class_name'), 1);
-            data.forams.splice(data.forams.indexOf('foram_id'), 1);
-            data.forams.splice(data.forams.indexOf('simulation_start'), 1);
-            $scope.availableFilterParamsToLoad = data.forams;
-            data.forams.splice(data.forams.indexOf('is_diploid'), 1);
-            $scope.availableFilterParams = data.forams;
+          } else {
+            ToastService.showServerToast(res.data, 'error', 3000);
+          }
+        }
+      }, function (err) {
+        ToastService.showToast('Cannot connect to server', 'error', 3000);
+      }
+      );
+
+    ForamAPIService.getFiltersAttributes().then(
+      function (res) {
+        if (res.data) {
+          if (res.status < 400) {
+            var data = res.data;
+            $scope.availableFilterParamsToLoad = data.attributes;
+            data.attributes.splice(data.attributes.indexOf('is_diploid'), 1);
+            $scope.availableFilterParams = data.attributes;
           } else {
             ToastService.showServerToast(res.data, 'error', 3000);
           }
@@ -491,18 +517,18 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     $scope.loader = false;
     $scope.visibility = {};
 
-  SettingsService.getSettings().then(
-    function(res){
-      $scope.precision = res.data.settings_set.number_precision;
-      $scope.treeLevel = res.data.settings_set.tree_level;
-      if (!angular.equals({}, res.data.settings_set.mappings)) {
-        $scope.mappings = res.data.settings_set.mappings;
+    SettingsService.getSettings().then(
+      function (res) {
+        $scope.precision = res.data.settings_set.number_precision;
+        $scope.treeLevel = res.data.settings_set.tree_level;
+        if (!angular.equals({}, res.data.settings_set.mappings)) {
+          $scope.mappings = res.data.settings_set.mappings;
+        }
+      },
+      function (err) {
+        console.error(err);
       }
-    },
-    function (err) {
-      console.error(err);
-    }
-  );
+      );
 
     //////////////// INIT /////////////////////
 

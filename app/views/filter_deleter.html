@@ -1,17 +1,17 @@
-<h3 ng-hide="filtersDeleted">Delete filter set</h3>
+<h3>Delete filters set</h3>
 
-<div class="alert alert-danger" role="alert">
-  Do you really want to delete filter set named {{filter.name}}?
+<div class="alert-box alert" role="alert">
+  Do you really want to delete filters set named {{filter.name}}?
 </div>
 
-<div class="clearfix" ng-hide="filtersDeleted">
+<div class="clearfix">
   <ul class="button-row right">
     <li>
       <button ng-click="cancel()" class="button secondary">Cancel</button>
     </li>
 
     <li>
-      <button ng-click="deleteFilters()" class="button">Delete filter</button>
+      <button ng-click="deleteFilters()" class="button">Delete set</button>
     </li>
   </ul>
 </div>

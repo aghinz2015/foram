@@ -11,3 +11,44 @@
     margin-right: 5px;
   }
 }
+
+.filters-button {
+  li {
+    .button {
+      font-size: 15px;
+      padding: 10px;
+    }
+  }
+}
+
+.arrows {
+
+  text-align: center;
+
+  li {
+
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+
+    vertical-align: middle;
+
+    &.input {
+      margin: -20px 5px 0;
+      text-align: center;
+    }
+
+    button {
+      padding: 5px 10px;
+    }
+
+    input {
+      margin-bottom: 0;
+    }
+  }
+}

@@ -1,3 +1,9 @@
+<div ng-show="loader" class="loader">
+  <div class="spinner-container">
+    <span class="fa fa-spin fa-spinner fa-5x"></span>
+  </div>
+</div>
+
 <div class="row" ng-cloak>
   <div class="large-12 columns">
     <h2 class="main-header inline">Death Map</h2>
@@ -7,30 +13,30 @@
       <option ng-repeat="simulation in availableSimulations">{{simulation}}</option>
     </select>
 
-    <ul class="button-row">
+    <div>
+      <button ng-click="swapType()" class="button change-type">{{changeTypeText()}}</button>
+    </div>
+    <ul class="button-row arrows">
       <li>
-        <button ng-click="swapType()" class="button">{{changeTypeText()}}</button>
+        <button id="startArrow"><span class="fa-fast-backward fa"></span></button>
       </li>
       <li>
-        <button id="startArrow">|&lt</button>
+        <button id="fastLeftArrow"><span class="fa-backward fa"></span></button>
       </li>
       <li>
-        <button id="fastLeftArrow">&lt&lt</button>
+        <button id="leftArrow"><span class="fa-chevron-left fa"></span></button>
       </li>
-      <li>
-        <button id="leftArrow">&lt</button>
-      </li>
-      <li>
+      <li class="input">
         <input type="number" name="input" id="zInput">
       </li>
       <li>
-        <button id="rightArrow">&gt</button>
+        <button id="rightArrow"><span class="fa-chevron-right fa"></span></button>
       </li>
       <li>
-        <button id="fastRightArrow">&gt&gt</button>
+        <button id="fastRightArrow"><span class="fa-forward fa"></span></button>
       </li>
       <li>
-        <button id="endArrow">&gt|</button>
+        <button id="endArrow"><span class="fa-fast-forward fa"></span></button>
       </li>
     </ul>
     <p id="chart">

@@ -1,6 +1,7 @@
 app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAPIService', '$window', 'ToastService', function ($scope, $routeParams, $location, ForamAPIService, $window, ToastService) {
   $scope.type = $routeParams.type || "bubble";
   $scope.zAxis = ($scope.type == "bubble") ? "depth" : "time";
+  $scope.loader = true;
 
   var dividingFactor = 20;
 
@@ -40,6 +41,7 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
   function color(d) { return d.x * d.y; }
 
   var prepareChart = function(data) {
+    $scope.loader = true;
     var minZ = data.z_min,
         maxZ = data.z_max,
         maxX = data.x_max,
@@ -51,7 +53,7 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
 
     var margin = {top: 19.5, right: 19.5, bottom: 19.5, left: 80.5},
         width = $window.innerWidth - 220 - margin.right,
-        height = $window.innerHeight - 200 - margin.top - margin.bottom;
+        height = $window.innerHeight - 240 - margin.top - margin.bottom;
 
     //TODO - consider scaling by values from data
     var xScale = d3.scale.linear().domain([minX-1, maxX+1]).range([0, width]),
@@ -172,9 +174,10 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
                        .range([box.x + 10, box.x + box.width - 10])
                        .clamp(true);
 
-        var fastStep = (maxZ - minZ) / 20;
+        var fastStep = (maxZ - minZ) / 10;
+        console.log(fastStep);
         if (fastStep < 1) {
-          fastStep = 1;
+          fastStep = 2;
         }
 
         svg.transition().duration(0);
@@ -301,6 +304,7 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
     };
 
     plotChart(data.data);
+    $scope.loader = false;
   };
 
   var refresh = function() {
@@ -340,4 +344,7 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
       refresh();
     }
   });
+
+  $scope.loader = false;
+
 }]);

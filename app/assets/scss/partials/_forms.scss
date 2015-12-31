@@ -30,3 +30,20 @@ button {
   width: 25%;
   margin: 0 10px 5px;
 }
+
+#used-name {
+  width: auto;
+  display: inline-block;
+}
+
+.filters-name {
+  .filter-name {
+    cursor: pointer;
+    font-weight: bold;
+    border-bottom: 2px solid #333;
+    color: #333;
+  }
+  .button {
+    padding: 9px 10px;
+  }
+}

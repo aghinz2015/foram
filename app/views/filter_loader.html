@@ -1,8 +1,8 @@
-<h3>Select filter to load</h3>
+<h3>Select filters set to load</h3>
 
 <div class="row">
   <div class="large-12 columns">
-    <label for="filter-id">Filter name</label>
+    <label for="filter-id">Filters set name</label>
     <select ng-options="filter as filter.name for filter in loadedFilters" ng-model="selectedFilter.data"></select>
   </div>
 </div>
@@ -14,7 +14,7 @@
     </li>
 
     <li>
-      <button ng-click="loadFilters()" class="button">Load filter</button>
+      <button ng-click="loadFilters()" class="button">Load set</button>
     </li>
   </ul>
 </div>

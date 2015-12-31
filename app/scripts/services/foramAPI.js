@@ -2,6 +2,7 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
 
   var foramsUrl = api_host + 'forams',
       attributesUrl = api_host + 'forams/attribute_names',
+      filtersAttributesUrl = api_host + 'foram_filters/attribute_names',
       attributeStatsUrl = api_host + 'forams/attribute_stats',
       simulationsUrl = api_host + 'forams/simulation_starts',
       generationsUrl = api_host + 'generations',
@@ -50,6 +51,14 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
    *
    * @returns {HttpPromise}
    */
+  this.getFiltersAttributes = function (params) {
+    return $http.get(filtersAttributesUrl,{params: params});
+  };
+
+  /**
+   *
+   * @returns {HttpPromise}
+   */
   this.getSimulations = function () {
     return $http.get(simulationsUrl);
   };
@@ -78,7 +87,7 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
     return $http.delete(api_host + "foram_filters/" + id);
   };
 
-  this.editFilters = function(id, params) {
+  this.updateFilters = function(id, params) {
     return $http.put(api_host + "foram_filters/" + id, {foram_filter: params});
   };
 
@@ -92,11 +101,11 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
   this.getDescendants = function (foramId, params) {
     return $http.get(descendantsUrl(foramId), { params: params });
   };
-  
+
   this.getAttributeStats = function (params) {
-    return $http.get(attributeStatsUrl, {params : params});  
+    return $http.get(attributeStatsUrl, {params : params});
   };
-  
+
 }]);
 
 /**

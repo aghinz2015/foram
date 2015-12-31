@@ -1,5 +1,8 @@
-app.controller('3DMapCtrl', ['$scope', 'ForamAPIService', 'ToastService', function ($scope, ForamAPIService, ToastService) {
+app.controller('3DMapCtrl', ['$scope', 'ForamAPIService', 'ToastService', '$window', function ($scope, ForamAPIService, ToastService, $window) {
+  $scope.loader = true;
+
   var setUp3DColors = function() {
+    $scope.loader = true;
     Highcharts.getOptions().colors = $.map(Highcharts.getOptions().colors, function (color) {
         return {
             radialGradient: {
@@ -13,22 +16,28 @@ app.controller('3DMapCtrl', ['$scope', 'ForamAPIService', 'ToastService', functi
             ]
         };
     });
+    $scope.loader = false;
   };
 
   var setUpChart = function(data) {
+    $scope.loader = true;
     var chartData = data.data,
         minX = data.x_min,
         maxX = data.x_max,
         minY = data.y_min,
         minZ = data.z_min,
         maxZ = data.z_max,
-        maxY = data.y_max;
+        maxY = data.y_max,
+        width = $window.innerWidth - 100,
+        height = $window.innerHeight - 500;
+
+
 
     $scope.chart = new Highcharts.Chart({
         chart: {
             renderTo: 'container',
             height: 800,
-            width: 1800,
+            width: width,
             margin: 100,
             type: 'scatter',
             options3d: {
@@ -84,9 +93,11 @@ app.controller('3DMapCtrl', ['$scope', 'ForamAPIService', 'ToastService', functi
             data: chartData
         }]
     });
+    $scope.loader = false;
   };
 
   var addInteractivity = function() {
+    $scope.loader = true;
     $($scope.chart.container).bind('mousedown.hc touchstart.hc', function (eStart) {
       eStart = $scope.chart.pointer.normalize(eStart);
 
@@ -113,13 +124,16 @@ app.controller('3DMapCtrl', ['$scope', 'ForamAPIService', 'ToastService', functi
         }
       });
     });
+    $scope.loader = false;
   };
 
   var refresh = function() {
+    $scope.loader = true;
     ForamAPIService.getDeathCoordinates({type: "three_dimensions"}).then(function (response) {
       setUpChart(response.data);
       addInteractivity();
     });
+    $scope.loader = false;
   };
 
   setUp3DColors();
@@ -149,4 +163,6 @@ app.controller('3DMapCtrl', ['$scope', 'ForamAPIService', 'ToastService', functi
       refresh();
     }
   });
+
+  $scope.loader = false;
 }]);
