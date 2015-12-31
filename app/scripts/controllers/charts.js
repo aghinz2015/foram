@@ -18,14 +18,11 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
   $scope.availableGroupingParameters = [];
   $scope.availableGroupingParameters = ["death_hour","age"];
 
-  ForamAPIService.getFiltersAttributes({only_numeric: true}).then(
+  ForamAPIService.getFiltersAttributes({only_numeric: true, only_genotype: true}).then(
     function (res) {
       if(res.data) {
         if (res.status < 400) {
           var data = res.data;
-          data.attributes.splice(data.attributes.indexOf('death_hour'),1);
-          data.attributes.splice(data.attributes.indexOf('age'),1);
-          data.attributes.splice(data.attributes.indexOf('chambers_count'),1);
           $scope.availableGenes = data.attributes;
         } else {
           ToastService.showServerToast(res.data,'error',3000);
