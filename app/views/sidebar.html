@@ -2,7 +2,6 @@
   <div class="icon-bar">
 
     <a ng-click="goTo('/','item')" class="logo">
-      <label>FORAM</label>
     </a>
 
     <a ng-repeat="position in menu.list" ng-click="$parent.goTo(position.args,'item')" ng-show="$root.globals.currentUser" id="{{position.args}}" class="item">

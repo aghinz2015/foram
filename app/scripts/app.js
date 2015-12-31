@@ -15,8 +15,8 @@ var app = angular.module('trunkApp', ['ngRoute', 'mm.foundation', 'highcharts-ng
 app.config(function ($routeProvider, $httpProvider) {
   $routeProvider
     .when('/', {
-      templateUrl: 'views/main.html',
-      controller: 'MainCtrl'
+      templateUrl: 'views/settings.html',
+      controller: 'SettingsCtrl'
     })
     .when('/about', {
       templateUrl: 'views/about.html',
