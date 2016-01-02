@@ -1,3 +1,5 @@
+@import "compass";
+
 $sidebar-width: 116px;
 $nav-color: #333;
 
@@ -68,7 +70,7 @@ $nav-color: #333;
 
 a.logo {
   background: #fff none no-repeat scroll -4px 0;
-  background-image: url('/app/assets/images/foram.png');
+  background-image: image-url('foram.png');
   background-size: 100%;
   height:72px;
   color: black;
@@ -79,7 +81,7 @@ a.logo {
 
   &:hover {
     background: transparent none no-repeat scroll -12px -4px;
-    background-image: url('/app/assets/images/foram.png');
+    background-image: image-url('foram.png');
     background-size: 110%;
   }
 }

@@ -209,19 +209,20 @@ module.exports = function (grunt) {
         sassDir: '<%= yeoman.app %>/assets/scss',
         cssDir: '.tmp/assets/css',
         generatedImagesDir: '.tmp/images/generated',
-        imagesDir: '<%= yeoman.app %>/images',
+        imagesDir: '<%= yeoman.app %>/assets/images',
         javascriptsDir: '<%= yeoman.app %>/assets/js',
         fontsDir: '<%= yeoman.app %>/assets/fonts',
         importPath: './bower_components/foundation/scss',
         httpImagesPath: '/images',
         httpGeneratedImagesPath: '/images/generated',
         httpFontsPath: '/assets/fonts',
-        relativeAssets: false,
+        relativeAssets: true,
         assetCacheBuster: false,
         raw: 'Sass::Script::Number.precision = 10\n'
       },
       dist: {
         options: {
+          imagesDir: '/assets/images',
           generatedImagesDir: '<%= yeoman.dist %>/images/generated'
         }
       },
@@ -238,7 +239,6 @@ module.exports = function (grunt) {
         src: [
           '<%= yeoman.dist %>/scripts/{,*/}*.js',
           '<%= yeoman.dist %>/assets/{,*/}*.css',
-          '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
           '<%= yeoman.dist %>/assets/fonts/*'
         ]
       }
@@ -302,27 +302,28 @@ module.exports = function (grunt) {
     //   dist: {}
     // },
 
-    imagemin: {
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= yeoman.app %>/images',
-          src: '{,*/}*.{png,jpg,jpeg,gif}',
-          dest: '<%= yeoman.dist %>/images'
-        }]
-      }
-    },
+    // imagemin: {
+    //   dist: {
+    //     options: {},
+    //     files: [{
+    //       expand: true,
+    //       cwd: '<%= yeoman.app %>/assets/images',
+    //       src: '**/*.{png,jpg,jpeg,gif}',
+    //       dest: '<%= yeoman.dist %>/assets/images'
+    //     }]
+    //   }
+    // },
 
-    svgmin: {
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= yeoman.app %>/images',
-          src: '{,*/}*.svg',
-          dest: '<%= yeoman.dist %>/images'
-        }]
-      }
-    },
+    // svgmin: {
+    //   dist: {
+    //     files: [{
+    //       expand: true,
+    //       cwd: '<%= yeoman.app %>/assets/images',
+    //       src: '{,*/}*.svg',
+    //       dest: '<%= yeoman.dist %>/assets/images'
+    //     }]
+    //   }
+    // },
 
     htmlmin: {
       dist: {
@@ -384,6 +385,11 @@ module.exports = function (grunt) {
           src: ['generated/*']
         }, {
           expand: true,
+          cwd: '<%= yeoman.app %>/assets/images',
+          dest: '<%= yeoman.dist %>/assets/images',
+          src: ['{,*/}*.{png,jpg,jpeg,gif,webp,svg}']
+        }, {
+          expand: true,
           cwd: '<%= yeoman.app %>/assets/fonts',
           dest: '<%= yeoman.dist %>/fonts',
           src: ['{,*/}*.*']
@@ -411,9 +417,7 @@ module.exports = function (grunt) {
         'compass'
       ],
       dist: [
-        'compass:dist',
-        'imagemin',
-        'svgmin'
+        'compass:dist'
       ]
     },
 
