@@ -174,8 +174,7 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
                        .clamp(true);
 
         var fastStep = (maxZ - minZ) / 10;
-        console.log(fastStep);
-        if (fastStep < 1) {
+        if (fastStep < 2) {
           fastStep = 2;
         }
 

@@ -482,6 +482,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     $scope.forams = [];
     $scope.numberOfForams = 1;
 
+
     ForamAPIService.getForamsAttributes().then(
       function (res) {
         if (res.data) {
