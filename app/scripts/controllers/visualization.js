@@ -12,8 +12,8 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
   $scope.toggles = {
     centoridsPath:    false,
     aperturesPath:    false,
-    thicknessVectors: false,
-  }
+    thicknessVectors: false
+  };
 
   configService.getConfig('visualization').then(function(response) {
     applyDefaults(response.data.defaults);
@@ -110,8 +110,6 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
   };
 
   var resetToggles = function() {
-    var toggle;
-
     for (var toggle in $scope.toggles) {
       $scope.toggles[toggle] = false;
     }
