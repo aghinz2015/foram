@@ -5,8 +5,8 @@ app.controller('GalleryCtrl', ['$location', '$scope', '$timeout', 'SettingsServi
     var swiper;
     var simulation;
 
-    $scope.forams = DatasetService.getProducts();
-    $scope.gene = {}
+    $scope.forams = DatasetService.getProducts('foram-storage');
+    $scope.gene = {};
 
     SettingsService.getSettings().then(
         function (res) {
@@ -28,7 +28,7 @@ app.controller('GalleryCtrl', ['$location', '$scope', '$timeout', 'SettingsServi
             onInit: init,
             onTransitionStart: loadSimulation,
             onSlideChangeStart: moveAnimation,
-            lazyLoading: true,
+            lazyLoading: true
         });
     });
 
@@ -37,7 +37,7 @@ app.controller('GalleryCtrl', ['$location', '$scope', '$timeout', 'SettingsServi
             translationFactor: genotype.translation_factor.effective,
             growthFactor: genotype.growth_factor.effective,
             beta: genotype.deviation_angle.effective,
-            phi: genotype.rotation_angle.effective,
+            phi: genotype.rotation_angle.effective
         };
     };
 
@@ -64,7 +64,7 @@ app.controller('GalleryCtrl', ['$location', '$scope', '$timeout', 'SettingsServi
     };
 
     $scope.visualize = function () {
-        DatasetService.putProducts($scope.foram);
+        DatasetService.putProducts($scope.foram,'foram-storage');
         $location.path("/visualization");
     };
 }]);

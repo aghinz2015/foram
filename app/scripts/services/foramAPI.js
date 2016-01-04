@@ -1,4 +1,4 @@
-app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) {
+app.service('ForamAPIService', ['$http', 'api_host', 'DatasetService', function ($http, api_host, DatasetService) {
 
   var foramsUrl = api_host + 'forams',
       attributesUrl = api_host + 'forams/attribute_names',
@@ -12,6 +12,21 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
       descendantsUrl = function(foramId) { return foramsUrl + '/' + foramId + '/descendants';},
       simulation;
 
+  /**
+   *
+   * @param params
+     */
+  var addFilters = function(params){
+    var filters = DatasetService.getProducts("foram-filters");
+    if(filters) {
+      var keys = Object.keys(filters);
+      for(var i = 0; i < keys.length; i++){
+        params[keys[i]] = filters[keys[i]];
+      }
+    }
+
+    return params;
+  };
 
   /**
    *
@@ -72,6 +87,9 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
     if(simulation) {
       params['simulation_start'] = simulation;
     }
+
+    params = addFilters(params);
+
     return $http.get(generationsUrl, { params: params });
   };
 
@@ -91,10 +109,14 @@ app.service('ForamAPIService', ['$http', 'api_host', function ($http, api_host) 
     return $http.put(api_host + "foram_filters/" + id, {foram_filter: params});
   };
 
+
   this.getDeathCoordinates = function (params) {
     if(simulation) {
       params['simulation_start'] = simulation;
     }
+
+    params = addFilters(params);
+
     return $http.get(deathCoordinatesUrl, { params: params });
   };
 

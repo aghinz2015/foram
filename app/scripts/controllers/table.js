@@ -32,7 +32,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     };
 
     $scope.visualize = function () {
-      DatasetService.putProducts($scope.selectedForams());
+      DatasetService.putProducts($scope.selectedForams(),'foram-storage');
       $location.path("/visualization");
     };
 
@@ -94,7 +94,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     };
 
     $scope.showForamGallery = function () {
-      $scope.selectedForams().length > 0 ? DatasetService.putProducts($scope.selectedForams()) : DatasetService.putProducts($scope.forams);
+      $scope.selectedForams().length > 0 ? DatasetService.putProducts($scope.selectedForams(),'foram-storage') : DatasetService.putProducts($scope.forams,'foram-storage');
       $location.path('/gallery');
     };
 
@@ -174,6 +174,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     // fliter data with current filters
     $scope.filterData = function () {
       flatFilters = prepareFilters();
+      DatasetService.putProducts(flatFilters,'foram-filters');
       filterForams();
     };
 
@@ -350,7 +351,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       var modalInstance = $modal.open({
         templateUrl: 'views/filter_loader.html',
         controller: 'FilterLoaderCtrl',
-        windowClass: 'small', 
+        windowClass: 'small'
       });
 
       modalInstance.result.then(function (loadedFilter) {
@@ -419,7 +420,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       },
 
       nextPage: function () {
-        if ($scope.currentPage < this.pageCount() - 1) {
+        if ($scope.currentPage < this.pageCount()) {
           $scope.currentPage++;
         }
       },
@@ -434,7 +435,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       },
 
       nextPageDisabled: function () {
-        return $scope.currentPage === this.pageCount() - 1 ? "disabled" : "";
+        return $scope.currentPage === this.pageCount() ? "disabled" : "";
       },
 
       pageCount: function () {
@@ -450,16 +451,23 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       },
 
       range: function () {
-        var rangeSize = 5;
-        var ret = [];
-        var start;
+        var rangeSize = 5,
+            ret = [],
+            start,
+            tempStart;
 
         start = $scope.currentPage;
         if (start > $scope.pagination.pageCount() - rangeSize) {
           start = $scope.pagination.pageCount() + 1 - rangeSize;
         }
 
-        for (var i = start; i < start + rangeSize; i++) {
+        if(start < 1) {
+          tempStart = 1;
+        } else {
+          tempStart = start;
+        }
+
+        for (var i = tempStart; i < start + rangeSize; i++) {
           ret.push(i);
         }
 
@@ -497,6 +505,12 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
             $scope.availableFilterParamsToLoad = data.attributes;
             data.attributes.splice(data.attributes.indexOf('is_diploid'), 1);
             $scope.availableFilterParams = data.attributes;
+            if(firstLoad){
+              firstLoad = false;
+              flatFilters = DatasetService.getProducts('foram-filters');
+              unflattenFilter(flatFilters);
+              filterForams();
+            }
           } else {
             ToastService.showServerToast(res.data, 'error', 3000);
           }
@@ -504,9 +518,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       }, function (err) {
         ToastService.showToast('Cannot connect to server', 'error', 3000);
       }
-      );
-
-
+    );
 
     //////////////////////// DISPLAY SETTINGS //////////////////////
 
@@ -514,6 +526,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     $scope.mappings = {};
     $scope.loader = false;
     $scope.visibility = {};
+    var firstLoad = true;
 
     SettingsService.getSettings().then(
       function (res) {
@@ -532,8 +545,11 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
 
     // watching current page number and loading forams
     $scope.$watch("currentPage", function () {
-      flatFilters['page'] = $scope.currentPage;
-      filterForams();
+      if(!firstLoad) {
+        flatFilters['page'] = $scope.currentPage;
+        filterForams();
+      }
     });
+
 
   }]);

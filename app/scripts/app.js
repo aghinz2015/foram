@@ -128,16 +128,16 @@ app.service('APIInterceptor', ['$location', function ($location) {
 
 app.service('DatasetService', function (localStorageService) {
 
-  this.putProducts = function (newDataset) {
-    localStorageService.set('foram-storage', newDataset);
+  this.putProducts = function (newDataset,key) {
+    localStorageService.set(key, newDataset);
   };
 
-  this.getProducts = function () {
-    return localStorageService.get('foram-storage');
+  this.getProducts = function (key) {
+    return localStorageService.get(key);
   };
 
-  this.getFirstProduct = function () {
-    return localStorageService.get('foram-storage')[0];
+  this.getFirstProduct = function (key) {
+    return localStorageService.get(key)[0];
   };
 });
 
