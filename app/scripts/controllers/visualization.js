@@ -4,9 +4,15 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
   var canvas = document.getElementById('visualization');
   var simulation = simulationFactory(canvas);
 
-  $scope.foram = genotypeService.fetchForamData();
-  $scope.foram = window._foram || $scope.foram;
-  $scope.userForam = angular.copy($scope.foram);
+  configService.getConfig('visualization').then(function(response) {
+    $scope.defaults = response.data.defaults;
+    applyDefaults();
+
+    $scope.foram = fetchForamData();
+    $scope.userForam = angular.copy($scope.foram);
+
+    $scope.simulate();
+  });
 
   $scope.morphology = {};
 
@@ -16,11 +22,6 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
     thicknessVectors: false,
     coloring:         false
   };
-
-  configService.getConfig('visualization').then(function(response) {
-    applyDefaults(response.data.defaults);
-    $scope.simulate();
-  });
 
   $scope.simulate = function() {
     simulation.simulate(
@@ -115,6 +116,10 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
     $scope.toggles.coloring = !$scope.toggles.coloring;
   };
 
+  var fetchForamData = function() {
+    return window._foram || genotypeService.fetchForamData() || $scope.defaults.foram;
+  };
+
   var increaseChambersCount = function() {
     $scope.userForam.chambersCount++;
   };
@@ -133,7 +138,9 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
     }
   };
 
-  var applyDefaults = function(defaults) {
+  var applyDefaults = function() {
+    var defaults = $scope.defaults;
+
     $scope.material = {
       opacity: defaults.material.opacity,
       colors:  []

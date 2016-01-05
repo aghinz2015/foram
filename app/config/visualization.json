@@ -1,5 +1,16 @@
 {
   "defaults": {
+    "foram": {
+      "genotype": {
+        "phi": 0.5,
+        "beta": 0.5,
+        "translationFactor": 0.4,
+        "growthFactor": 1.1,
+        "wallThicknessFactor": 1.1
+      },
+      "chambersCount": 20
+    },
+
     "material": {
       "opacity": 0.8,
       "colors": ["#ff0000", "#00ff00", "#0000ff"]
