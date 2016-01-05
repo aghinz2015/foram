@@ -8,6 +8,12 @@
       </li>
 
       <li class="action">
+        <a ng-click="resetGenotype()">
+          Reset genotype
+        </a>
+      </li>
+
+      <li class="action">
         <a ng-click="fitTarget()">
           Fit model to camera
         </a>
@@ -27,7 +33,7 @@
           <span>Number of chambers:</span>
         </div>
 
-        <input ng-model="foram.chambersCount" type="number" min="0" max="100"/>
+        <input ng-model="userForam.chambersCount" type="number" min="0" max="100"/>
       </li>
 
       <li class="field">
@@ -35,7 +41,7 @@
           <span>Phi:</span>
         </div>
 
-        <input ng-model="foram.genotype.phi" type="number" min="0" step="0.01"/>
+        <input ng-model="userForam.genotype.phi" type="number" min="0" step="0.01"/>
       </li>
 
       <li class="field">
@@ -43,7 +49,7 @@
           <span>Beta:</span>
         </div>
 
-        <input ng-model="foram.genotype.beta" type="number" min="0" step="0.01"/>
+        <input ng-model="userForam.genotype.beta" type="number" min="0" step="0.01"/>
       </li>
 
       <li class="field">
@@ -51,7 +57,7 @@
           <span>Growth factor:</span>
         </div>
 
-        <input ng-model="foram.genotype.growthFactor" type="number" min="0" max="2" step="0.01"/>
+        <input ng-model="userForam.genotype.growthFactor" type="number" min="0" max="2" step="0.01"/>
       </li>
 
       <li class="field">
@@ -59,7 +65,7 @@
           <span>Translation factor:</span>
         </div>
 
-        <input ng-model="foram.genotype.translationFactor" type="number" min="0" max="2" step="0.01"/>
+        <input ng-model="userForam.genotype.translationFactor" type="number" min="0" max="2" step="0.01"/>
       </li>
 
       <li class="field">
@@ -67,7 +73,7 @@
           <span>Wall thickness factor:</span>
         </div>
 
-        <input ng-model="foram.genotype.wallThicknessFactor" type="number" min="0" max="2" step="0.01"/>
+        <input ng-model="userForam.genotype.wallThicknessFactor" type="number" min="0" max="2" step="0.01"/>
       </li>
     </ul>
   </accordion-group>

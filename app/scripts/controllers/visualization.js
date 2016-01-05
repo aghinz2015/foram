@@ -6,6 +6,7 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
 
   $scope.foram = genotypeService.fetchForamData();
   $scope.foram = window._foram || $scope.foram;
+  $scope.userForam = angular.copy($scope.foram);
 
   $scope.morphology = {};
 
@@ -23,12 +24,17 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
 
   $scope.simulate = function() {
     simulation.simulate(
-      $scope.foram.genotype,
-      $scope.foram.chambersCount
+      $scope.userForam.genotype,
+      $scope.userForam.chambersCount
     );
 
     recalculateMorphology();
     resetToggles();
+  };
+
+  $scope.resetGenotype = function() {
+    angular.copy($scope.foram, $scope.userForam);
+    $scope.simulate();
   };
 
   $scope.evolve = function() {
@@ -110,12 +116,12 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
   };
 
   var increaseChambersCount = function() {
-    $scope.foram.chambersCount++;
+    $scope.userForam.chambersCount++;
   };
 
   var decreaseChambersCount = function() {
-    if ($scope.foram.chambersCount > 1) {
-      $scope.foram.chambersCount--
+    if ($scope.userForam.chambersCount > 1) {
+      $scope.userForam.chambersCount--
     }
   };
 
