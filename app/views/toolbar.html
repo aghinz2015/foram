@@ -1,6 +1,35 @@
 <accordion class="toolbar" close-others="false">
-  <accordion-group heading="Genotype" class="folder">
+  <div class="folder">
     <ul class="folder-items">
+      <li class="action">
+        <a ng-click="simulate()">
+          Generate model
+        </a>
+      </li>
+
+      <li class="action">
+        <a ng-click="fitTarget()">
+          Fit model to camera
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <accordion-group is-open="genotypeOpened" class="folder section">
+    <accordion-heading>
+      Genotype
+      <i class="right" ng-class="{'fa fa-chevron-down': genotypeOpened, 'fa fa-chevron-right': !genotypeOpened}"></i>
+    </accordion-heading>
+
+    <ul class="folder-items">
+      <li class="field">
+        <div class="property">
+          <span>Number of chambers:</span>
+        </div>
+
+        <input ng-model="foram.chambersCount" type="number" min="0" max="100"/>
+      </li>
+
       <li class="field">
         <div class="property">
           <span>Phi:</span>
@@ -43,67 +72,12 @@
     </ul>
   </accordion-group>
 
-  <accordion-group heading="Structure analyzer" is-open="true" class="folder">
-    <ul class="folder-items">
-      <li class="field">
-        <div class="property">
-          <span>Number of chambers:</span>
-        </div>
+  <accordion-group is-open="morphometricsOpened" class="folder section">
+    <accordion-heading>
+      Morphometrics
+      <i class="right" ng-class="{'fa fa-chevron-down': morphometricsOpened, 'fa fa-chevron-right': !morphometricsOpened}"></i>
+    </accordion-heading>
 
-        <input ng-model="foram.chambersCount" type="number" min="0" max="100"/>
-      </li>
-
-      <li class="action">
-        <a ng-click="simulate()" class="markedout">
-          Simulate
-        </a>
-      </li>
-
-      <li class="action">
-        <a ng-click="evolve()">
-          Evolve
-        </a>
-      </li>
-
-      <li class="action">
-        <a ng-click="regress()">
-          Regress
-        </a>
-      </li>
-
-      <li class="action">
-        <a ng-click="toggleCentroidsPath()" ng-class="{selected: toggles.centroidsPath}">
-          Centroids path
-        </a>
-      </li>
-
-      <li class="action">
-        <a ng-click="toggleAperturesPath()" ng-class="{selected: toggles.aperturesPath}">
-          Apertures path
-        </a>
-      </li>
-
-      <li class="action">
-        <a ng-click="toggleThicknessVectors()" ng-class="{selected: toggles.thicknessVectors}">
-          Thickness vectors
-        </a>
-      </li>
-
-      <li class="action">
-        <a ng-click="toggleColoring()" ng-class="{selected: toggles.coloring}">
-          Coloring
-        </a>
-      </li>
-
-      <li class="action">
-        <a ng-click="fitTarget()">
-          Fit target to camera
-        </a>
-      </li>
-    </ul>
-  </accordion-group>
-
-  <accordion-group heading="Morphology" class="folder">
     <ul class="folder-items">
       <li class="field">
         <div class="property">
@@ -125,7 +99,40 @@
     </ul>
   </accordion-group>
 
-  <accordion-group heading="Material" class="folder">
+  <div class="folder">
+    <ul class="folder-items">
+      <li class="action">
+        <a ng-click="toggleCentroidsPath()" ng-class="{selected: toggles.centroidsPath}">
+          Centroids path
+        </a>
+      </li>
+
+      <li class="action">
+        <a ng-click="toggleAperturesPath()" ng-class="{selected: toggles.aperturesPath}">
+          Apertures path
+        </a>
+      </li>
+
+      <li class="action">
+        <a ng-click="toggleThicknessVectors()" ng-class="{selected: toggles.thicknessVectors}">
+          Wall thickness vectors
+        </a>
+      </li>
+
+      <li class="action">
+        <a ng-click="toggleColoring()" ng-class="{selected: toggles.coloring}">
+          Coloring
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <accordion-group is-open="materialsOpened" class="folder section">
+    <accordion-heading>
+      Materials
+      <i class="right" ng-class="{'fa fa-chevron-down': materialsOpened, 'fa fa-chevron-right': !materialsOpened}"></i>
+    </accordion-heading>
+
     <ul class="folder-items">
       <li class="field">
         <div class="property">
@@ -162,7 +169,12 @@
     </ul>
   </accordion-group>
 
-  <accordion-group heading="Export" class="folder">
+  <accordion-group is-open="materialsIsOpened" class="folder section">
+    <accordion-heading>
+      Export
+      <i class="right" ng-class="{'fa fa-chevron-down': materialsIsOpened, 'fa fa-chevron-right': !materialsIsOpened}"></i>
+    </accordion-heading>
+
     <ul class="folder-items">
       <li class="action">
         <a ng-click="exportToOBJ()">

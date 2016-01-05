@@ -14,7 +14,7 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
     aperturesPath:    false,
     thicknessVectors: false,
     coloring:         false
-  }
+  };
 
   configService.getConfig('visualization').then(function(response) {
     applyDefaults(response.data.defaults);
