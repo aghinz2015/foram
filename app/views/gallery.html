@@ -14,7 +14,7 @@
             </div>
         </div>
         <accordion close-others="false">
-            <accordion-group heading="Genotype" ng-cloak> 
+            <accordion-group heading="Genotype" ng-cloak is-open="true">
                 <div class="row">
                     <div class="large-3 columns" ng-repeat="(key,value) in genotype">
                         <strong>{{key}}:</strong> {{value | number:precision}}
