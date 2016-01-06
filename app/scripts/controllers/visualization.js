@@ -22,13 +22,6 @@ app.controller('VisualizationCtrl', ['$scope', 'ConfigService', 'SimulationFacto
     thicknessVectors: false,
     coloring:         false
   };
-    thicknessVectors: false
-  };
-
-  configService.getConfig('visualization').then(function(response) {
-    applyDefaults(response.data.defaults);
-    $scope.simulate();
-  });
 
   $scope.simulate = function() {
     simulation.simulate(
