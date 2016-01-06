@@ -509,8 +509,15 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
             if(firstLoad){
               firstLoad = false;
               flatFilters = DatasetService.getProducts('foram-filters');
+
               if(flatFilters){
                 unflattenFilter(flatFilters);
+              }
+
+              var visibility = DatasetService.getProducts('foram-visibility');
+
+              if(visibility){
+                $scope.visibility = visibility;
               }
               filterForams();
             }
@@ -542,7 +549,12 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
       function (err) {
         console.error(err);
       }
-      );
+    );
+
+    $scope.saveVisibility = function() {
+      console.log($scope.visibility);
+      DatasetService.putProducts($scope.visibility,'foram-visibility');
+    };
 
     //////////////// INIT /////////////////////
 
@@ -553,6 +565,8 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
         filterForams();
       }
     });
+
+
 
 
 
