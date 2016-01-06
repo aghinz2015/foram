@@ -509,7 +509,9 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
             if(firstLoad){
               firstLoad = false;
               flatFilters = DatasetService.getProducts('foram-filters');
-              unflattenFilter(flatFilters);
+              if(flatFilters){
+                unflattenFilter(flatFilters);
+              }
               filterForams();
             }
           } else {
@@ -551,6 +553,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
         filterForams();
       }
     });
+
 
 
   }]);
