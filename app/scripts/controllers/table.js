@@ -214,7 +214,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
         diploid: true,
         haploid: true
       };
-      filterForams();
+      $scope.filterData();
     };
 
     // delete filter and load forams
