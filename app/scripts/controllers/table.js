@@ -195,7 +195,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
         $scope.filterData();
       }
 
-    };remove
+    };
 
     // add new filter
     $scope.addFilter = function () {
