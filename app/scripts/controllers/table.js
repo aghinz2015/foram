@@ -195,7 +195,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
         $scope.filterData();
       }
 
-    };
+    };remove
 
     // add new filter
     $scope.addFilter = function () {
@@ -230,7 +230,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
         flatFilters[key] = undefined;
       }
       $scope.filters.splice(index, 1);
-      filterForams();
+      $scope.filterData();
     };
 
     // check filters for intersecting
