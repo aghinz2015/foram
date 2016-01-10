@@ -90,7 +90,8 @@ app.controller('3DMapCtrl', ['$scope', 'ForamAPIService', 'ToastService', '$wind
         series: [{
             name: 'Forams',
             colorByPoint: true,
-            data: chartData
+            data: chartData,
+            turboThreshold: 0
         }]
     });
     $scope.loader = false;
