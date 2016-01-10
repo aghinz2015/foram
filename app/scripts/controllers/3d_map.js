@@ -130,7 +130,7 @@ app.controller('3DMapCtrl', ['$scope', 'ForamAPIService', 'ToastService', '$wind
 
   var refresh = function() {
     $scope.loader = true;
-    ForamAPIService.getDeathCoordinates({type: "three_dimensions"}).then(function (response) {
+    ForamAPIService.getDeathCoordinates({type: "3d"}).then(function (response) {
       setUpChart(response.data);
       addInteractivity();
     });

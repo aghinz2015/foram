@@ -1,13 +1,13 @@
 app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAPIService', '$window', 'ToastService', function ($scope, $routeParams, $location, ForamAPIService, $window, ToastService) {
-  $scope.type = $routeParams.type || "bubble";
-  $scope.zAxis = ($scope.type == "bubble") ? "depth" : "time";
+  $scope.type = $routeParams.type || "2d_z";
+  $scope.zAxis = ($scope.type == "2d_z") ? "depth" : "time";
   $scope.loader = true;
 
   var dividingFactor = 20;
 
   $scope.changeTypeText = function() {
     var result = "Group by ";
-    if ($scope.type == "bubble") {
+    if ($scope.type == "2d_z") {
       return result + "death time";
     } else {
       return  result + "depth"
@@ -16,7 +16,7 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
 
   $scope.currentTypeText = function() {
     var result = "Currently grouped by ";
-    if ($scope.type == "bubble") {
+    if ($scope.type == "2d_z") {
       return result + "depth";
     } else {
       return  result + "death time";
@@ -25,10 +25,10 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
 
 
   $scope.swapType = function() {
-    if ($scope.type == "bubble") {
-      $scope.type = "bubble_alternative";
+    if ($scope.type == "2d_z") {
+      $scope.type = "2d_death_hour";
     } else {
-      $scope.type = "bubble";
+      $scope.type = "2d_z";
     }
 
     $location.path("/bubble-map/" + $scope.type);
