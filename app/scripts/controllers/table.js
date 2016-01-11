@@ -566,6 +566,9 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     // watching current page number and loading forams
     $scope.$watch("currentPage", function () {
       if(!firstLoad) {
+        if(!flatFilters) {
+          flatFilters = {};
+        }
         flatFilters['page'] = $scope.currentPage;
         DatasetService.putProducts(flatFilters,'foram-filters');
         filterForams();
