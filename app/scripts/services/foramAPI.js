@@ -10,7 +10,7 @@ app.service('ForamAPIService', ['$http', 'api_host', 'DatasetService', function 
       deathCoordinatesUrl = api_host + 'death_coordinates',
       databaseUrl = function (id) { return [databasesUrl, id].join('/');},
       descendantsUrl = function(foramId) { return foramsUrl + '/' + foramId + '/descendants';},
-      simulation;
+      simulation = DatasetService.getProducts('foram-simulation');
 
   /**
    *
@@ -33,6 +33,7 @@ app.service('ForamAPIService', ['$http', 'api_host', 'DatasetService', function 
    * @param simulation_id
      */
   this.setSimulation = function(simulation_id) {
+    DatasetService.putProducts(simulation_id,'foram-simulation');
     simulation = simulation_id;
   };
 
