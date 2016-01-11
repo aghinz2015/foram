@@ -512,6 +512,9 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
 
               if(flatFilters){
                 unflattenFilter(flatFilters);
+                if(flatFilters.page){
+                  $scope.currentPage = flatFilters.page;
+                }
               }
 
               var visibility = DatasetService.getProducts('foram-visibility');
@@ -519,6 +522,8 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
               if(visibility){
                 $scope.visibility = visibility;
               }
+
+
               filterForams();
             }
           } else {
@@ -562,6 +567,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     $scope.$watch("currentPage", function () {
       if(!firstLoad) {
         flatFilters['page'] = $scope.currentPage;
+        DatasetService.putProducts(flatFilters,'foram-filters');
         filterForams();
       }
     });
