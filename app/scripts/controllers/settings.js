@@ -48,6 +48,7 @@ app.controller('SettingsCtrl',['$scope', '$location', '$modal', 'UserService', '
 
   $scope.saveUserData = function(data){
     $scope.loader = true;
+
     UserService.updateUserData(data).then(
       function(res){
         if(res.status < 400) {
@@ -71,6 +72,7 @@ app.controller('SettingsCtrl',['$scope', '$location', '$modal', 'UserService', '
 
         $scope.settings.number_precision = res.data.user.settings_set.number_precision;
         $scope.settings.tree_level = res.data.user.settings_set.tree_level;
+        $scope.settings.per_page = res.data.user.settings_set.per_page;
 
         if(!angular.equals({},res.data.user.settings_set.mappings)) {
           for (var gene in res.data.user.settings_set.mappings) {
@@ -113,6 +115,7 @@ app.controller('SettingsCtrl',['$scope', '$location', '$modal', 'UserService', '
   $scope.settings = {mappings: []};
 
   $scope.saveSettings = function(settings){
+
     UserService.updateUserSettings(settings).then(
       function(res){
         if(res.status < 400) {

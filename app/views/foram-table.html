@@ -14,8 +14,8 @@
     </select>
 
     <accordion close-others="false">
-      <accordion-group ng-cloak is-open="isopen">
-        <accordion-heading>
+      <accordion-group ng-cloak is-open="true">
+        <accordion-heading id="filtersAcc">
           Filters <span class="right" ng-class="{'fa fa-chevron-down': isopen, 'fa fa-chevron-right': !isopen}"></span>
         </accordion-heading>
         <ul class="button-row filters-button">
@@ -86,7 +86,7 @@
         <ul class="visibility-list">
           <li ng-repeat="key in displayAttributes" ng-if="key != '_id' && key != 'foram_id'" class="visible-column">
             <span class="column-visible">{{key}}</span>
-            <input type="checkbox" ng-init="visibility[key]=true" ng-model="visibility[key]">
+            <input type="checkbox" ng-init="visibility[key]=true" ng-model="visibility[key]" ng-click="saveVisibility()">
           </li>
         </ul>
       </accordion-group>

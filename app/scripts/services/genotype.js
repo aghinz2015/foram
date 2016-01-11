@@ -2,7 +2,7 @@
 
 app.service('GenotypeService', ['DatasetService', function(datasetService) {
   this.fetchForamData = function() {
-    var foram = datasetService.getFirstProduct();
+    var foram = datasetService.getFirstProduct('foram-storage');
 
     if (!foram) return;
 

@@ -13,10 +13,11 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
   ////////////////////////    DIALOG    ///////////////////////////
 
   var modalInstance;
-  $scope.loader = true;
+
   $scope.availableGenes = [];
   $scope.availableGroupingParameters = [];
   $scope.availableGroupingParameters = ["death_hour","age"];
+  $scope.simulationStart = ForamAPIService.getCurrentSimulation();
 
   ForamAPIService.getFiltersAttributes({only_numeric: true, only_genotype: true}).then(
     function (res) {
@@ -106,7 +107,7 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
   };
 
   var generateChart = function () {
-    $scope.loader = true;
+
     if (!$scope.chartParams.gene) return;
 
     var gene = $scope.chartParams.gene.replace(/\s+/g, '');
@@ -120,6 +121,7 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
       group_by: $scope.chartParams.groupingParameter
     };
 
+    $scope.loader = true;
     ForamAPIService.getGenerations(flatParams).then(function (res) {
       if(res.data) {
         if (res.status < 400) {
@@ -249,8 +251,6 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
 
   $scope.open();
 
-
-
   $scope.$watch('simulationStart', function (newValue,oldValue) {
     if(newValue) {
       ForamAPIService.setSimulation(newValue);
@@ -273,7 +273,7 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
     }
   );
 
-  $scope.simulationStart = ForamAPIService.getCurrentSimulation();
+
 
   Highcharts.createElement('link', {
     href: '//fonts.googleapis.com/css?family=Unica+One',
@@ -283,6 +283,5 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
 
   Highcharts.setOptions(options);
 
-  $scope.loader = false;
 
 }]);

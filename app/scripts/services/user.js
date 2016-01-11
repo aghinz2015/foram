@@ -41,6 +41,7 @@ app.service('UserService', ['$http', 'api_host', 'SettingsService', 'ForamAPISer
 
     settings_data.number_precision = settings.number_precision;
     settings_data.tree_level = settings.tree_level;
+    settings_data.per_page = settings.per_page;
 
     SettingsService.saveSettings(settings_data);
 

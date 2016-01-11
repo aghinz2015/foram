@@ -84,6 +84,16 @@
               </div>
             </div>
             <div class="row">
+              <label for="per-page-param" ng-class="{error: userSettings.page.$invalid}">Forams per page
+                <input id="per-page-param" type="number" min="0" name="page" ng-model="settings.per_page">
+              </label>
+              <div role="alert">
+                  <span class="error" ng-show="userSettings.page.$invalid">
+                    Number of forams per page should be an integer larger then 0!
+                  </span>
+              </div>
+            </div>
+            <div class="row">
               <caption>Genes display</caption>
               <table class="display-settings">
                 <tr>

@@ -55,7 +55,6 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
         width = $window.innerWidth - 220 - margin.right,
         height = $window.innerHeight - 240 - margin.top - margin.bottom;
 
-    //TODO - consider scaling by values from data
     var xScale = d3.scale.linear().domain([minX-1, maxX+1]).range([0, width]),
         yScale = d3.scale.linear().domain([minY-1, maxY+1]).range([height, 0]),
         radiusScale = d3.scale.sqrt().domain([0, 50]).range([0, 40]),
@@ -175,8 +174,7 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
                        .clamp(true);
 
         var fastStep = (maxZ - minZ) / 10;
-        console.log(fastStep);
-        if (fastStep < 1) {
+        if (fastStep < 2) {
           fastStep = 2;
         }
 
