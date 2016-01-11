@@ -38,6 +38,7 @@ app.service('ForamAPIService', ['$http', 'api_host', 'DatasetService', function 
   };
 
   this.getCurrentSimulation = function() {
+    console.log(simulation);
     return simulation;
   };
 
@@ -47,8 +48,12 @@ app.service('ForamAPIService', ['$http', 'api_host', 'DatasetService', function 
    * @returns {HttpPromise}
    */
   this.getForams = function (params, format) {
-    if (format === undefined)
+    if(!params) {
+      params = {};
+    }
+    if (format === undefined) {
       format = '';
+    }
     if(simulation) {
       params['simulation_start'] = simulation;
     }
