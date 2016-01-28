@@ -2,6 +2,7 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
   $scope.type = $routeParams.type || "2d_z";
   $scope.zAxis = ($scope.type == "2d_z") ? "depth" : "time";
   $scope.loader = true;
+  $scope.animationSpeed = 1;
 
   var dividingFactor = 20;
 
@@ -143,7 +144,7 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
       var playAnimation = d3.select("#playAnimation");
       var pauseAnimation = d3.select("#pauseAnimation");
 
-      var duration = maxZ * 1000;
+
 
       startArrow.on("mouseover", enableInteraction);
       fastLeftArrow.on("mouseover", enableInteraction);
@@ -254,6 +255,8 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
       }
 
       playAnimation.on("click", function() {
+        console.log($scope.animationSpeed);
+        var duration = maxZ * $scope.animationSpeed * 1000;
         svg.transition()
             .duration(duration)
             .ease("linear")
