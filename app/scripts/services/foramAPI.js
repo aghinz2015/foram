@@ -1,3 +1,5 @@
+'use strict';
+
 app.service('ForamAPIService', ['$http', 'api_host', 'DatasetService', function ($http, api_host, DatasetService) {
 
   var foramsUrl = api_host + 'forams',
@@ -136,7 +138,4 @@ app.service('ForamAPIService', ['$http', 'api_host', 'DatasetService', function 
 
 }]);
 
-/**
- * Created by ezimonczyk on 18/08/15.
- */
-'use strict';
+

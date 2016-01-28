@@ -129,7 +129,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     $scope.simulationStart = ForamAPIService.getCurrentSimulation();
 
     $scope.$watch('simulationStart', function (newValue, oldValue) {
-      if (newValue) {
+      if (newValue && !firstLoad) {
         ForamAPIService.setSimulation(newValue);
         filterForams();
       }
@@ -248,7 +248,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     };
 
     // filter forams - get total number and then load forams
-    var filterForams = function () {
+    var filterForams = function (firstFlag) {
       $scope.loader = true;
       ForamAPIService.getForams(flatFilters)
         .then(function (res) {
@@ -261,9 +261,11 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
             ToastService.showServerToast(res.data, 'error', 5000);
           }
           $scope.loader = false;
+          if(firstFlag) firstLoad = false;
         }, function (err) {
           ToastService.showToast('Cannot connect to server', 'error', 5000);
           $scope.loader = false;
+          if(firstFlag) firstLoad = false;
         });
     };
 
@@ -506,12 +508,15 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
             $scope.availableFilterParamsToLoad = data.attributes;
             data.attributes.splice(data.attributes.indexOf('is_diploid'), 1);
             $scope.availableFilterParams = data.attributes;
-            if(firstLoad){
-              firstLoad = false;
+            if(firstLoad) {
               flatFilters = DatasetService.getProducts('foram-filters');
 
               if(flatFilters){
+
                 unflattenFilter(flatFilters);
+                if(flatFilters['simulation_start']){
+                  flatFilters['simulation_start'] = ForamAPIService.getCurrentSimulation();
+                }
                 if(flatFilters.page){
                   $scope.currentPage = flatFilters.page;
                 }
@@ -523,8 +528,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
                 $scope.visibility = visibility;
               }
 
-
-              filterForams();
+              filterForams(true);
             }
           } else {
             ToastService.showServerToast(res.data, 'error', 3000);
@@ -564,8 +568,8 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
     //////////////// INIT /////////////////////
 
     // watching current page number and loading forams
-    $scope.$watch("currentPage", function () {
-      if(!firstLoad) {
+    $scope.$watch("currentPage", function (newValue, oldValue) {
+      if(newValue && !firstLoad) {
         if(!flatFilters) {
           flatFilters = {};
         }
