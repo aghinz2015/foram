@@ -2,6 +2,7 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
   $scope.type = $routeParams.type || "2d_z";
   $scope.zAxis = ($scope.type == "2d_z") ? "depth" : "time";
   $scope.loader = true;
+  $scope.animationSpeed = 1;
 
   var dividingFactor = 20;
 
@@ -33,6 +34,8 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
 
     $location.path("/bubble-map/" + $scope.type);
   };
+
+
 
   function x(d) { return d.x; }
   function y(d) { return d.y; }
@@ -138,12 +141,10 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
       var fastRightArrow = d3.select("#fastRightArrow");
       var endArrow = d3.select("#endArrow");
       var zInput = d3.select("#zInput");
+      var playAnimation = d3.select("#playAnimation");
+      var pauseAnimation = d3.select("#pauseAnimation");
 
-      svg.transition()
-          .duration(30000)
-          .ease("linear")
-          .tween("z", tweenZ)
-          .each("end", enableInteraction);
+
 
       startArrow.on("mouseover", enableInteraction);
       fastLeftArrow.on("mouseover", enableInteraction);
@@ -252,6 +253,23 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
 
         interactionEnabled = true;
       }
+
+      playAnimation.on("click", function() {
+        console.log($scope.animationSpeed);
+        var duration = maxZ * $scope.animationSpeed * 1000;
+        svg.transition()
+            .duration(duration)
+            .ease("linear")
+            .tween("z", tweenZ)
+            .each("end", enableInteraction)
+            .attr("z",currentZ);
+
+      });
+
+      pauseAnimation.on("click", function() {
+        svg.transition()
+            .duration(0);
+      });
 
       function tweenZ() {
         var z = d3.interpolateNumber(minZ, maxZ);

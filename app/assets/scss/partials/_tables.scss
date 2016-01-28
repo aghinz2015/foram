@@ -73,6 +73,13 @@ div.tabs-content {
   }
 }
 
+#database-table {
+  tr.active {
+    background: rgba(198, 231, 255, 1);
+    font-weight: bold;
+  }
+}
+
 #database-table tr th, #database-table tr td {
 
   text-align: center;

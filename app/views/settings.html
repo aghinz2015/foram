@@ -134,7 +134,7 @@
                   <th>Database</th>
                   <th colspan="3">Actions</th>
                 </tr>
-                <tr ng-repeat="database in databases">
+                <tr ng-repeat="database in databases" ng-class="{active: database.active}">
                   <td>{{database.name}}</td>
                   <td>{{database.database}}</td>
                   <td>
