@@ -113,8 +113,6 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
     var gene = $scope.chartParams.gene.replace(/\s+/g, '');
 
     var flatParams = {
-      start: $scope.chartParams.start,
-      stop: $scope.chartParams.stop,
       "genes[]": [
         gene
       ],
