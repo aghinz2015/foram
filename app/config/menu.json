@@ -20,7 +20,7 @@
     {
       "name": "Map",
       "icon": "area-chart",
-      "args": "/bubble-map/bubble"
+      "args": "/bubble-map/2d_z"
     },
     {
       "name": "Settings",
