@@ -133,8 +133,8 @@ app.controller('3DMapCtrl', ['$scope', 'ForamAPIService', 'ToastService', '$wind
     ForamAPIService.getDeathCoordinates({type: "3d"}).then(function (response) {
       setUpChart(response.data);
       addInteractivity();
+      $scope.loader = false;
     });
-    $scope.loader = false;
   };
 
   setUp3DColors();
@@ -164,6 +164,4 @@ app.controller('3DMapCtrl', ['$scope', 'ForamAPIService', 'ToastService', '$wind
       refresh();
     }
   });
-
-  $scope.loader = false;
 }]);

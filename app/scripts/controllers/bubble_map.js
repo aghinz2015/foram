@@ -124,6 +124,7 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
       dot.append("title")
          .text(function(d) { return d.name; });
 
+
       var box = label.node().getBBox();
 
       var overlay = svg.append("rect")
@@ -324,13 +325,16 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
   };
 
   var refresh = function() {
+    $scope.loader = true;
     ForamAPIService.getDeathCoordinates({ type: $scope.type})
       .then(
         function (res) {
           prepareChart(res.data)
+          $scope.loader = false;
         },
         function(err){
           console.log(err);
+          $scope.loader = false;
         }
       )
   };
@@ -360,7 +364,4 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
       refresh();
     }
   });
-
-  $scope.loader = false;
-
 }]);

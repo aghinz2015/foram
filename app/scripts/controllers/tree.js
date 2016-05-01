@@ -7,6 +7,8 @@ app.controller('TreeCtrl', ['$scope', '$window', 'ForamAPIService', 'SimulationF
   var foramId = searchObject.foramId,
       level = searchObject.level;
 
+  $scope.loader = true;
+
 
   $scope.goToVisualization = function() {
      var newWindow = $window.open("/#/visualization");
@@ -104,6 +106,7 @@ app.controller('TreeCtrl', ['$scope', '$window', 'ForamAPIService', 'SimulationF
     }
 
     var plotTree = function(forams) {
+      $scope.loader = true;
       root = forams;
       root.x0 = height / 2;
       root.y0 = 0;
@@ -120,6 +123,7 @@ app.controller('TreeCtrl', ['$scope', '$window', 'ForamAPIService', 'SimulationF
         root.children.forEach(collapse);
       }
       update(root);
+      $scope.loader = false;
     };
 
     d3.select(self.frameElement).style("height", "800px");

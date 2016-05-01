@@ -543,7 +543,7 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
 
     $scope.precision = 16;
     $scope.mappings = {};
-    $scope.loader = false;
+    $scope.loader = true;
     $scope.visibility = {};
     var firstLoad = true;
 
@@ -578,9 +578,4 @@ app.controller('TableCtrl', ['$location', '$scope', '$modal', 'ForamAPIService',
         filterForams();
       }
     });
-
-
-
-
-
   }]);
