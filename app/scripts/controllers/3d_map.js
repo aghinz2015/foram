@@ -159,7 +159,7 @@ app.controller('3DMapCtrl', ['$scope', 'ForamAPIService', 'ToastService', '$wind
   $scope.simulationStart = ForamAPIService.getCurrentSimulation();
 
   $scope.$watch('simulationStart', function (newValue,oldValue) {
-    if(newValue) {
+    if(newValue !== oldValue) {
       ForamAPIService.setSimulation(newValue);
       refresh();
     }

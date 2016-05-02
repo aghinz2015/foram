@@ -359,7 +359,7 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
   $scope.simulationStart = ForamAPIService.getCurrentSimulation();
 
   $scope.$watch('simulationStart', function (newValue,oldValue) {
-    if(newValue) {
+    if(newValue !== oldValue) {
       ForamAPIService.setSimulation(newValue);
       refresh();
     }
