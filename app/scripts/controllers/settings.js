@@ -7,7 +7,7 @@
  * # SettingsCtrl
  * Controller of the trunkApp
  */
-app.controller('SettingsCtrl',['$scope', '$location', '$modal', 'UserService', 'ConfigService', 'ToastService', 'ForamAPIService', function ($scope, $location, $modal, UserService, ConfigService, ToastService, ForamAPIService) {
+app.controller('SettingsCtrl',['$scope', '$location', '$modal', 'UserService', 'ConfigService', 'ToastService', 'ForamAPIService', 'AuthenticationService', function ($scope, $location, $modal, UserService, ConfigService, ToastService, ForamAPIService, AuthenticationService) {
 
 
   // Redirect to database tab if coming from 'databases' path
@@ -101,6 +101,10 @@ app.controller('SettingsCtrl',['$scope', '$location', '$modal', 'UserService', '
         $scope.user.email = res.data.user.email;
         $scope.user.username = res.data.user.username;
         $scope.user.password = $scope.user.password_confirmation = "";
+      } else if (res.status == 401) {
+        // workaround to break redirect loop - auth logic is handled by angular library and proper
+        // fix should be done by patching it
+        AuthenticationService.clearCredentials();
       } else {
         ToastService.showServerToast(res.data,'error',3000);
       }
