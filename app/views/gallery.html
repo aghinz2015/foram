@@ -13,7 +13,20 @@
                 <div class="swiper-button-prev swiper-button-white"></div>
             </div>
         </div>
+
         <accordion close-others="false">
+            <accordion-group heading="Children" ng-cloak is-open="true">
+                <div class="row">
+                    <div class="large-3 columns">
+                        <strong>Children count:</strong> {{childrenCount}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="large-3 columns">
+                        <button ng-click="descendantsTree()"> Descendants tree </button>
+                    </div>
+                </div>
+            </accordion-group>
             <accordion-group heading="Genotype" ng-cloak is-open="true">
                 <div class="row">
                     <div class="large-3 columns" ng-repeat="(key,value) in genotype">

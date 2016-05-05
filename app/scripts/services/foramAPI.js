@@ -12,6 +12,7 @@ app.service('ForamAPIService', ['$http', 'api_host', 'DatasetService', function 
       deathCoordinatesUrl = api_host + 'death_coordinates',
       databaseUrl = function (id) { return [databasesUrl, id].join('/');},
       descendantsUrl = function(foramId) { return foramsUrl + '/' + foramId + '/descendants';},
+      childrenCountUrl = function(foramId) { return foramsUrl + '/' + foramId + '/children_count' ;},
       simulation = DatasetService.getProducts('foram-simulation');
 
   /**
@@ -136,6 +137,9 @@ app.service('ForamAPIService', ['$http', 'api_host', 'DatasetService', function 
     return $http.get(attributeStatsUrl, {params : params});
   };
 
+  this.getChildrenCount = function(foramId, params) {
+    return $http.get(childrenCountUrl(foramId), { params: params });
+  }
 }]);
 
 
