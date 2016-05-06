@@ -45,25 +45,26 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
   };
 
   ////////////////////////    CHART    ///////////////////////////
+  $scope.currentChart = 0;
 
   var getChartRef = function () {
     return Highcharts.charts.filter(function (item) {
       return item !== undefined;
-    })[0];
+    })[$scope.currentChart];
   };
 
+  $scope.charts = [];
+
   $scope.chartParams = {};
-  $scope.chart = {};
   $scope.exportOptions = {};
 
   var generations;
 
-  ConfigService.getHighchart().then(
-    function (res) {
-      $scope.chart = res.data.config;
-    });
-
   $scope.createChart = function () {
+    ConfigService.getHighchart().then(
+            function (res) {
+              $scope.charts[$scope.currentChart] = res.data.config;
+            });
     modalInstance.close();
     generateChart();
   };
@@ -102,7 +103,7 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
           }
       }
     }
-    $scope.chart.series = toBePushed;
+    $scope.charts[$scope.currentChart].series = toBePushed;
 
   };
 
@@ -124,16 +125,18 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
       if(res.data) {
         if (res.status < 400) {
           generations = res.data.result;
-          $scope.chart.xAxis.categories = generations.grouping_parameter.values;
-          $scope.chart.xAxis.title = {};
-          $scope.chart.xAxis.title.text = generations.grouping_parameter.name;
-          $scope.chart.xAxis.crosshair = true;
+          console.log($scope.charts.length);
+          $scope.charts[$scope.currentChart].xAxis.categories = generations.grouping_parameter.values;
+          $scope.charts[$scope.currentChart].xAxis.title = {};
+          $scope.charts[$scope.currentChart].xAxis.title.text = generations.grouping_parameter.name;
+          $scope.charts[$scope.currentChart].xAxis.crosshair = true;
           pushSeries(generations.gene1);
           var title = "Change of attribute " + gene;
           setChartTitle(title);
           var chart = getChartRef();
           chart.redraw();
           $scope.loader = false;
+          $scope.currentChart += 1;
         } else {
           ToastService.showServerToast(res.data,'error',3000);
           $scope.loader = false;

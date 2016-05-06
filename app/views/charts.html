@@ -19,46 +19,48 @@
       </li>
     </ul>
 
-    <div class="row chart-container" style="height: 450px">
-      <highchart id="chart1" config="chart" class="span10"></highchart>
-    </div>
+    <div ng-repeat="chart in charts">
+      <div class="row chart-container" style="height: 450px">
+        <highchart id="chart1" config="chart" class="span10"></highchart>
+      </div>
 
-    <accordion close-others="false">
-      <accordion-group heading="Chart settings">
-        <div class="row">
-          <div class="large-4 columns end">
-            <label for="chart-title">Chart title</label>
-            <input class="small-8 columns" id="chart-title" ng-model="chart.title.text">
-          </div>
-        </div>
-        <ul class="no-bullets">
-          <li>
-            <div class="row">
-              <div class="large-8 columns">
-                Series
-              </div>
-
-              <div class="large-4 columns end">
-                Color (hex)
-              </div>
+      <accordion close-others="false">
+        <accordion-group heading="Chart settings">
+          <div class="row">
+            <div class="large-4 columns end">
+              <label for="chart-title">Chart title</label>
+              <input class="small-8 columns" id="chart-title" ng-model="chart.title.text">
             </div>
-          </li>
-          <li ng-repeat="serie in chart.series track by $index">
+          </div>
+          <ul class="no-bullets">
+            <li>
+              <div class="row">
+                <div class="large-8 columns">
+                  Series
+                </div>
 
-              <div class="large-8 columns">
-                <input ng-model="serie.name" type="text">
+                <div class="large-4 columns end">
+                  Color (hex)
+                </div>
               </div>
+            </li>
+            <li ng-repeat="serie in chart.series track by $index">
 
-              <div class="large-4 columns">
-                <input colorpicker ng-model="serie.color" type="text">
-              </div>
+                <div class="large-8 columns">
+                  <input ng-model="serie.name" type="text">
+                </div>
 
-          </li>
-        </ul>
-      </accordion-group>
-    </accordion>
+                <div class="large-4 columns">
+                  <input colorpicker ng-model="serie.color" type="text">
+                </div>
 
-    <div class="chart-options">
+            </li>
+          </ul>
+        </accordion-group>
+      </accordion>
+
+      <div class="chart-options">
+      </div>
     </div>
   </div>
 </div>
