@@ -78,6 +78,7 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
         for (var k in geneSeries[key])
           if (geneSeries[key].hasOwnProperty(k)) {
             var serie = null;
+            var linear_serie = null;
             var name = [geneSeries.name, key, k].join("_");
             if (name.indexOf('standard_deviation') > -1) {
               serie = {
@@ -92,13 +93,16 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
                 serie.data.push([geneSeries[key][k]['minus_standard_deviation'][i], geneSeries[key][k]['plus_standard_deviation'][i]]);
               }
             } else {
-              serie = { data: geneSeries[key][k], name: name };
+              serie = { data: geneSeries[key][k], name: name , id: name };
+              linear_serie = { name: "trendline", linkedTo: name, showInLegend: true, enableMouseTracking: false, type: 'trendline', algorithm: 'linear', visible: false}
             }
             if (serie) {
               if (!(name.indexOf('effective_') > -1)) {
                 serie.visible = false;
               }
               toBePushed.push(serie);
+              if (linear_serie)
+                toBePushed.push(linear_serie)
             }
           }
       }
