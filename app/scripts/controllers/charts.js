@@ -19,6 +19,7 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
   $scope.availableGroupingParameters = ["death_hour","age"];
   $scope.simulationStart = ForamAPIService.getCurrentSimulation();
 
+
   ForamAPIService.getFiltersAttributes({only_numeric: true, only_genotype: true}).then(
     function (res) {
       if(res.data) {
@@ -36,7 +37,9 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
 
 
 
-  $scope.open = function () {
+  $scope.open = function (force) {
+    $scope.forceClear = force;
+
     modalInstance = $modal.open({
       templateUrl: 'views/gene-selector.html',
       scope: $scope,
@@ -60,7 +63,11 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
 
   var generations;
 
-  $scope.createChart = function () {
+  $scope.createChart = function (force) {
+    console.log(force);
+    if (force) {
+      clearAdditionalCharts(true);
+    }
     ConfigService.getHighchart().then(
             function (res) {
               $scope.charts[$scope.currentChart] = res.data.config;
@@ -68,6 +75,20 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
     modalInstance.close();
     generateChart();
   };
+
+  $scope.clear = function() {
+    clearAdditionalCharts(false);
+  }
+
+  var clearAdditionalCharts = function(force) {
+    if (force) {
+      $scope.currentChart = 0;
+    }
+    else {
+      $scope.currentChart = 1;
+    }
+    $scope.charts = [$scope.charts[0]];
+  }
 
   var pushSeries = function (geneSeries) {
     var chart = getChartRef();
@@ -258,6 +279,7 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
 
   ////////////////////////    INIT    ///////////////////////////
 
+  $scope.forceClear = true;
   $scope.open();
 
   $scope.$watch('simulationStart', function (newValue,oldValue) {

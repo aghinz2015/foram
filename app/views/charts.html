@@ -15,7 +15,13 @@
 
     <ul class="button-row">
       <li>
-        <button ng-click="open()">New chart</button>
+        <button ng-click="open(true)">New chart</button>
+      </li>
+      <li>
+        <button ng-click="open(false)">Add chart</button>
+      </li>
+      <li ng-visible="charts.length > 1">
+        <button ng-click="clear()">Clear additional charts</button>
       </li>
     </ul>
 
