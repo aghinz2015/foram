@@ -222,6 +222,7 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
             {
               text: 'Save as image',
               onclick: function () {
+                var thisIndex = Number(this.renderTo.id.replace( /^\D+/g, ''));
                 modalInstance = $modal.open({
                   templateUrl: 'views/chart_exporter.html',
                   controller: 'ChartExporterCtrl',
@@ -230,6 +231,9 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
                   resolve: {
                     chartOptions: function () {
                       return $scope.export;
+                    },
+                    index: function () {
+                      return thisIndex;
                     }
                   }
                 });

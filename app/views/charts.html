@@ -21,7 +21,7 @@
 
     <div ng-repeat="chart in charts">
       <div class="row chart-container" style="height: 450px">
-        <highchart id="chart1" config="chart" class="span10"></highchart>
+        <highchart id="chart{{$index}}" config="chart" class="span10"></highchart>
       </div>
 
       <accordion close-others="false">

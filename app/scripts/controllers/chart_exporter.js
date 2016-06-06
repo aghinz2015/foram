@@ -1,14 +1,15 @@
 'use strict';
 
-app.controller('ChartExporterCtrl', function ($scope, $modalInstance, chartOptions) {
-  
+app.controller('ChartExporterCtrl', function ($scope, $modalInstance, chartOptions, index) {
+
   $scope.chartOptions = chartOptions;
-  var getChartRef = function () {
+  var getChartRef = function (index) {
+    console.log(index);
     return Highcharts.charts.filter(function (item) {
       return item !== undefined;
-    })[0];
+    })[index];
   };
-  
+
   $scope.exportOptions = { type: 'image/png', filename: 'chart' };
   $scope.grayScale = {value: false};
 
@@ -16,15 +17,15 @@ app.controller('ChartExporterCtrl', function ($scope, $modalInstance, chartOptio
     exportChart($scope.exportOptions, $scope.grayScale.value);
     $modalInstance.close();
   };
-  
+
   var exportChart = function (exportOptions, grayScale) {
     if(grayScale) blackAndWhiteExport(exportOptions);
     else {
-      var chart = getChartRef();
+      var chart = getChartRef(index);
       chart.exportChart(exportOptions, $scope.chartOptions.color);
-    }   
+    }
   };
-  
+
   var getRgbFromHex = function (hexColor) {
     return {
       r: parseInt(hexColor.substring(1, 3), 16),
@@ -72,13 +73,13 @@ app.controller('ChartExporterCtrl', function ($scope, $modalInstance, chartOptio
   };
 
   var blackAndWhiteExport = function (exportOptions) {
-    var chart = getChartRef();
+    var chart = getChartRef(index);
     var series = chart.series;
     var previousColors = setAllSeriesToGrayScale(series);
     chart.exportChart(exportOptions, $scope.chartOptions.blackAndWhite);
     updateSeriesColors(series, previousColors);
   };
-  
+
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
