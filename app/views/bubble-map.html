@@ -8,11 +8,6 @@
   <div class="large-12 columns">
     <h2 class="main-header inline">Death Map</h2>
 
-    <select class="simulation-picker" id="format-param" ng-model="simulationStart">
-      <option value="" disabled selected>Select simulation start</option>
-      <option ng-repeat="simulation in availableSimulations">{{simulation}}</option>
-    </select>
-
     <div>
       <button ng-click="swapType()" class="button change-type">{{changeTypeText()}}</button>
     </div>

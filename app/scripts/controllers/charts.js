@@ -282,30 +282,6 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
   $scope.forceClear = true;
   $scope.open();
 
-  $scope.$watch('simulationStart', function (newValue,oldValue) {
-    if(newValue) {
-      ForamAPIService.setSimulation(newValue);
-      generateChart();
-    }
-  });
-
-  // select simulation
-  ForamAPIService.getSimulations().then(
-    function (res) {
-      if(res.data) {
-        if (res.status < 400) {
-          $scope.availableSimulations = res.data.simulation_starts;
-        } else {
-          ToastService.showServerToast(res.data,'error',3000);
-        }
-      }
-    }, function (err) {
-      ToastService.showToast('Cannot connect to server','error',3000);
-    }
-  );
-
-
-
   Highcharts.createElement('link', {
     href: '//fonts.googleapis.com/css?family=Unica+One',
     rel: 'stylesheet',

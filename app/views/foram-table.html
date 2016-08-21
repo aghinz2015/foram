@@ -10,7 +10,7 @@
 
     <select class="simulation-picker" id="format-param" ng-model="simulationStart">
       <option value="" disabled selected>Select simulation start</option>
-      <option ng-repeat="simulation in availableSimulations">{{simulation}}</option>
+      <option ng-repeat="simulation in availableSimulations" value="{{simulation}}">{{simulation | date:'yyyy-MM-dd HH:mm:ss'}}</option>
     </select>
 
     <accordion close-others="false">

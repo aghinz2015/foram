@@ -342,26 +342,5 @@ app.controller('BubbleMapCtrl', ['$scope', '$routeParams', '$location', 'ForamAP
   refresh();
 
   // select simulation
-  ForamAPIService.getSimulations().then(
-    function (res) {
-      if(res.data) {
-        if (res.status < 400) {
-          $scope.availableSimulations = res.data.simulation_starts;
-        } else {
-          ToastService.showServerToast(res.data,'error',3000);
-        }
-      }
-    }, function (err) {
-      ToastService.showToast('Cannot connect to server','error',3000);
-    }
-  );
-
   $scope.simulationStart = ForamAPIService.getCurrentSimulation();
-
-  $scope.$watch('simulationStart', function (newValue,oldValue) {
-    if(newValue !== oldValue) {
-      ForamAPIService.setSimulation(newValue);
-      refresh();
-    }
-  });
 }]);
