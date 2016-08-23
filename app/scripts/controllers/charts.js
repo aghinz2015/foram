@@ -114,7 +114,7 @@ app.controller('ChartsCtrl', ['$scope', '$modal', 'ConfigService', 'ForamAPIServ
                 serie.data.push([geneSeries[key][k]['minus_standard_deviation'][i], geneSeries[key][k]['plus_standard_deviation'][i]]);
               }
             } else {
-              serie = { data: geneSeries[key][k], name: name , id: name };
+              serie = { data: geneSeries[key][k], name: name , id: name, lineWidth: 0.5 };
               linear_serie = { name: "trendline", linkedTo: name, showInLegend: true, enableMouseTracking: false, type: 'trendline', algorithm: 'linear', visible: false}
             }
             if (serie) {
